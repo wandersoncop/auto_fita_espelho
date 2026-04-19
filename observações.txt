@@ -1,0 +1,9 @@
+A posição 17 do arquivo TXT é que decide o tipo de dado:
+0 = cabeçaçho de le iremos usar principalmento o mesfita
+1 = pessoal
+2 = funcional
+3 = financeiro
+4 = totalização dos dados financeiros
+5 = afastamentos
+6 = totalização dos dados de afastamentos
+9 = quantidade de upags e servidores
