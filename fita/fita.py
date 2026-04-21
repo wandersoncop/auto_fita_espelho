@@ -1,11 +1,16 @@
 import os
 import csv
+import pandas as pd
 from mapeamentos import (
     LAYOUT_TIPO_1, 
     LAYOUT_TIPO_2, 
     CAMPOS_DATA_TIPO_1, 
     CAMPOS_DATA_TIPO_2, 
-    TRADUCAO_ESTADO_CIVIL
+    TRADUCAO_ESTADO_CIVIL,
+    TRADUCAO_DENO_ESCOL,
+    # TRADUCAO_ESCOLARIDADE,
+    TRADUCAO_TITFORM,
+    TRADUCAO_PAIS,
 )
 
 def formatar_data(valor):
@@ -47,9 +52,27 @@ def extrair_tipo_1(caminho_arquivo, header):
                         dados[campo] = None
                     elif campo in CAMPOS_DATA_TIPO_1:
                         dados[campo] = formatar_data(valor)
-                    elif campo == 'estado_civil':
+                    
+                    elif campo == 'ECIV':
                         dados[campo] = valor
-                        dados['estado_civil_desc'] = TRADUCAO_ESTADO_CIVIL.get(valor, '')
+                        dados['DENO_E_CIV'] = TRADUCAO_ESTADO_CIVIL.get(valor, '')
+
+                    elif campo == 'COD_ESCOL':
+                        dados[campo] = valor
+                        valor_str = str(valor)
+                        dados['DENO_ECOL'] = TRADUCAO_DENO_ESCOL.get(valor_str, '')
+                        
+                    
+                    elif campo == 'COD_TITULACAO':
+                        dados[campo]=valor
+                        valor_str = str(valor)
+                        dados['DENO_TIT'] = TRADUCAO_TITFORM.get(valor_str,'')
+                                           
+                    elif campo == 'PAIS':
+                        dados[campo]=valor
+                        valor_str = str(valor)
+                        dados['DENO_PAIS'] = TRADUCAO_PAIS.get(valor_str,'')
+
                     else:
                         dados[campo] = valor
                 lista_dados_pessoais.append(dados)    
@@ -88,7 +111,7 @@ diretorio = r'c:\Users\Wanderson\Desktop\auto_fita_espelho'
 arquivo = 'fita_espelho.txt'
 caminho_completo = os.path.join(diretorio, arquivo)
 
-# Processamento
+# --- PROCESSAMENTO ---
 dados_0 = extrair_tipo_0(diretorio, arquivo)
 
 servidores_pessoais = extrair_tipo_1(caminho_completo, dados_0) 
@@ -105,3 +128,5 @@ print(f"Tipo 1 (Dados Pessoais): {len(servidores_pessoais)} registros extraídos
 # len(servidores_funcionais) conta quantos itens existem na lista do Tipo 2
 print(f"Tipo 2 (Dados Funcionais): {len(servidores_funcionais)} registros extraídos.")
 print("-" * 50)
+
+df = pd.DataFrame(servidores_pessoais)

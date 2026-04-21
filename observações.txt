@@ -7,3 +7,7 @@ A posição 17 do arquivo TXT é que decide o tipo de dado:
 5 = afastamentos
 6 = totalização dos dados de afastamentos
 9 = quantidade de upags e servidores
+
+
+DE ONDE VEM A MATICULA UFMG?
+QUAL COD FORMA A ESCOLARIDADE?
