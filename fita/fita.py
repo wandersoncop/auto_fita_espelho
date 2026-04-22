@@ -3,13 +3,14 @@ import csv
 import pandas as pd
 from mapeamentos import (
     LAYOUT_TIPO_1, 
+    HEADER_TIPO_1,
     LAYOUT_TIPO_2, 
     CAMPOS_DATA_TIPO_1, 
     CAMPOS_DATA_TIPO_2, 
     TRADUCAO_ESTADO_CIVIL,
     TRADUCAO_DENO_ESCOL,
-    # TRADUCAO_ESCOLARIDADE,
-    TRADUCAO_TITFORM,
+    TRADUCAO_TIT_FORM,
+    TRADUCAO_ESCOLARIDADE,
     TRADUCAO_PAIS,
 )
 
@@ -46,6 +47,8 @@ def extrair_tipo_1(caminho_arquivo, header):
             if len(linha) > 18 and linha[17] == '1':
                 dados = {'mes_fita': header['mes_fita']}
                 
+               # --- DENTRO DA FUNÇÃO extrair_tipo_1 ---
+
                 for campo, (inicio, fim) in LAYOUT_TIPO_1.items():
                     valor = linha[inicio:fim].strip()
                     if not valor:
@@ -57,26 +60,62 @@ def extrair_tipo_1(caminho_arquivo, header):
                         dados[campo] = valor
                         dados['DENO_E_CIV'] = TRADUCAO_ESTADO_CIVIL.get(valor, '')
 
-                    elif campo == 'COD_ESCOL':
-                        dados[campo] = valor
-                        valor_str = str(valor)
-                        dados['DENO_ECOL'] = TRADUCAO_DENO_ESCOL.get(valor_str, '')
-                        
+                    # AJUSTE AQUI: O nome no seu LAYOUT_TIPO_1 é 'ESCOL'
+                    elif campo == 'ESCOL':
+                        dados['COD_ESCOL'] = valor # Guardamos como COD_ESCOL para a função calcular
+                        valor_str = str(valor).zfill(2)
+                        dados['DENO_ESCOL'] = TRADUCAO_DENO_ESCOL.get(valor_str, '')
                     
-                    elif campo == 'COD_TITULACAO':
-                        dados[campo]=valor
-                        valor_str = str(valor)
-                        dados['DENO_TIT'] = TRADUCAO_TITFORM.get(valor_str,'')
-                                           
+                    # AJUSTE AQUI: O nome no seu LAYOUT_TIPO_1 é 'TIT_FORM'
+                    elif campo == 'TIT_FORM':
+                        dados['COD_TITULACAO'] = valor # Guardamos como COD_TITULACAO para a função calcular
+                        valor_str = str(valor).zfill(2)
+                        dados['DENO_TIT'] = TRADUCAO_TIT_FORM.get(valor_str, '')
+                                            
                     elif campo == 'PAIS':
-                        dados[campo]=valor
-                        valor_str = str(valor)
-                        dados['DENO_PAIS'] = TRADUCAO_PAIS.get(valor_str,'')
+                        dados[campo] = valor
+                        valor_str = str(valor).zfill(3) # Países costumam ter 3 dígitos (ex: 024)
+                        dados['DENO_PAIS'] = TRADUCAO_PAIS.get(valor_str, '')
 
                     else:
                         dados[campo] = valor
-                lista_dados_pessoais.append(dados)    
+
+                # Agora a função calcular_escolaridade vai encontrar os dados
+                dados['ESCOLARIDADE'] = calcular_escolaridade(dados)
+                    #  FAZ A ORGANIZAÇÃO DE SAIDA DAS COLUNAS DA TABELA
+                dados_ordenado = {campo: dados.get(campo) for campo in HEADER_TIPO_1}
+                lista_dados_pessoais.append(dados_ordenado)
+
+                        
+
+               
     return lista_dados_pessoais 
+
+def calcular_escolaridade(dados):
+    cod_escol = str(dados.get('COD_ESCOL', '')).zfill(2)
+    cod_tit = str(dados.get('COD_TITULACAO','')).zfill(2)
+
+    grau_escol = TRADUCAO_ESCOLARIDADE.get(cod_escol,-1)
+    grau_tit = TRADUCAO_ESCOLARIDADE.get(cod_tit,-1)
+
+    deno_escol = dados.get('DENO_ESCOL','')
+    deno_tit = dados.get('DENO_TIT','')
+
+    if grau_escol >= 0 and grau_tit >=0:
+        return deno_escol if grau_escol >=grau_tit else deno_tit
+
+    if grau_tit >= 0:
+        return deno_tit
+   
+    if grau_escol >= 0:
+        return deno_escol
+    
+    return ''
+
+
+
+ 
+
 
 def extrair_tipo_2(caminho_arquivo, header):
     lista_dados_funcionais = []
@@ -107,7 +146,7 @@ def salvar_em_csv(lista_dados, nome_arquivo):
     print(f'Arquivo salvo: {nome_arquivo}')       
 
 # --- EXECUÇÃO ---
-diretorio = r'c:\Users\Wanderson\Desktop\auto_fita_espelho'
+diretorio = r'c:\Users\Wandersoncop\Desktop\auto_fita_espelho'
 arquivo = 'fita_espelho.txt'
 caminho_completo = os.path.join(diretorio, arquivo)
 
