@@ -30,7 +30,7 @@ LAYOUT_TIPO_1 = {
     "CEP": (323, 331),
     "UF": (331, 333),
     "IDENT": (333, 347),
-    "ID_ORIG": (347, 352),
+    "ORG_EXP": (347, 352),
     "DT_EXP": (352, 360),
     "ID_UF": (360, 362),
     "TITULO_ELEITOR": (362, 375)
@@ -40,6 +40,7 @@ LAYOUT_TIPO_1 = {
 HEADER_TIPO_1 = [
     'mes_fita',
     'UPAG',
+    'InscUFMG',
     'MATRIC',
     'DIG',
     'TREG',
@@ -78,6 +79,7 @@ HEADER_TIPO_1 = [
     'CEP',
     'UF',
     'IDENT',
+    'ORG_EXP',
     'DT_EXP',
     'ID_UF',
     'TITULO_ELEITOR'
@@ -287,7 +289,7 @@ TRADUCAO_TIT_FORM= {
     '20': 'TECNICO (NIVEL MEDIO COMPLETO)',
     '21': 'APERFEICOAMENTO NIVEL MEDIO',
     '22': 'ESPECIALIZACAO NIVEL MEDIO',
-    '23': 'ENSINO SUPERIOR',
+    '23': 'GRADUACAO (NIVEL SUPERIOR COMPLETO)',
     '24': 'APERFEICOAMENTO NIVEL SUPERIOR',
     '25': 'ESPECIALIZACAO NIVEL SUPERIOR',
     '26': 'MESTRADO',
