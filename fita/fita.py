@@ -5,6 +5,7 @@ from mapeamentos import (
     LAYOUT_TIPO_1, 
     HEADER_TIPO_1,
     LAYOUT_TIPO_2, 
+    HEADER_TIPO_2,
     CAMPOS_DATA_TIPO_1, 
     CAMPOS_DATA_TIPO_2, 
     TRADUCAO_ESTADO_CIVIL,
@@ -12,6 +13,8 @@ from mapeamentos import (
     TRADUCAO_TIT_FORM,
     TRADUCAO_ESCOLARIDADE,
     TRADUCAO_PAIS,
+    TRADUCAO_SIT,
+    
 )
 
 def carregar_dicionario_inscricoes(fita, Pescad_InscUFMG):
@@ -71,6 +74,8 @@ def extrair_tipo_0(fita, fita_espelho):
 
 def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
     lista_dados_pessoais = []
+    # aqui vais guardar os nomes para usar em outras tabelas
+    mapa_nomes = {} # Dicionário auxiliar: { matricula: nome }
     # Pega o valor do mês uma única vez aqui fora para garantir
     valor_do_mes = header.get('mes_fita') or header.get('MES_FITA')
     
@@ -92,10 +97,17 @@ def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
 
                 # 2. Fixação de campos externos e cálculos
                 dados['mes_fita'] = valor_do_mes 
-                
+                matric_limpa = str(linha[9:16]).strip() # Posição da matrícula no texto
+                nome_servidor = str(linha[20:80]).strip() # Posição do nome no Tipo 1
+
+                dados['MATRIC'] = matric_limpa
+                dados ['NOME'] = nome_servidor
+                dados['InscUFMG'] = mapa_inscricoes.get(matric_limpa,'')
                 # Inscrição UFMG
                 matric_limpa = str(dados.get('MATRIC', '')).strip()
                 dados['InscUFMG'] = mapa_inscricoes.get(matric_limpa, '')
+                # Alimenta o mapa de nomes para usar no Tipo 2
+                mapa_nomes[matric_limpa] = nome_servidor
                 
                 # Estado Civil
                 dados['DENO_E_CIV'] = TRADUCAO_ESTADO_CIVIL.get(dados.get('ECIV'), '')
@@ -118,7 +130,7 @@ def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
                 dados_ordenado = {campo: dados.get(campo) for campo in HEADER_TIPO_1}
                 lista_dados_pessoais.append(dados_ordenado)
                 
-    return lista_dados_pessoais
+    return lista_dados_pessoais, mapa_nomes
 
 def calcular_escolaridade(dados):
     # Tenta pegar pelo nome novo ou pelo nome bruto do layout
@@ -146,22 +158,58 @@ def calcular_escolaridade(dados):
  
 
 
-def extrair_tipo_2(caminho_arquivo, header):
+def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
     lista_dados_funcionais = []
+    valor_do_mes = header.get('mes_fita') or header.get('MES_FITA')
+    
     with open(caminho_arquivo, 'r', encoding='latin-1') as f:
         for linha in f:
-            if len(linha) > 18 and linha[17] == '2':
-                dados = {'mes_fita': header['mes_fita']}
+            # Verifica se a linha tem o tamanho mínimo e se o tipo é 2 na posição 17
+            if len(linha) > 120 and linha[17] == '2':
+                dados = {'mes_fita': valor_do_mes}
+                
+                # 1. EXTRAÇÃO VIA LAYOUT_TIPO_2
                 for campo, (inicio, fim) in LAYOUT_TIPO_2.items():
                     valor = linha[inicio:fim].strip()
-                    if not valor:
-                        dados[campo] = None
-                    elif campo in CAMPOS_DATA_TIPO_2:
-                        dados[campo] = formatar_data(valor)
-                    else:
-                        dados[campo] = valor
-                lista_dados_funcionais.append(dados)
-    return lista_dados_funcionais       
+                    # Mantemos o valor original para processar depois, ou None se vazio
+                    dados[campo] = valor if valor else None
+
+                # 2. CRIAÇÃO DO CODCARGO (701 + 062 = 701062)
+                # Pegamos direto do dicionário 'dados' preenchido acima
+                v_gr = dados.get('GRCARGO')
+                v_ca = dados.get('CARGO')
+
+                # Se existirem, formatamos. Se não, viram '000'
+                gr_f = str(v_gr).zfill(3) if v_gr else '000'
+                ca_f = str(v_ca).zfill(3) if v_ca else '000'
+
+                # Atualizamos o dicionário com os valores formatados
+                dados['GRCARGO'] = gr_f
+                dados['CARGO'] = ca_f
+                dados['CodCargo'] = gr_f + ca_f
+
+                # 3. CORRESPONDÊNCIA (MATRICULA, NOME E INSCRIÇÃO)
+                # O nome da chave aqui DEVE ser igual ao que está no seu LAYOUT_TIPO_2
+                matric_func = str(dados.get('MATRIC', '')).strip()
+                
+                dados['NOME'] = mapa_nomes.get(matric_func, 'NOME NAO ENCONTRADO')
+                dados['InscUFMG'] = mapa_inscricoes.get(matric_func, '')
+
+                # 4. TRADUÇÃO DA SITUAÇÃO
+                # O nome da chave aqui DEVE ser igual ao que está no seu LAYOUT_TIPO_2 ('SIT')
+                cod_sit = str(dados.get('SIT') or '').zfill(2)
+                dados['DENO_SIT'] = TRADUCAO_SIT.get(cod_sit, f'SIT {cod_sit}')
+
+                # 5. MONTAGEM PARA O CSV
+                # Crucial: HEADER_TIPO_2 deve ter 'GRCARGO', 'CARGO' e 'CodCargo'
+                try:
+                    dados_ordenado = {campo: dados.get(campo) for campo in HEADER_TIPO_2}
+                    lista_dados_funcionais.append(dados_ordenado)
+                except Exception as e:
+                    # Se der erro aqui, é porque algum nome no HEADER_TIPO_2 não existe no dados
+                    print(f"Erro de mapeamento no Header: {e}")
+                
+    return lista_dados_funcionais
 
 def salvar_em_csv(lista_dados, nome_arquivo):
     if not lista_dados:
@@ -184,10 +232,10 @@ caminho_completo = os.path.join(diretorio, arquivo)
 # --- PROCESSAMENTO ---
 dados_0 = extrair_tipo_0(diretorio, arquivo)
 
-servidores_pessoais = extrair_tipo_1(caminho_completo, dados_0,mapa_insc) 
+servidores_pessoais,mapa_nomes_aux = extrair_tipo_1(caminho_completo, dados_0,mapa_insc) 
 salvar_em_csv(servidores_pessoais, os.path.join(diretorio, 'servidores_tipo1_pessoal.csv')) 
 
-servidores_funcionais = extrair_tipo_2(caminho_completo, dados_0,)
+servidores_funcionais = extrair_tipo_2(caminho_completo, dados_0,mapa_insc,mapa_nomes_aux)
 salvar_em_csv(servidores_funcionais, os.path.join(diretorio, 'servidores_tipo2_funcional.csv'))
 
 # --- RELATÓRIO FINAL ---
