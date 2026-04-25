@@ -14,7 +14,7 @@ from mapeamentos import (
     TRADUCAO_ESCOLARIDADE,
     TRADUCAO_PAIS,
     TRADUCAO_SIT,
-    
+    TRADUCAO_CARGO,
 )
 
 def carregar_dicionario_inscricoes(fita, Pescad_InscUFMG):
@@ -165,7 +165,7 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
     with open(caminho_arquivo, 'r', encoding='latin-1') as f:
         for linha in f:
             # Verifica se a linha tem o tamanho mínimo e se o tipo é 2 na posição 17
-            if len(linha) > 120 and linha[17] == '2':
+            if len(linha) > 18 and linha[17] == '2':
                 dados = {'mes_fita': valor_do_mes}
                 
                 # 1. EXTRAÇÃO VIA LAYOUT_TIPO_2
@@ -174,19 +174,19 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                     # Mantemos o valor original para processar depois, ou None se vazio
                     dados[campo] = valor if valor else None
 
-                # 2. CRIAÇÃO DO CODCARGO (701 + 062 = 701062)
-                # Pegamos direto do dicionário 'dados' preenchido acima
-                v_gr = dados.get('GRCARGO')
-                v_ca = dados.get('CARGO')
+                # # 2. CRIAÇÃO DO CODCARGO (701 + 062 = 701062)
+                # # Pegamos direto do dicionário 'dados' preenchido acima
+                # v_gr = dados.get('GRCARGO')
+                # v_ca = dados.get('CARGO')
 
-                # Se existirem, formatamos. Se não, viram '000'
-                gr_f = str(v_gr).zfill(3) if v_gr else '000'
-                ca_f = str(v_ca).zfill(3) if v_ca else '000'
+                # # Se existirem, formatamos. Se não, viram '000'
+                # gr_f = str(v_gr).zfill(3) if v_gr else '000'
+                # ca_f = str(v_ca).zfill(3) if v_ca else '000'
 
-                # Atualizamos o dicionário com os valores formatados
-                dados['GRCARGO'] = gr_f
-                dados['CARGO'] = ca_f
-                dados['CodCargo'] = gr_f + ca_f
+                # # Atualizamos o dicionário com os valores formatados
+                # dados['GRCARGO'] = gr_f
+                # dados['CARGO'] = ca_f
+                # dados['CodCargo'] = gr_f + ca_f
 
                 # 3. CORRESPONDÊNCIA (MATRICULA, NOME E INSCRIÇÃO)
                 # O nome da chave aqui DEVE ser igual ao que está no seu LAYOUT_TIPO_2
@@ -199,6 +199,12 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                 # O nome da chave aqui DEVE ser igual ao que está no seu LAYOUT_TIPO_2 ('SIT')
                 cod_sit = str(dados.get('SIT') or '').zfill(2)
                 dados['DENO_SIT'] = TRADUCAO_SIT.get(cod_sit, f'SIT {cod_sit}')
+
+                # 4. TRADUÇÃO DO CARGO
+                cod_cargo = str(dados.get('CODCARGO')or '').zfill(6
+                                                                  
+                                                                  )
+                dados['DENOCARG']= TRADUCAO_CARGO.get(cod_cargo,f'DENOCARG{cod_cargo}')
 
                 # 5. MONTAGEM PARA O CSV
                 # Crucial: HEADER_TIPO_2 deve ter 'GRCARGO', 'CARGO' e 'CodCargo'
@@ -223,7 +229,7 @@ def salvar_em_csv(lista_dados, nome_arquivo):
     print(f'Arquivo salvo: {nome_arquivo}')       
 
 # --- EXECUÇÃO ---
-diretorio = r'c:\Users\Wandersoncop\Desktop\auto_fita_espelho'
+diretorio = r'c:\Users\Wanderson\Desktop\auto_fita_espelho'
 arquivo = 'fita_espelho.txt'
 arquivo_insc = 'Pescad_InscUFMG.txt'
 mapa_insc = carregar_dicionario_inscricoes(diretorio,arquivo_insc)
