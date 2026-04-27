@@ -8,7 +8,7 @@ from mapeamentos import (
     HEADER_TIPO_2,
     CAMPOS_DATA_TIPO_1, 
     CAMPOS_DATA_TIPO_2, 
-    TRADUCAO_ESTADO_CIVIL,
+    # TRADUCAO_ESTADO_CIVIL,
     TRADUCAO_DENO_ESCOL,
     TRADUCAO_TIT_FORM,
     TRADUCAO_ESCOLARIDADE,
@@ -17,6 +17,45 @@ from mapeamentos import (
     TRADUCAO_CARGO,
     
 )
+import csv
+
+import csv
+#  formata a tabela desejada
+import csv
+
+import csv
+
+import csv
+
+def carregar_tabela_apoio(caminho_arquivo):
+    traducao = {}
+    try:
+        with open(caminho_arquivo, mode='r', encoding='latin-1') as f:
+            conteudo = f.read().replace('"', '')
+            linhas = conteudo.splitlines()
+            
+            for i, linha in enumerate(linhas):
+                if not linha.strip(): continue # Pula linhas vazias
+                colunas = linha.split(';')
+                if len(colunas) >= 2:
+                    chave = colunas[0].strip()
+                    
+                    # Pula cabeçalho se a primeira coluna for texto de identificação
+                    if i == 0 and chave.lower() in ['chaveclasse', 'cod', 'codigo', 'id', 'chave']:
+                        continue
+                    
+                    # Se tiver 4 colunas (Classe), pega a última. Senão, pega a segunda.
+                    indice_desc = 3 if len(colunas) >= 4 else 1
+                    
+                    if chave:
+                        traducao[chave] = colunas[indice_desc].strip()
+        print(f"SUCESSO: {caminho_arquivo} carregado.")
+    except FileNotFoundError:
+        print(f"ERRO: Arquivo não encontrado em: {caminho_arquivo}")
+    except Exception as e:
+        print(f"ERRO ao carregar {caminho_arquivo}: {e}")
+    return traducao
+
 
 def carregar_dicionario_inscricoes(fita, Pescad_InscUFMG):
     caminho = os.path.join(fita, Pescad_InscUFMG)
@@ -73,6 +112,14 @@ def extrair_tipo_0(fita, fita_espelho):
     print("AVISO: Linha Tipo 0 não encontrada no arquivo! Usando valores vazios.")
     return header
 
+# carrega as traduções da tabelas
+# Agora essa função serve para TUDO
+# Mude estas linhas no topo do seu código:
+
+MAPA_CLASSES = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Classe.txt')
+MAPA_ESTADO_CIVIL = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Estado Civil.txt')
+# MAPA_ESCOLARIDADE = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Escolaridade.txt')
+
 def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
     lista_dados_pessoais = []
     # aqui vais guardar os nomes para usar em outras tabelas
@@ -110,8 +157,9 @@ def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
                 # Alimenta o mapa de nomes para usar no Tipo 2
                 mapa_nomes[matric_limpa] = nome_servidor
                 
-                # Estado Civil
-                dados['DENO_E_CIV'] = TRADUCAO_ESTADO_CIVIL.get(dados.get('ECIV'), '')
+                # Estado Civil------------------------------------------
+                codigo_eciv = str(dados.get('ECIV') or '').strip()
+                dados['DENO_E_CIV'] = MAPA_ESTADO_CIVIL.get(codigo_eciv, 'NÃO INFORMADO')
                 
                 # Preparação para Escolaridade
                 dados['COD_ESCOL'] = str(dados.get('ESCOL', '')).zfill(2)
@@ -119,6 +167,7 @@ def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
 
                 # Traduções de escolaridade e título
                 dados['DENO_ESCOL'] = TRADUCAO_DENO_ESCOL.get(dados['COD_ESCOL'], '')
+                
                 dados['DENO_TIT'] = TRADUCAO_TIT_FORM.get(dados['COD_TITULACAO'], '')
                 
                 # Cálculo do maior grau
@@ -162,64 +211,86 @@ def calcular_escolaridade(dados):
 def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
     lista_dados_funcionais = []
     valor_do_mes = header.get('mes_fita') or header.get('MES_FITA')
+
+     # 1. Extração do layout com FORMATAÇÃO DE DATA integrada
+    
+
+
     
     with open(caminho_arquivo, 'r', encoding='latin-1') as f:
         for linha in f:
-            # Verifica se a linha tem o tamanho mínimo e se o tipo é 2 na posição 17
+            # Verifica se a linha tem o tipo 2 na posição 17
             if len(linha) > 18 and linha[17] == '2':
                 dados = {'mes_fita': valor_do_mes}
-                
-                # 1. EXTRAÇÃO VIA LAYOUT_TIPO_2
+            # FORMATA OS CAMPO DE DATA
+               # --- 1. EXTRAÇÃO ÚNICA COM FORMATAÇÃO DE DATA ---
                 for campo, (inicio, fim) in LAYOUT_TIPO_2.items():
                     valor = linha[inicio:fim].strip()
-                    # Mantemos o valor original para processar depois, ou None se vazio
-                    dados[campo] = valor if valor else None
+                    
+                    if not valor:
+                        dados[campo] = ""
+                    elif campo in CAMPOS_DATA_TIPO_2:
+                        # Formata aqui e já salva no dicionário
+                        dados[campo] = formatar_data(valor)
+                    else:
+                        dados[campo] = valor
 
-             
-                # 2. CRIAÇÃO DO CAMPO CAT
-                gr_cargo = dados.get('GRCARGO')                
-                dados['CAT'] = 'Docente' if gr_cargo in ('060', '702', '705', '706', '707') else 'Tec-Administrativo'
+                   
 
-               
-               
+                # 2. CRIAÇÃO DO CAMPO CAT E IDENTIFICAÇÃO DA LETRA
+                gr_cargo = dados.get('GRCARGO', '')
+                cat_letra = 'M' if gr_cargo in ('060', '702', '705', '706', '707') else 'T'
+                dados['CAT'] = 'Docente' if cat_letra == 'M' else 'Tec-Administrativo'
 
-                # # 2. CRIAÇÃO DO CODCARGO (701 + 062 = 701062)
-                # # Pegamos direto do dicionário 'dados' preenchido acima
-                # v_gr = dados.get('GRCARGO')
-                # v_ca = dados.get('CARGO')
+                # 3. CONCATENAÇÃO DA CHAVE E TRADUÇÃO DA CLASSE (DenoClasse)
+              
+                val_classe = dados.get('CLASSE') or dados.get('CLAS') or ''
+                ref = dados.get('REF') or ''
+                primeiro_dig_ref = ref[0] if ref else ""
 
-                # # Se existirem, formatamos. Se não, viram '000'
-                # gr_f = str(v_gr).zfill(3) if v_gr else '000'
-                # ca_f = str(v_ca).zfill(3) if v_ca else '000'
+                # Montagem inicial da chave (Ex: M + 6 = M6)
+                chave_final = f"{cat_letra}{val_classe}"
 
-                # # Atualizamos o dicionário com os valores formatados
-                # dados['GRCARGO'] = gr_f
-                # dados['CARGO'] = ca_f
-                # dados['CodCargo'] = gr_f + ca_f
+                # Regra especial para o cargo 705 (Docentes específicos)
+                if gr_cargo == '705' and val_classe == '4' and primeiro_dig_ref != '4':
+                    chave_final = f"{cat_letra}{gr_cargo}{val_classe}{primeiro_dig_ref}"
 
-                # 3. CORRESPONDÊNCIA (MATRICULA, NOME E INSCRIÇÃO)
-                # O nome da chave aqui DEVE ser igual ao que está no seu LAYOUT_TIPO_2
-                matric_func = str(dados.get('MATRIC', '')).strip()
+                # Salva a chave montada para conferência
+                dados['ChaveClass'] = chave_final
                 
+                # Realiza a tradução usando o MAPA_CLASSES carregado do CSV
+                # Se não encontrar no CSV, ele mostra a chave entre parênteses para você saber o que faltou
+                dados['DenoClasse'] = MAPA_CLASSES.get(chave_final,'')
+
+                # 4. CRIAÇÃO DO CODCARGO (GRCARGO + CARGO)
+                v_gr = str(dados.get('GRCARGO', '')).zfill(3)
+                v_ca = str(dados.get('CARGO', '')).zfill(3)
+                dados['CodCargo'] = v_gr + v_ca
+
+                # 5. CORRESPONDÊNCIA (MATRICULA, NOME E INSCRIÇÃO)
+                matric_func = str(dados.get('MATRIC', '')).strip()
                 dados['NOME'] = mapa_nomes.get(matric_func, 'NOME NAO ENCONTRADO')
                 dados['InscUFMG'] = mapa_inscricoes.get(matric_func, '')
 
-                # 4. TRADUÇÃO DA SITUAÇÃO
-                # O nome da chave aqui DEVE ser igual ao que está no seu LAYOUT_TIPO_2 ('SIT')
+                # 6. TRADUÇÃO DA SITUAÇÃO E CARGO (Dicionários fixos)
                 cod_sit = str(dados.get('SIT') or '').zfill(2)
                 dados['DENO_SIT'] = TRADUCAO_SIT.get(cod_sit, f'SIT {cod_sit}')
-
-                # 4. TRADUÇÃO DO CARGO
-                cod_cargo = str(dados.get('CODCARGO')or '').zfill(6)
-                dados['DENOCARG']= TRADUCAO_CARGO.get(cod_cargo,f'DENOCARG{cod_cargo}')
-
-                # 5. MONTAGEM PARA O CSV
                 
+                cod_cargo_full = dados['CodCargo'].zfill(6)
+                dados['DENOCARG'] = TRADUCAO_CARGO.get(cod_cargo_full, f'DENOCARG {cod_cargo_full}')
+
+                # REGRA DO RT SE FOR '99' VIRA 'DE'
+                valor_rtrab = dados.get('RTRAB','').strip() # pega o valor bruto de RTRAB
+                if valor_rtrab == '99':
+                    dados['RT'] = 'DE'
+                else:
+                    dados['RT']= valor_rtrab
+
+                # 7. MONTAGEM FINAL PARA O CSV (Conforme a ordem do HEADER_TIPO_2)
                 try:
                     dados_ordenado = {campo: dados.get(campo) for campo in HEADER_TIPO_2}
                     lista_dados_funcionais.append(dados_ordenado)
                 except Exception as e:
-                    # Se der erro aqui, é porque algum nome no HEADER_TIPO_2 não existe no dados
                     print(f"Erro de mapeamento no Header: {e}")
                 
     return lista_dados_funcionais
@@ -230,13 +301,13 @@ def salvar_em_csv(lista_dados, nome_arquivo):
         return
     colunas = lista_dados[0].keys()
     with open(nome_arquivo, 'w', newline='', encoding='latin-1') as f:
-        escritor = csv.DictWriter(f, fieldnames=colunas, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL)
+        escritor = csv.DictWriter(f, fieldnames=colunas, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL,lineterminator='\n')
         escritor.writeheader()
         escritor.writerows(lista_dados)
     print(f'Arquivo salvo: {nome_arquivo}')       
 
 # --- EXECUÇÃO ---
-diretorio = r'c:\Users\Wanderson\Desktop\auto_fita_espelho'
+diretorio = r'c:\Users\Wandersoncop\Desktop\auto_fita_espelho'
 arquivo = 'fita_espelho.txt'
 arquivo_insc = 'Pescad_InscUFMG.txt'
 mapa_insc = carregar_dicionario_inscricoes(diretorio,arquivo_insc)
