@@ -1,3 +1,2 @@
- 'NOVA_FUNCAO_SIGLA': (175, 178),
-    'NOVA_FUNCAO_CODIGO_NIVEL': (178, 183),
-    'NOVA_FUNCAO_ESCOLARIDADE': (183, 185),
+cod_sit = str(dados.get('SIT') or '').zfill(2)
+                dados['DENO_SIT'] = TRADUCAO_SIT.get(cod_sit, f'SIT {cod_sit}')

@@ -15,6 +15,7 @@ from mapeamentos import (
     TRADUCAO_PAIS,
     TRADUCAO_SIT,
     TRADUCAO_CARGO,
+    
 )
 
 def carregar_dicionario_inscricoes(fita, Pescad_InscUFMG):
@@ -174,6 +175,14 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                     # Mantemos o valor original para processar depois, ou None se vazio
                     dados[campo] = valor if valor else None
 
+             
+                # 2. CRIAÇÃO DO CAMPO CAT
+                gr_cargo = dados.get('GRCARGO')                
+                dados['CAT'] = 'Docente' if gr_cargo in ('060', '702', '705', '706', '707') else 'Tec-Administrativo'
+
+               
+               
+
                 # # 2. CRIAÇÃO DO CODCARGO (701 + 062 = 701062)
                 # # Pegamos direto do dicionário 'dados' preenchido acima
                 # v_gr = dados.get('GRCARGO')
@@ -201,13 +210,11 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                 dados['DENO_SIT'] = TRADUCAO_SIT.get(cod_sit, f'SIT {cod_sit}')
 
                 # 4. TRADUÇÃO DO CARGO
-                cod_cargo = str(dados.get('CODCARGO')or '').zfill(6
-                                                                  
-                                                                  )
+                cod_cargo = str(dados.get('CODCARGO')or '').zfill(6)
                 dados['DENOCARG']= TRADUCAO_CARGO.get(cod_cargo,f'DENOCARG{cod_cargo}')
 
                 # 5. MONTAGEM PARA O CSV
-                # Crucial: HEADER_TIPO_2 deve ter 'GRCARGO', 'CARGO' e 'CodCargo'
+                
                 try:
                     dados_ordenado = {campo: dados.get(campo) for campo in HEADER_TIPO_2}
                     lista_dados_funcionais.append(dados_ordenado)
