@@ -17,15 +17,17 @@ from mapeamentos import (
     TRADUCAO_CARGO,
     
 )
-import csv
+# import csv
 
-import csv
-#  formata a tabela desejada
-import csv
+# import csv
+# #  formata a tabela desejada
+# import csv
 
-import csv
+# import csv
 
-import csv
+# import csv
+
+
 
 def carregar_tabela_apoio(caminho_arquivo):
     traducao = {}
@@ -116,9 +118,10 @@ def extrair_tipo_0(fita, fita_espelho):
 # Agora essa função serve para TUDO
 # Mude estas linhas no topo do seu código:
 
-MAPA_CLASSES = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Classe.txt')
+MAPA_CLASSES = carregar_tabela_apoio(r'C:\Users\\Desktop\auto_fita_espelho\Tabela Classe.txt')
+
 MAPA_ESTADO_CIVIL = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Estado Civil.txt')
-# MAPA_ESCOLARIDADE = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Escolaridade.txt')
+# MAPA_ESCOLARIDADE = carregar_tabela_apoio(r'C:\Userswandersoncop\wandersoncop\Desktop\auto_fita_espelho\Tabela Escolaridade.txt')
 
 def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
     lista_dados_pessoais = []
@@ -306,12 +309,24 @@ def salvar_em_csv(lista_dados, nome_arquivo):
         escritor.writerows(lista_dados)
     print(f'Arquivo salvo: {nome_arquivo}')       
 
+import os
+
 # --- EXECUÇÃO ---
-diretorio = r'c:\Users\Wandersoncop\Desktop\auto_fita_espelho'
+
+# Identifica automaticamente se o PC é Wanderson, Wandersoncop ou qualquer outro
+diretorio = os.path.join(os.path.expanduser("~"), "Desktop", "auto_fita_espelho")
+
 arquivo = 'fita_espelho.txt'
 arquivo_insc = 'Pescad_InscUFMG.txt'
-mapa_insc = carregar_dicionario_inscricoes(diretorio,arquivo_insc)
+
+# Agora o código usa o diretório dinâmico para carregar os arquivos
+mapa_insc = carregar_dicionario_inscricoes(diretorio, arquivo_insc)
 caminho_completo = os.path.join(diretorio, arquivo)
+
+# Exemplo de como abrir a Tabela de Estado Civil usando o mesmo diretório
+# caminho_estado_civil = os.path.join(diretorio, 'Tabela Estado Civil.txt')
+
+print(f"Diretório detectado: {diretorio}")
 
 # --- PROCESSAMENTO ---
 dados_0 = extrair_tipo_0(diretorio, arquivo)
