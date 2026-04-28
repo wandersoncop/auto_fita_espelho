@@ -31,6 +31,9 @@ from mapeamentos import (
 
 def carregar_tabela_apoio(caminho_arquivo):
     traducao = {}
+    if not os.path.exists(caminho_arquivo):
+        print(f"ERRO: Arquivo não encontrado em: {caminho_arquivo}")
+        return traducao  # Retorna vazio se não achar o arquivo
     try:
         with open(caminho_arquivo, mode='r', encoding='latin-1') as f:
             conteudo = f.read().replace('"', '')
@@ -253,6 +256,7 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
 
                 # Montagem inicial da chave (Ex: M + 6 = M6)
                 chave_final = f"{cat_letra}{val_classe}"
+                
 
                 # Regra especial para o cargo 705 (Docentes específicos)
                 if gr_cargo == '705' and val_classe == '4' and primeiro_dig_ref != '4':
@@ -263,7 +267,12 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                 
                 # Realiza a tradução usando o MAPA_CLASSES carregado do CSV
                 # Se não encontrar no CSV, ele mostra a chave entre parênteses para você saber o que faltou
-                dados['DenoClasse'] = MAPA_CLASSES.get(chave_final,'')
+                #dados['DenoClasse'] = MAPA_CLASSES.get(chave_final,'')
+                # Isso vai te mostrar no CSV se o erro é 'Chave não encontrada' ou 'Dicionário Vazio'
+                if not MAPA_CLASSES:
+                    dados['DenoClasse'] = "ERRO: DICIONARIO VAZIO"
+                else:
+                    dados['DenoClasse'] = MAPA_CLASSES.get(chave_final, f"NAO LOCALIZADO: {chave_final}")
 
                 # 4. CRIAÇÃO DO CODCARGO (GRCARGO + CARGO)
                 v_gr = str(dados.get('GRCARGO', '')).zfill(3)
@@ -275,7 +284,7 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                 dados['NOME'] = mapa_nomes.get(matric_func, 'NOME NAO ENCONTRADO')
                 dados['InscUFMG'] = mapa_inscricoes.get(matric_func, '')
 
-                # 6. TRADUÇÃO DA SITUAÇÃO E CARGO (Dicionários fixos)
+                # 6. TRADUÇÃO DA SITUAÇÃO E CARGO 
                 cod_sit = str(dados.get('SIT') or '').zfill(2)
                 dados['DENO_SIT'] = TRADUCAO_SIT.get(cod_sit, f'SIT {cod_sit}')
                 
@@ -309,7 +318,7 @@ def salvar_em_csv(lista_dados, nome_arquivo):
         escritor.writerows(lista_dados)
     print(f'Arquivo salvo: {nome_arquivo}')       
 
-import os
+# import os
 
 # --- EXECUÇÃO ---
 
@@ -318,6 +327,8 @@ diretorio = os.path.join(os.path.expanduser("~"), "Desktop", "auto_fita_espelho"
 
 arquivo = 'fita_espelho.txt'
 arquivo_insc = 'Pescad_InscUFMG.txt'
+caminho_classe = os.path.join(diretorio, 'Tabela Classe.txt')
+MAPA_CLASSES = carregar_tabela_apoio(caminho_classe)
 
 # Agora o código usa o diretório dinâmico para carregar os arquivos
 mapa_insc = carregar_dicionario_inscricoes(diretorio, arquivo_insc)
