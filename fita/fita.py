@@ -121,9 +121,11 @@ def extrair_tipo_0(fita, fita_espelho):
 # Agora essa função serve para TUDO
 # Mude estas linhas no topo do seu código:
 
-MAPA_CLASSES = carregar_tabela_apoio(r'C:\Users\\Desktop\auto_fita_espelho\Tabela Classe.txt')
+MAPA_CLASSES = carregar_tabela_apoio(r'C:\Users\wanderson\Desktop\auto_fita_espelho\Tabela Classe.txt')
 
-MAPA_ESTADO_CIVIL = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Estado Civil.txt')
+MAPA_ESTADO_CIVIL = carregar_tabela_apoio(r'C:\Users\wanderson\Desktop\auto_fita_espelho\Tabela Estado Civil.txt')
+
+
 # MAPA_ESCOLARIDADE = carregar_tabela_apoio(r'C:\Userswandersoncop\wandersoncop\Desktop\auto_fita_espelho\Tabela Escolaridade.txt')
 
 def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
@@ -272,7 +274,7 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                 if not MAPA_CLASSES:
                     dados['DenoClasse'] = "ERRO: DICIONARIO VAZIO"
                 else:
-                    dados['DenoClasse'] = MAPA_CLASSES.get(chave_final, f"NAO LOCALIZADO: {chave_final}")
+                    dados['DenoClasse'] = MAPA_CLASSES.get(chave_final,'')
 
                 # 4. CRIAÇÃO DO CODCARGO (GRCARGO + CARGO)
                 v_gr = str(dados.get('GRCARGO', '')).zfill(3)
@@ -313,7 +315,7 @@ def salvar_em_csv(lista_dados, nome_arquivo):
         return
     colunas = lista_dados[0].keys()
     with open(nome_arquivo, 'w', newline='', encoding='latin-1') as f:
-        escritor = csv.DictWriter(f, fieldnames=colunas, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL,lineterminator='\n')
+        escritor = csv.DictWriter(f, fieldnames=colunas, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL,lineterminator='\r\n')
         escritor.writeheader()
         escritor.writerows(lista_dados)
     print(f'Arquivo salvo: {nome_arquivo}')       
@@ -327,6 +329,7 @@ diretorio = os.path.join(os.path.expanduser("~"), "Desktop", "auto_fita_espelho"
 
 arquivo = 'fita_espelho.txt'
 arquivo_insc = 'Pescad_InscUFMG.txt'
+
 caminho_classe = os.path.join(diretorio, 'Tabela Classe.txt')
 MAPA_CLASSES = carregar_tabela_apoio(caminho_classe)
 
