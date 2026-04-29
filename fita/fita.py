@@ -17,16 +17,47 @@ from mapeamentos import (
     TRADUCAO_CARGO,
     
 )
-# import csv
 
-# import csv
-# #  formata a tabela desejada
-# import csv
+import csv
+import os
 
-# import csv
+def carregar_mapa_unidades(caminho_arquivo):
+    print(f"\n>>> INICIANDO LEITURA DE: {caminho_arquivo}")
+    mapa = {}
+    try:
+        with open(caminho_arquivo, 'r', encoding='latin-1') as f:
+            # Lemos as linhas e limpamos as aspas duplas de tudo
+            linhas = f.readlines()
+            if not linhas:
+                print("ERRO: O arquivo está totalmente vazio.")
+                return mapa
 
-# import csv
+            # Processamos o cabeçalho manualmente para garantir que não haja erros
+            cabecalho = [col.strip().replace('"', '') for col in linhas[0].split(';')]
+            print(f">>> Colunas detectadas no arquivo: {cabecalho}")
 
+            for i, linha in enumerate(linhas[1:], 1):
+                valores = [val.strip().replace('"', '') for val in linha.split(';')]
+                
+                # Criamos o dicionário da linha
+                dados_linha = dict(zip(cabecalho, valores))
+                cod = dados_linha.get('CodUnid')
+
+                if cod:
+                    mapa[cod] = dados_linha
+                    
+                    # DIAGNÓSTICO FORÇADO NA PRIMEIRA LINHA ÚTIL
+                    if len(mapa) == 1:
+                        print("-" * 30)
+                        print(f"DEBUG - Primeira chave carregada: {repr(cod)}")
+                        print(f"DEBUG - Conteúdo da Unid: {repr(dados_linha.get('Unid'))}")
+                        print("-" * 30)
+
+        print(f"SUCESSO: {len(mapa)} unidades mapeadas.")
+    except Exception as e:
+        print(f"ERRO CRÍTICO: {e}")
+    
+    return mapa
 
 
 def carregar_tabela_apoio(caminho_arquivo):
@@ -121,9 +152,11 @@ def extrair_tipo_0(fita, fita_espelho):
 # Agora essa função serve para TUDO
 # Mude estas linhas no topo do seu código:
 
-MAPA_CLASSES = carregar_tabela_apoio(r'C:\Users\wanderson\Desktop\auto_fita_espelho\Tabela Classe.txt')
+MAPA_CLASSES = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Classe.txt')
 
-MAPA_ESTADO_CIVIL = carregar_tabela_apoio(r'C:\Users\wanderson\Desktop\auto_fita_espelho\Tabela Estado Civil.txt')
+MAPA_ESTADO_CIVIL = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Estado Civil.txt')
+
+
 
 
 # MAPA_ESCOLARIDADE = carregar_tabela_apoio(r'C:\Userswandersoncop\wandersoncop\Desktop\auto_fita_espelho\Tabela Escolaridade.txt')
@@ -220,95 +253,124 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
     lista_dados_funcionais = []
     valor_do_mes = header.get('mes_fita') or header.get('MES_FITA')
 
-     # 1. Extração do layout com FORMATAÇÃO DE DATA integrada
-    
-
-
-    
     with open(caminho_arquivo, 'r', encoding='latin-1') as f:
         for linha in f:
             # Verifica se a linha tem o tipo 2 na posição 17
             if len(linha) > 18 and linha[17] == '2':
                 dados = {'mes_fita': valor_do_mes}
-            # FORMATA OS CAMPO DE DATA
-               # --- 1. EXTRAÇÃO ÚNICA COM FORMATAÇÃO DE DATA ---
+                
+                # --- 1. EXTRAÇÃO DO LAYOUT ---
                 for campo, (inicio, fim) in LAYOUT_TIPO_2.items():
                     valor = linha[inicio:fim].strip()
-                    
                     if not valor:
                         dados[campo] = ""
                     elif campo in CAMPOS_DATA_TIPO_2:
-                        # Formata aqui e já salva no dicionário
                         dados[campo] = formatar_data(valor)
                     else:
                         dados[campo] = valor
 
-                   
-
-                # 2. CRIAÇÃO DO CAMPO CAT E IDENTIFICAÇÃO DA LETRA
+                # --- 2. CRIAÇÃO DO CAMPO CAT ---
                 gr_cargo = dados.get('GRCARGO', '')
                 cat_letra = 'M' if gr_cargo in ('060', '702', '705', '706', '707') else 'T'
                 dados['CAT'] = 'Docente' if cat_letra == 'M' else 'Tec-Administrativo'
 
-                # 3. CONCATENAÇÃO DA CHAVE E TRADUÇÃO DA CLASSE (DenoClasse)
-              
+                # --- 3. TRADUÇÃO DA CLASSE (DenoClasse) ---
                 val_classe = dados.get('CLASSE') or dados.get('CLAS') or ''
                 ref = dados.get('REF') or ''
                 primeiro_dig_ref = ref[0] if ref else ""
-
-                # Montagem inicial da chave (Ex: M + 6 = M6)
                 chave_final = f"{cat_letra}{val_classe}"
-                
 
-                # Regra especial para o cargo 705 (Docentes específicos)
                 if gr_cargo == '705' and val_classe == '4' and primeiro_dig_ref != '4':
                     chave_final = f"{cat_letra}{gr_cargo}{val_classe}{primeiro_dig_ref}"
 
-                # Salva a chave montada para conferência
                 dados['ChaveClass'] = chave_final
-                
-                # Realiza a tradução usando o MAPA_CLASSES carregado do CSV
-                # Se não encontrar no CSV, ele mostra a chave entre parênteses para você saber o que faltou
-                #dados['DenoClasse'] = MAPA_CLASSES.get(chave_final,'')
-                # Isso vai te mostrar no CSV se o erro é 'Chave não encontrada' ou 'Dicionário Vazio'
-                if not MAPA_CLASSES:
-                    dados['DenoClasse'] = "ERRO: DICIONARIO VAZIO"
-                else:
-                    dados['DenoClasse'] = MAPA_CLASSES.get(chave_final,'')
+                dados['DenoClasse'] = MAPA_CLASSES.get(chave_final, '') if MAPA_CLASSES else "ERRO: MAPA VAZIO"
 
-                # 4. CRIAÇÃO DO CODCARGO (GRCARGO + CARGO)
+                # --- 4. CODCARGO E TRADUÇÕES (SITUAÇÃO/CARGO) ---
                 v_gr = str(dados.get('GRCARGO', '')).zfill(3)
                 v_ca = str(dados.get('CARGO', '')).zfill(3)
                 dados['CodCargo'] = v_gr + v_ca
-
-                # 5. CORRESPONDÊNCIA (MATRICULA, NOME E INSCRIÇÃO)
-                matric_func = str(dados.get('MATRIC', '')).strip()
-                dados['NOME'] = mapa_nomes.get(matric_func, 'NOME NAO ENCONTRADO')
-                dados['InscUFMG'] = mapa_inscricoes.get(matric_func, '')
-
-                # 6. TRADUÇÃO DA SITUAÇÃO E CARGO 
+                
                 cod_sit = str(dados.get('SIT') or '').zfill(2)
                 dados['DENO_SIT'] = TRADUCAO_SIT.get(cod_sit, f'SIT {cod_sit}')
                 
                 cod_cargo_full = dados['CodCargo'].zfill(6)
                 dados['DENOCARG'] = TRADUCAO_CARGO.get(cod_cargo_full, f'DENOCARG {cod_cargo_full}')
 
-                # REGRA DO RT SE FOR '99' VIRA 'DE'
-                valor_rtrab = dados.get('RTRAB','').strip() # pega o valor bruto de RTRAB
-                if valor_rtrab == '99':
-                    dados['RT'] = 'DE'
-                else:
-                    dados['RT']= valor_rtrab
+                # --- 5. MATRICULA E NOME ---
+                matric_func = str(dados.get('MATRIC', '')).strip()
+                dados['NOME'] = mapa_nomes.get(matric_func, 'NOME NAO ENCONTRADO')
+                dados['InscUFMG'] = mapa_inscricoes.get(matric_func, '')
 
-                # 7. MONTAGEM FINAL PARA O CSV (Conforme a ordem do HEADER_TIPO_2)
+                # --- 6. REGRA DO RT ---
+                valor_rtrab = dados.get('RTRAB','').strip()
+                dados['RT'] = 'DE' if valor_rtrab == '99' else valor_rtrab
+
+                # --- 7. TRADUÇÃO DA UNIDADE DE LOTAÇÃO ---
+                uorg_lotacao = dados.get('NrUorgLotacao', '').strip()
+                unidade_lot_info = MAPA_UNIDADES.get(uorg_lotacao)
+
+                if isinstance(unidade_lot_info, dict):
+                    dados['UnidLotacao'] = unidade_lot_info.get('Unid', '')
+                    dados['DenoSetorLotacao'] = unidade_lot_info.get('DenoSetor', '')
+                else:
+                    dados['UnidLotacao'] = ''
+                    dados['DenoSetorLotacao'] = ''
+
+                # --- 8. DEFINIÇÃO DO CAMPO TEMFUNCAO ---
+                gr_exc = dados.get('GREXC','').strip()
+                sit    = dados.get('SIT','').strip()
+                fun    = dados.get('FUN','').strip()
+                dt_fim = dados.get('DtChefFim','').strip()
+
+                if (gr_exc == '00' and sit != '02' and fun != '' and 
+                    (dt_fim == '00000000' or dt_fim == '00/00/0000' or dt_fim == '') and 
+                    fun != 'ETG'):
+                    dados['TemFuncao'] = 'S'
+                else:
+                    dados['TemFuncao'] = 'N'
+
+                # --- 9. DEFINIÇÃO DO CAMPO FUNCSETOR ---
+                nov_fun_sigl = dados.get('NOVFUNCSIGLA','').strip()
+                nov_fun_unor = dados.get('NOVFUNCUNORG','').strip()
+                fun_unorg    = dados.get('FUNUNORG','').strip()
+
+                if nov_fun_sigl != '' and nov_fun_unor != '000000000':
+                    func_setor = nov_fun_unor
+                else:
+                    func_setor = fun_unorg
+                
+                dados['FuncSetor'] = func_setor
+
+                # --- 10. DEFINIÇÃO DO NrUorgExercicio (O QUE FALTAVA) ---
+                rj = dados.get('RJ', '').strip()
+
+                if (rj == "ETG" and func_setor != "000000000" and func_setor != "") or dados.get('TemFuncao') == "S":
+                    exercicio_final = func_setor
+                else:
+                    exercicio_final = uorg_lotacao
+
+                dados['NrUorgExercicio'] = exercicio_final
+
+                # --- 11. TRADUÇÃO DA UNIDADE DE EXERCÍCIO ---
+                unidade_ex_info = MAPA_UNIDADES.get(exercicio_final)
+
+                if isinstance(unidade_ex_info, dict):
+                    dados['UnidExercicio'] = unidade_ex_info.get('Unid', '')
+                    dados['DenoSetorExercicio'] = unidade_ex_info.get('DenoSetor', '')
+                else:
+                    dados['UnidExercicio'] = ''
+                    dados['DenoSetorExercicio'] = ''
+
+                # --- 12. MONTAGEM FINAL PARA O CSV ---
                 try:
-                    dados_ordenado = {campo: dados.get(campo) for campo in HEADER_TIPO_2}
+                    # Filtra apenas as colunas que estão no seu HEADER_TIPO_2 (mapeamentos.py)
+                    dados_ordenado = {campo: dados.get(campo, '') for campo in HEADER_TIPO_2}
                     lista_dados_funcionais.append(dados_ordenado)
                 except Exception as e:
-                    print(f"Erro de mapeamento no Header: {e}")
-                
-    return lista_dados_funcionais
+                    print(f"Erro ao organizar dados para o CSV: {e}")
 
+    return lista_dados_funcionais
 def salvar_em_csv(lista_dados, nome_arquivo):
     if not lista_dados:
         print(f'Aviso: Lista para {nome_arquivo} está vazia.')    
@@ -330,8 +392,11 @@ diretorio = os.path.join(os.path.expanduser("~"), "Desktop", "auto_fita_espelho"
 arquivo = 'fita_espelho.txt'
 arquivo_insc = 'Pescad_InscUFMG.txt'
 
-caminho_classe = os.path.join(diretorio, 'Tabela Classe.txt')
+caminho_classe = os.path.join(diretorio,'Tabela Classe.txt')
 MAPA_CLASSES = carregar_tabela_apoio(caminho_classe)
+
+caminho_unidade = os.path.join(diretorio,'Tabela Unidade Atual.txt')
+MAPA_UNIDADES = carregar_mapa_unidades(caminho_unidade)
 
 # Agora o código usa o diretório dinâmico para carregar os arquivos
 mapa_insc = carregar_dicionario_inscricoes(diretorio, arquivo_insc)
