@@ -153,9 +153,8 @@ def extrair_tipo_0(fita, fita_espelho):
 # Mude estas linhas no topo do seu código:
 
 MAPA_CLASSES = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Classe.txt')
-
 MAPA_ESTADO_CIVIL = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Estado Civil.txt')
-
+MAPA_MUNICIPIO = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Municipio.txt')
 
 
 
@@ -302,22 +301,26 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                 dados['NOME'] = mapa_nomes.get(matric_func, 'NOME NAO ENCONTRADO')
                 dados['InscUFMG'] = mapa_inscricoes.get(matric_func, '')
 
-                # --- 6. REGRA DO RT ---
+#---------------------------------------- 6. REGRA DO RT ---
                 valor_rtrab = dados.get('RTRAB','').strip()
                 dados['RT'] = 'DE' if valor_rtrab == '99' else valor_rtrab
 
-                # --- 7. TRADUÇÃO DA UNIDADE DE LOTAÇÃO ---
+#----------------------------------------7. TRADUÇÃO DA UNIDADE DE LOTAÇÃO ---
                 uorg_lotacao = dados.get('NrUorgLotacao', '').strip()
                 unidade_lot_info = MAPA_UNIDADES.get(uorg_lotacao)
 
                 if isinstance(unidade_lot_info, dict):
                     dados['UnidLotacao'] = unidade_lot_info.get('Unid', '')
                     dados['DenoSetorLotacao'] = unidade_lot_info.get('DenoSetor', '')
+                    dados['UorgPaiExercicio'] = unidade_lot_info.get('UorgPai','').strip()
+                    dados['NomeUorgPaiExercicio'] = unidade_lot_info.get('NomeUorgPai','').strip()
                 else:
                     dados['UnidLotacao'] = ''
                     dados['DenoSetorLotacao'] = ''
+                    dados['UorgPaiExercicio'] = ''
+                    dados['NomeUorgPaiExercicio'] = ''
 
-                # --- 8. DEFINIÇÃO DO CAMPO TEMFUNCAO ---
+#---------------------------------------- 8. DEFINIÇÃO DO CAMPO TEMFUNCAO ---
                 gr_exc = dados.get('GREXC','').strip()
                 sit    = dados.get('SIT','').strip()
                 fun    = dados.get('FUN','').strip()
@@ -330,7 +333,7 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                 else:
                     dados['TemFuncao'] = 'N'
 
-                # --- 9. DEFINIÇÃO DO CAMPO FUNCSETOR ---
+#------------------------------------------- 9. DEFINIÇÃO DO CAMPO FUNCSETOR ---
                 nov_fun_sigl = dados.get('NOVFUNCSIGLA','').strip()
                 nov_fun_unor = dados.get('NOVFUNCUNORG','').strip()
                 fun_unorg    = dados.get('FUNUNORG','').strip()
@@ -341,8 +344,8 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                     func_setor = fun_unorg
                 
                 dados['FuncSetor'] = func_setor
-
-                # --- 10. DEFINIÇÃO DO NrUorgExercicio (O QUE FALTAVA) ---
+                
+#----------------------------------------10. DEFINIÇÃO DO NrUorgExercicio ---
                 rj = dados.get('RJ', '').strip()
 
                 if (rj == "ETG" and func_setor != "000000000" and func_setor != "") or dados.get('TemFuncao') == "S":
@@ -352,7 +355,7 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
 
                 dados['NrUorgExercicio'] = exercicio_final
 
-                # --- 11. TRADUÇÃO DA UNIDADE DE EXERCÍCIO ---
+#---------------------------------------- 11. TRADUÇÃO DA UNIDADE DE EXERCÍCIO ---
                 unidade_ex_info = MAPA_UNIDADES.get(exercicio_final)
 
                 if isinstance(unidade_ex_info, dict):
@@ -362,7 +365,9 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                     dados['UnidExercicio'] = ''
                     dados['DenoSetorExercicio'] = ''
 
-                # --- 12. MONTAGEM FINAL PARA O CSV ---
+#---------------------------------------- 12. TRADUÇÃO DE MUNICIPIO ---       
+
+#---------------------------------------- 13. MONTAGEM FINAL PARA O CSV ---
                 try:
                     # Filtra apenas as colunas que estão no seu HEADER_TIPO_2 (mapeamentos.py)
                     dados_ordenado = {campo: dados.get(campo, '') for campo in HEADER_TIPO_2}
@@ -382,9 +387,9 @@ def salvar_em_csv(lista_dados, nome_arquivo):
         escritor.writerows(lista_dados)
     print(f'Arquivo salvo: {nome_arquivo}')       
 
-# import os
 
-# --- EXECUÇÃO ---
+
+# --------------------------------------- EXECUÇÃO ---
 
 # Identifica automaticamente se o PC é Wanderson, Wandersoncop ou qualquer outro
 diretorio = os.path.join(os.path.expanduser("~"), "Desktop", "auto_fita_espelho")
@@ -398,6 +403,9 @@ MAPA_CLASSES = carregar_tabela_apoio(caminho_classe)
 caminho_unidade = os.path.join(diretorio,'Tabela Unidade Atual.txt')
 MAPA_UNIDADES = carregar_mapa_unidades(caminho_unidade)
 
+caminho_municipio = os.path.join(diretorio,'Tabela Municipio.txt')
+MAPA_MUNICIPIO = carregar_tabela_apoio(caminho_municipio)
+
 # Agora o código usa o diretório dinâmico para carregar os arquivos
 mapa_insc = carregar_dicionario_inscricoes(diretorio, arquivo_insc)
 caminho_completo = os.path.join(diretorio, arquivo)
@@ -407,7 +415,7 @@ caminho_completo = os.path.join(diretorio, arquivo)
 
 print(f"Diretório detectado: {diretorio}")
 
-# --- PROCESSAMENTO ---
+# ------------------------------------ PROCESSAMENTO ---
 dados_0 = extrair_tipo_0(diretorio, arquivo)
 
 servidores_pessoais,mapa_nomes_aux = extrair_tipo_1(caminho_completo, dados_0,mapa_insc) 
@@ -416,7 +424,7 @@ salvar_em_csv(servidores_pessoais, os.path.join(diretorio, 'servidores_tipo1_pes
 servidores_funcionais = extrair_tipo_2(caminho_completo, dados_0,mapa_insc,mapa_nomes_aux)
 salvar_em_csv(servidores_funcionais, os.path.join(diretorio, 'servidores_tipo2_funcional.csv'))
 
-# --- RELATÓRIO FINAL ---
+# ------------------------------------- RELATÓRIO FINAL ---
 print("-" * 50)
 print(f"PROCESSAMENTO CONCLUÍDO")
 # len(servidores_pessoais) conta quantos itens existem na lista do Tipo 1

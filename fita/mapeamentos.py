@@ -265,8 +265,11 @@ HEADER_TIPO_2 = [
     'DenoSetorLotacao',#CAMPO CRIADO
     'NrUorgExercicio',#CAMPO CRIADO
     'UnidExercicio',#CAMPO CRIADO
-    'DenoSetorExercico',
+    'DenoSetorExercicio',
     'TemFuncao', # CAMPO CRIADO
+    'UorgPaiExercicio',
+    'NomeUorgPaiExercicio',
+    'MunicipioUORGExercicio',
     # 'DTOCUP',
     # 'DTSAIDA',
     'FUN',
@@ -429,6 +432,7 @@ CAMPOS_DATA_TIPO_2 = [
     'DTAPO',
     'DtChefInic',
     'DtChefFim',
+    'DLPUBLINGRORG',
 ]
 TRADUCAO_DENO_ESCOL = {
     
