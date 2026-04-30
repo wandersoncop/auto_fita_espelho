@@ -59,32 +59,32 @@ def carregar_mapa_unidades(caminho_arquivo):
     
     return mapa
 
-
-def carregar_tabela_apoio(caminho_arquivo):
-    traducao = {}
-    if not os.path.exists(caminho_arquivo):
+# a chave tem que estar na coluna 1
+def carregar_tabela_apoio(caminho_arquivo): # recebe o caminho do arquivo a ser lido
+    traducao = {} # guarda aqui como chave valor
+    if not os.path.exists(caminho_arquivo): # verifica se o caminho existe
         print(f"ERRO: Arquivo não encontrado em: {caminho_arquivo}")
         return traducao  # Retorna vazio se não achar o arquivo
     try:
-        with open(caminho_arquivo, mode='r', encoding='latin-1') as f:
-            conteudo = f.read().replace('"', '')
+        with open(caminho_arquivo, mode='r', encoding='latin-1') as f: # abre o arquivo em modo leitura
+            conteudo = f.read().replace('"', '') #remove as aspas
             linhas = conteudo.splitlines()
             
             for i, linha in enumerate(linhas):
-                if not linha.strip(): continue # Pula linhas vazias
+                if not linha.strip(): continue # Pula linhas vazias e remove espaços vazios
                 colunas = linha.split(';')
-                if len(colunas) >= 2:
-                    chave = colunas[0].strip()
+                if len(colunas) >= 2: #garante que tem ao menos 2 colunas
+                    chave = colunas[0].strip() # define que a chave será a primeira coluna
                     
                     # Pula cabeçalho se a primeira coluna for texto de identificação
-                    if i == 0 and chave.lower() in ['chaveclasse', 'cod', 'codigo', 'id', 'chave']:
+                    if i == 0: #and chave.lower() in ['chaveclasse', 'cod', 'codigo', 'id', 'chave']:
                         continue
                     
                     # Se tiver 4 colunas (Classe), pega a última. Senão, pega a segunda.
                     indice_desc = 3 if len(colunas) >= 4 else 1
                     
                     if chave:
-                        traducao[chave] = colunas[indice_desc].strip()
+                        traducao[chave] = colunas[indice_desc].strip() #salva o dicionario
         print(f"SUCESSO: {caminho_arquivo} carregado.")
     except FileNotFoundError:
         print(f"ERRO: Arquivo não encontrado em: {caminho_arquivo}")
@@ -106,6 +106,23 @@ def carregar_dicionario_inscricoes(fita, Pescad_InscUFMG):
     except Exception as e:
         print(f"Erro ao carregar arquivo de inscrições: {e}")
     return mapa_inscricoes
+
+def carregar_mapa_municipios(caminho_arquivo):
+    mapa = {}
+    try:
+        with open(caminho_arquivo, 'r', encoding='latin-1') as f:
+            import csv
+            # Lendo como dicionário para facilitar o acesso pelas colunas
+            leitor = csv.DictReader(f, delimiter=';')
+            for linha in leitor:
+                # Remove aspas extras se existirem e limpa espaços
+                cod = linha['CODMUNICIP'].replace('"', '').strip()
+                mapa[cod] = linha['DENOMUNIC'].replace('"', '').strip()
+        print(f"SUCESSO: {len(mapa)} municípios carregados.")
+    except Exception as e:
+        print(f"Erro ao carregar municípios: {e}")
+    return mapa
+
 
 
 
@@ -149,9 +166,9 @@ def extrair_tipo_0(fita, fita_espelho):
     return header
 
 # carrega as traduções da tabelas
-# Agora essa função serve para TUDO
-# Mude estas linhas no topo do seu código:
 
+# Mude estas linhas no topo do seu código:
+#-----------------------------------------------------------CHAMA AS TABELAS QUE TEM CHAVE NA 1 COLUNA
 MAPA_CLASSES = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Classe.txt')
 MAPA_ESTADO_CIVIL = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Estado Civil.txt')
 MAPA_MUNICIPIO = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Municipio.txt')
@@ -365,7 +382,23 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                     dados['UnidExercicio'] = ''
                     dados['DenoSetorExercicio'] = ''
 
-#---------------------------------------- 12. TRADUÇÃO DE MUNICIPIO ---       
+#---------------------------------------- 12. TRADUÇÃO DE MUNICIPIO --- 
+
+
+
+
+            # Pegamos o código que veio da fita (ex: '0241')
+            # SUBSTITUA 'CODMUNIC' pelo nome exato que está no seu LAYOUT_TIPO_2
+            cod_da_fita = dados.get('MunicipioUORGExercicio', '').strip() 
+
+            # Buscamos a tradução no mapa que carregamos do seu CSV
+            nome_municipio = MAPA_MUNICIPIOS.get(cod_da_fita)
+
+            if nome_municipio:
+                dados['DenoMunicip'] = nome_municipio
+            else:
+                # Se não encontrar, mantemos o código original ou aviso
+                dados['DenoMunicip'] = f"Não encontrado ({cod_da_fita})"
 
 #---------------------------------------- 13. MONTAGEM FINAL PARA O CSV ---
                 try:
@@ -400,12 +433,11 @@ arquivo_insc = 'Pescad_InscUFMG.txt'
 caminho_classe = os.path.join(diretorio,'Tabela Classe.txt')
 MAPA_CLASSES = carregar_tabela_apoio(caminho_classe)
 
-caminho_unidade = os.path.join(diretorio,'Tabela Unidade Atual.txt')
-MAPA_UNIDADES = carregar_mapa_unidades(caminho_unidade)
-
 caminho_municipio = os.path.join(diretorio,'Tabela Municipio.txt')
 MAPA_MUNICIPIO = carregar_tabela_apoio(caminho_municipio)
 
+caminho_unidade = os.path.join(diretorio,'Tabela Unidade Atual.txt')
+MAPA_UNIDADES = carregar_mapa_unidades(caminho_unidade)
 # Agora o código usa o diretório dinâmico para carregar os arquivos
 mapa_insc = carregar_dicionario_inscricoes(diretorio, arquivo_insc)
 caminho_completo = os.path.join(diretorio, arquivo)
@@ -432,5 +464,7 @@ print(f"Tipo 1 (Dados Pessoais): {len(servidores_pessoais)} registros extraídos
 # len(servidores_funcionais) conta quantos itens existem na lista do Tipo 2
 print(f"Tipo 2 (Dados Funcionais): {len(servidores_funcionais)} registros extraídos.")
 print("-" * 50)
+
+print(list(MAPA_MUNICIPIO.items())[:5])
 
 df = pd.DataFrame(servidores_pessoais)
