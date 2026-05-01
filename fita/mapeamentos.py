@@ -122,7 +122,7 @@ LAYOUT_TIPO_2 = {
     'NOVFUNCDTSAIDA': (200, 208),
     'NOVFUNCUNORG': (208, 217),
     'ATIVFUNC': (217, 221),
-    'NrUorgLotacao': (221, 230),   # ERA LOTAC
+    'NrUorgLotacao': (221, 230),   # ERA LOTAC E TAMBEM PODE SER LOCAL
     'DTLOTAC': (230, 238),
     'LOCALIZ': (238, 243),
     'SETOR': (243, 252),
@@ -265,11 +265,13 @@ HEADER_TIPO_2 = [
     'DenoSetorLotacao',#CAMPO CRIADO
     'NrUorgExercicio',#CAMPO CRIADO
     'UnidExercicio',#CAMPO CRIADO
-    'DenoSetorExercicio',
-    'TemFuncao', # CAMPO CRIADO
+    'DenoSetorExercicio',#CAMPO CRIADO
+    'MunicipioUORGExercicio',#CAMPO CRIADO
+    'EmailUORGExercicio',#CAMPO CRIADO
     'UorgPaiExercicio',
     'NomeUorgPaiExercicio',
-    'MunicipioUORGExercicio',
+    'TemFuncao', # CAMPO CRIADO
+   
     # 'DTOCUP',
     # 'DTSAIDA',
     'FUN',
@@ -296,6 +298,7 @@ HEADER_TIPO_2 = [
     # 'CONTA_PAGAMENTO',    
     'NOVFUNCUNORG',
     'ATIVFUNC',
+    'DENOATIV',
     'DTLOTAC',
     'LOCALIZ',
     'GROCINGRORG',
