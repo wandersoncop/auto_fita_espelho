@@ -1,2 +1,4 @@
-tbl_uorg_endereco = os.path.join(diretorio,'Tabela UORG Endereco.txt')
-TRADUCAO_EMAIL = carregar_tabela_apoio(tbl_uorg_endereco,col_chave=16,col_valor=13)
+                gr_exc = dados.get('GREXC','').strip()
+                sit    = dados.get('SIT','').strip()
+                fun    = dados.get('FUN','').strip()
+                dt_fim = dados.get('DtChefFim','').strip()

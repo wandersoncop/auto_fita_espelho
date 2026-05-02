@@ -159,10 +159,10 @@ LAYOUT_TIPO_2 = {
     'DLPUBLAPO': (412, 420),
     'APOSNUMPROC': (420, 435),
     'APOSANOPREV': (435, 439),
+    'APOSUORG': (440, 449),
 
 # DESCOMENTAR PAR COD FINAL    
     # 'APOSOPCAOINTEGRAL': (439, 440),
-    # 'APOSUORG': (440, 449),
     # 'ORGDEST': (486, 491),
     # 'DTLIBER': (491, 499),
     # 'ORGORIG': (499, 504),
@@ -180,7 +180,7 @@ LAYOUT_TIPO_2 = {
     # 'OB_LIVRO': (609, 617),
     # 'OB_FOLHA': (617, 623),
     # 'OB_REG': (623, 631),
-    # 'OBITO_DT': (631, 639),
+    'OBITO_DT': (631, 639),
     # 'INDEXCINSTIT': (639, 640),
     # 'DTEXCINSTIT': (640, 648),
     # 'VALIMTIPO': (648, 649),
@@ -263,31 +263,53 @@ HEADER_TIPO_2 = [
     'NrUorgLotacao', # NUMERO UORG LOTAÇÃO 'LOTAC'
     'UnidLotacao',
     'DenoSetorLotacao',#CAMPO CRIADO
-    'NrUorgExercicio',#CAMPO CRIADO
+    'NrUorgExercicio', #CAMPO CRIADO
     'UnidExercicio',#CAMPO CRIADO
     'DenoSetorExercicio',#CAMPO CRIADO
     'MunicipioUORGExercicio',#CAMPO CRIADO
     'EmailUORGExercicio',#CAMPO CRIADO
     'UorgPaiExercicio',
     'NomeUorgPaiExercicio',
-    'TemFuncao', # CAMPO CRIADO
-   
-    # 'DTOCUP',
-    # 'DTSAIDA',
+    'NrUorgLocalAP',
+    'DenoSetorLocalAP',
+    'EmailUORGExercicio', # CAMPO CRIADO
+    'DenoMunicipExercicio', # CAMPO CRIADO
+    'GREXC',
+    'DTINGRORG',
+    'DTINGRSP',
+    'DTEXC',
+    'DTAPO',
+    'OBITO_DT',   
     'FUN',
     'FUNCNIV',
     'DtChefInic',
     'DtChefFim',
+    'TemFuncao', # CAMPO CRIADO
+    'FuncSetor', # CAMPO CRIADO É O NrUorgExercicio
+    'UnidFunc',
+    'DenoSetorFunc',
+    'NOVFUNCESCOL',
+    'NOVFUNCOPCAO',
+    'ATIVFUNC',
+    'DENOATIV',
+    'GROCORAPO',
+    'OCORAPO',
+    'DenoAposent',
+    'GROCINGRORG',
+    'OCORINGRORG',
+    'DenoIngrgao',
+
+    
+###############################################
     'FUNCESCOL',
     'FUNCOPCAO',
     'DTCAD', 
+    'APOSUORG',
     'SUSPPAG',  
     'DTSUSP',    
     'FUNCUNORG',
     'NOVFUNCSIGLA',
     'NOVFUNCNIV',
-    'NOVFUNCESCOL',
-    'NOVFUNCOPCAO',
     'NOVFUNCDTING',
     'NOVFUNCDTSAIDA',
     # 'CTPS_NUMERO',    
@@ -295,27 +317,25 @@ HEADER_TIPO_2 = [
     # 'CTPS_UF',    
     # 'BANCO_PAGAMENTO',    
     # 'AGENCIA_PAGAMENTO',
-    # 'CONTA_PAGAMENTO',    
+    # 'CONTA_PAGAMENTO',
+    #  # 'DTOCUP',
+    # 'DTSAIDA',    
     'NOVFUNCUNORG',
-    'ATIVFUNC',
-    'DENOATIV',
     'DTLOTAC',
     'LOCALIZ',
-    'GROCINGRORG',
-    'OCORINGRORG',
-    'DTINGRORG',
+    
+    
     'DLINGRORG',
     'DLNUMINGRORG',
     'DLPUBLINGRORG',
     'GROCORINGRSP',
     'OCORINGRSP',
-    'DTINGRSP',
+    
     'DLINGRSP',
     'DLNUMINGRSP',
     'DLPUBLINGRSP',
-    'GREXC',
     'OCOREXC',
-    'DTEXC',
+    
     'DLEXC',
     'DLNUMEXC',
     'DLPUBLEXC',
@@ -327,16 +347,14 @@ HEADER_TIPO_2 = [
     'DLNUMAFAST',
 # DESCOMETAR PAR O COD FINAL
     # 'DLPUBLAFAST',
-    # 'GROCORAPO',
-    # 'OCORAPO',
-    # 'DTAPO',
+    
+    
     # 'DLAPO',
     # 'DLNUMAPO',
     # 'DLPUBLAPO',
     # 'APOSNUMPROC',
     # 'APOSANOPREV',
     # 'APOSOPCAOINTEGRAL',
-    # 'APOSUORG',
     # 'ORGDEST',
     # 'DTLIBER',
     # 'ORGORIG',
@@ -354,7 +372,7 @@ HEADER_TIPO_2 = [
     # 'OB_LIVRO',
     # 'OB_FOLHA',
     # 'OB_REG',
-    # 'OBITO_DT',
+    
     # 'INDEXCINSTIT',
     # 'DTEXCINSTIT',
     # 'VALIMTIPO',

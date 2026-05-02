@@ -97,6 +97,21 @@ def carregar_tabela_apoio(caminho_arquivo, col_chave=0, col_valor=1):
         
     return traducao
 
+def buscar_municipio_isolado(codigo_uorg, mapa_ponte, mapa_nomes_cidades):
+    if not codigo_uorg: 
+        return ""
+    
+    # Limpa e formata o código que veio da fita
+    chave = str(codigo_uorg).strip().zfill(9)
+    
+    # Busca o código do município na tabela de endereços
+    cod_mun = mapa_ponte.get(chave)
+    
+    if cod_mun:
+        cod_mun_limpo = str(cod_mun).replace('"', '').strip()
+        return mapa_nomes_cidades.get(cod_mun_limpo, f"Cod {cod_mun_limpo}")
+    
+    return ""
 
 def carregar_dicionario_inscricoes(fita, Pescad_InscUFMG):
     caminho = os.path.join(fita, Pescad_InscUFMG)
@@ -170,13 +185,7 @@ def extrair_tipo_0(fita, fita_espelho):
     print("AVISO: Linha Tipo 0 não encontrada no arquivo! Usando valores vazios.")
     return header
 
-# carrega as traduções da tabelas
 
-# Mude estas linhas no topo do seu código:
-#-----------------------------------------------------------CHAMA AS TABELAS QUE TEM CHAVE NA 1 COLUNA
-# MAPA_CLASSES = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Classe.txt')
-
-# MAPA_MUNICIPIO = carregar_tabela_apoio(r'C:\Users\wandersoncop\Desktop\auto_fita_espelho\Tabela Municipio.txt')
 
 
 
@@ -267,7 +276,32 @@ def calcular_escolaridade(dados):
     
     return ''
 
+def calcular_tem_funcao(dados):
+    # 1. Pegamos os valores e forçamos a limpeza de espaços
+    # Usamos o .get() com fallback para string vazia para evitar erros
+    gr  = str(dados.get('GREXC', '')).strip()
+    sit = str(dados.get('SIT', '')).strip()
+    fun = str(dados.get('FUN', '')).strip()
+    
+    # 2. O PONTO CRÍTICO: 
+    # Vamos capturar a data de qualquer campo que comece com 'DtChefFim'
+    # Isso protege caso haja algum caractere invisível no nome da chave
+    dt_fim = ""
+    for chave, valor in dados.items():
+        if 'DtChefFim' in chave:
+            dt_fim = str(valor).strip()
+            break
 
+    # 3. A Lógica (Exatamente como você disse que já está no código)
+    c1 = (gr == '00' or gr == '0')
+    c2 = (sit != '02')
+    c3 = (fun != '' and fun != 'ETG')
+    c4 = (dt_fim == '00000000' or dt_fim == '00/00/0000' or dt_fim == '')
+
+    if c1 and c2 and c3 and c4:
+        return 'S'
+    
+    return 'N'
 
  
 
@@ -345,18 +379,9 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                     dados['NomeUorgPaiExercicio'] = ''
 
 #---------------------------------------- 8. DEFINIÇÃO DO CAMPO TEMFUNCAO ---
-                gr_exc = dados.get('GREXC','').strip()
-                sit    = dados.get('SIT','').strip()
-                fun    = dados.get('FUN','').strip()
-                dt_fim = dados.get('DtChefFim','').strip()
-
-                if (gr_exc == '00' and sit != '02' and fun != '' and 
-                    (dt_fim == '00000000' or dt_fim == '00/00/0000' or dt_fim == '') and 
-                    fun != 'ETG'):
-                    dados['TemFuncao'] = 'S'
-                else:
-                    dados['TemFuncao'] = 'N'
-
+              #---------------------------------------- 8. DEFINIÇÃO DO CAMPO TEMFUNCAO ---
+            # --- 8. DEFINIÇÃO DO CAMPO TEMFUNCAO (CHAMADA ISOLADA) ---
+                dados['TemFuncao'] = calcular_tem_funcao(dados)
 #------------------------------------------- 9. DEFINIÇÃO DO CAMPO FUNCSETOR ---
                 nov_fun_sigl = dados.get('NOVFUNCSIGLA','').strip()
                 nov_fun_unor = dados.get('NOVFUNCUNORG','').strip()
@@ -378,6 +403,7 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                     exercicio_final = uorg_lotacao
 
                 dados['NrUorgExercicio'] = exercicio_final
+                
 
 #---------------------------------------- 11. TRADUÇÃO DA UNIDADE DE EXERCÍCIO ---
                 unidade_ex_info = MAPA_UNIDADES.get(exercicio_final)
@@ -385,24 +411,14 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                 if isinstance(unidade_ex_info, dict):
                     dados['UnidExercicio'] = unidade_ex_info.get('Unid', '')
                     dados['DenoSetorExercicio'] = unidade_ex_info.get('DenoSetor', '')
+                    dados['UnidFunc'] = unidade_ex_info.get('Unid', '')
+                    dados['DenoSetorFunc'] = unidade_ex_info.get('DenoSetor', '')
                 else:
                     dados['UnidExercicio'] = ''
                     dados['DenoSetorExercicio'] = ''
+                    dados['UnidFunc'] =''
+                    dados['DenoSetorFunc'] = ''
 
-#---------------------------------------- 12. TRADUÇÃO DE MUNICIPIO --- 
-
-            # Pegamos o código que veio da fita (ex: '0241')
-            # SUBSTITUA 'CODMUNIC' pelo nome exato que está no seu LAYOUT_TIPO_2
-            # cod_da_fita = dados.get('MunicipioUORGExercicio', '').strip() 
-
-            # # Buscamos a tradução no mapa que carregamos do seu CSV
-            # nome_municipio = MAPA_MUNICIPIOS.get(cod_da_fita)
-
-            # if nome_municipio:
-            #     dados['DenoMunicip'] = nome_municipio
-            # else:
-            #     # Se não encontrar, mantemos o código original ou aviso
-            #     dados['DenoMunicip'] = f"Não encontrado ({cod_da_fita})"
 
 #---------------------------------------- 12. TRADUÇÃO DE DENOATIV --- 
 
@@ -412,6 +428,16 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
 
             # Tradução de email uorg
                 dados['EmailUORGExercicio'] = TRADUCAO_EMAIL.get(str(dados.get('NrUorgLotacao')).zfill(9), '')
+            
+            # Tradução de NrUorgLocalAP
+                dados['NrUorgLocalAP'] = TRADUCAO_LOCAL_AP.get(str(dados.get('MATRIC')).zfill(7), '')
+                dados['DenoSetorLocalAP'] = TRADUCAO_DENO_LOCAL_AP.get(str(dados.get('MATRIC')).zfill(7), '')
+
+  # Tradução de municipio
+                # Aqui usamos a variável 'exercicio_final' que você já criou no seu passo 10
+                dados['MunicipioUORGExercicio'] = buscar_municipio_isolado(exercicio_final, MAPA_PONTE_MUN, MAPA_MUNICIPIO)
+
+
 
 #---------------------------------------- 13. MONTAGEM FINAL PARA O CSV ---
                 try:
@@ -422,6 +448,7 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                     print(f"Erro ao organizar dados para o CSV: {e}")
 
     return lista_dados_funcionais
+
 def salvar_em_csv(lista_dados, nome_arquivo):
     if not lista_dados:
         print(f'Aviso: Lista para {nome_arquivo} está vazia.')    
@@ -455,11 +482,19 @@ TRADUCAO_DENOATIV = carregar_tabela_apoio(tbl_atividade,col_chave=2,col_valor=3)
 tbl_uorg_endereco = os.path.join(diretorio,'Tabela UORG Endereco.txt')
 TRADUCAO_EMAIL = carregar_tabela_apoio(tbl_uorg_endereco,col_chave=16,col_valor=13)
 
+local_ap = os.path.join(diretorio,'Tabela Local Aposentadoria.txt')
+TRADUCAO_LOCAL_AP = carregar_tabela_apoio(local_ap,col_chave=0,col_valor=1)
+
+deno_local_ap = os.path.join(diretorio,'Tabela Local Aposentadoria.txt')
+TRADUCAO_DENO_LOCAL_AP = carregar_tabela_apoio(deno_local_ap,col_chave=0,col_valor=2)
+
 
 
 
 caminho_municipio = os.path.join(diretorio,'Tabela Municipio.txt')
 MAPA_MUNICIPIO = carregar_tabela_apoio(caminho_municipio)
+caminho_endereco = os.path.join(diretorio, 'Tabela UORG Endereco.txt')
+MAPA_PONTE_MUN = carregar_tabela_apoio(caminho_endereco, col_chave=16, col_valor=3)
 
 caminho_unidade = os.path.join(diretorio,'Tabela Unidade Atual.txt')
 MAPA_UNIDADES = carregar_mapa_unidades(caminho_unidade)
