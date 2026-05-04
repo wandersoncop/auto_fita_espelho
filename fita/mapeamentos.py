@@ -90,9 +90,9 @@ LAYOUT_TIPO_2 = {
     # 'CTPS_NUMERO': (25, 31),
     # 'CTPS_SERIE': (31, 36),
     # 'CTPS_UF': (36, 38),
-    # 'BANCO_PAGAMENTO': (38, 41),
-    # 'AGENCIA_PAGAMENTO': (41, 47),
-    # 'CONTA_PAGAMENTO': (47, 60),
+    'BANCO_PAGAMENTO': (38, 41),
+    'AGENCIA_PAGAMENTO': (41, 47),
+    'CONTA_PAGAMENTO': (47, 60),
     'RTRAB': (90, 92),
     'ANUE': (92, 94),
     'DTCAD': (94, 102),
@@ -160,66 +160,64 @@ LAYOUT_TIPO_2 = {
     'APOSNUMPROC': (420, 435),
     'APOSANOPREV': (435, 439),
     'APOSUORG': (440, 449),
-
-# DESCOMENTAR PAR COD FINAL    
-    # 'APOSOPCAOINTEGRAL': (439, 440),
-    # 'ORGDEST': (486, 491),
-    # 'DTLIBER': (491, 499),
-    # 'ORGORIG': (499, 504),
-    # 'ORGANT': (504, 509),
-    # 'MATRICANT': (509, 516),
-    # 'ORGEXTMOD': (516, 521),
-    # 'MATRICSERVEXT': (521, 528),
-    # 'ORGATUAL': (528, 533),
-    # 'MATRICATUAL': (533, 540),
-    # 'MUDUPAGCOD': (540, 549),
-    # 'MUDUPAGDTLIB': (549, 557),
-    # 'MUDUPAGMOTIV': (557, 558),
-    # 'INDPAGSERV': (558, 559),
-    # 'OB_CART': (559, 609),
-    # 'OB_LIVRO': (609, 617),
-    # 'OB_FOLHA': (617, 623),
-    # 'OB_REG': (623, 631),
+    'AP_OP_INTG': (439, 440),
+    'ORGDEST': (486, 491),
+    'DTLIBER': (491, 499),
+    'ORGORIGEM': (499, 504),
+    'ORGANT': (504, 509),
+    'MATRICANT': (509, 516),
+    'ORGEXTMOD': (516, 521),
+    'MATRICSERVEXT': (521, 528),
+    'ORGATUAL': (528, 533),
+    'MATRIC_ATUAL': (533, 540),
+    'MUDUPAGCOD': (540, 549),
+    'MUDUPAGDTLIB': (549, 557),
+    'MUDUPAGMOTI': (557, 558),
+    'I_PAGSERV': (558, 559),
+    'OBITOCART': (559, 609),
+    'OBITOLIVRO': (609, 617),
+    'OBITOFOLHA': (617, 623),
+    'OBITOREG': (623, 631),
     'OBITO_DT': (631, 639),
-    # 'INDEXCINSTIT': (639, 640),
-    # 'DTEXCINSTIT': (640, 648),
-    # 'VALIMTIPO': (648, 649),
-    # 'VALIMDTINIC': (649, 657),
-    # 'VALIMDTFIM': (657, 665),
-    # 'RX': (665, 666),
-    # 'ORGREQ': (666, 671),
-    # 'CODVAGA': (671, 678),
-    # 'ANUEMES': (678, 680),
-    # 'RXPERC': (680, 685),
-    # 'GROCOREVERSAOATIV': (717, 719),
-    # 'OCORREVERSAOATIV': (719, 722),
+    'I_EXCINSTI': (639, 640),
+    'DTEXCINSTIT': (640, 648),
+    'VALIMTIPO': (648, 649),
+    'VALIMDTINIC': (649, 657),
+    'VALIMDTFIM': (657, 665),
+    'RX': (665, 666),
+    'ORGREQ': (666, 671),
+    'CODVAGA': (671, 678),
+    'ANUEMES': (678, 680),
+    'RXPERC': (680, 685),
+    'GOCORREVAT': (717, 719),
+    'OCREVERATI': (719, 722),
     # 'DTREVERSAOATIV': (722, 730),
     # 'REVERSAO_CODIGO': (714, 722),
-    # 'DT_REVERSAO': (700, 708),
+    'DTREVERS': (700, 708),
     # 'REVERSAO_DIPLOMA_DATA_PUB': (722, 730), 
     # 'REVERSAO_DIPLOMA_CODIGO': (724, 726),
     # 'REVERSAO_DIPLOMA_NUMERO': (731, 749),    
-    # 'I_CARGO': (749, 750), 
-    # 'I_FUNCAO': (750, 751),              # 1º S - Deu certo!
-    # 'I_SALARIO_FAMILIA': (751, 752),     # 2º S
-    # 'I_ANUENIO': (752, 753), # 3º S
-    # 'I_FGTS': (753, 754),               # 4º S
-    # 'I_PSS': (754, 755),        # 5º S
-    # 'I_IR': (755, 756),               # 6º S
-    # 'I_MARGEM_CONSIG': (756, 757), # 7º S
-    # 'I_SINDICAL': (757, 758),   # 8º S
-    # 'I_ADIANTAMENTO_13': (758, 759),    # 9º S
-    # 'I_ABATE_TETO': (759, 760),         # 10º S
-    # 'I_13_SAL': (760, 761),         # 11º S
-    # 'I_PSS_6': (761, 762),     # 12º S
-    # 'I_FERIAS': (762, 763),             # 13º S
-    # 'I_PENSAO': (763, 764),             # 14º S
-    # 'I_BENEFICIOS': (764, 765),                # 15º S
-    # 'I_IPMF_CPMF': (765, 766),                 # 16º S
-    # 'I_RAIS': (766, 767),                      # 17º S
-    # 'I_DIF_URV': (767, 768),                   # 18º S
-    # 'I_ADIANTAMENTO': (768, 769),              # 19º S
-    # 'I_PASEP': (769, 770)                      # 20º S
+    'I_CARGO': (749, 750), 
+    'I_FUNCAO': (750, 751),              # 1º S - Deu certo!
+    'I_SALARIO_FAMILIA': (751, 752),     # 2º S
+    'I_ANUENIO': (752, 753), # 3º S
+    'I_FGTS': (753, 754),               # 4º S
+    'I_PSS': (754, 755),        # 5º S
+    'I_IR': (755, 756),               # 6º S
+    'I_MARGEM_CONSIG': (756, 757), # 7º S
+    'I_SINDICAL': (757, 758),   # 8º S
+    'I_ADIANTAMENTO_13': (758, 759),    # 9º S
+    'I_ABATE_TETO': (759, 760),         # 10º S
+    'I_13_SAL': (760, 761),         # 11º S
+    'I_PSS_6': (761, 762),     # 12º S
+    'I_FERIAS': (762, 763),             # 13º S
+    'I_PENSAO': (763, 764),             # 14º S
+    'I_BENEFICIOS': (764, 765),                # 15º S
+    'I_IPMF_CPMF': (765, 766),                 # 16º S
+    'I_RAIS': (766, 767),                      # 17º S
+    'I_DIF_URV': (767, 768),                   # 18º S
+    'I_ADIANTAMENTO': (768, 769),              # 19º S
+    'I_PASEP': (769, 770)                      # 20º S
 #---------------------------------------------------------------------------------------------------
     # 'POSSE_GRUPO_CODIGO': (679, 681),
     # 'POSSE_OCORRENCIA': (681, 684),
@@ -271,9 +269,7 @@ HEADER_TIPO_2 = [
     'UorgPaiExercicio',
     'NomeUorgPaiExercicio',
     'NrUorgLocalAP',
-    'DenoSetorLocalAP',
-    'EmailUORGExercicio', # CAMPO CRIADO
-    'DenoMunicipExercicio', # CAMPO CRIADO
+    'DenoSetorLocalAP',   
     'GREXC',
     'DTINGRORG',
     'DTINGRSP',
@@ -312,12 +308,10 @@ HEADER_TIPO_2 = [
     'NOVFUNCNIV',
     'NOVFUNCDTING',
     'NOVFUNCDTSAIDA',
-    # 'CTPS_NUMERO',    
-    # 'CTPS_SERIE',   
-    # 'CTPS_UF',    
-    # 'BANCO_PAGAMENTO',    
-    # 'AGENCIA_PAGAMENTO',
-    # 'CONTA_PAGAMENTO',
+        
+   
+    
+   
     #  # 'DTOCUP',
     # 'DTSAIDA',    
     'NOVFUNCUNORG',
@@ -354,64 +348,73 @@ HEADER_TIPO_2 = [
     # 'DLPUBLAPO',
     # 'APOSNUMPROC',
     # 'APOSANOPREV',
-    # 'APOSOPCAOINTEGRAL',
-    # 'ORGDEST',
-    # 'DTLIBER',
-    # 'ORGORIG',
-    # 'ORGANT',
-    # 'MATRICANT',
-    # 'ORGEXTMOD',
-    # 'MATRICSERVEXT',
-    # 'ORGATUAL',
-    # 'MATRICATUAL',
-    # 'MUDUPAGCOD',
-    # 'MUDUPAGDTLIB',
-    # 'MUDUPAGMOTIV',
-    # 'INDPAGSERV',
-    # 'OB_CART',
-    # 'OB_LIVRO',
-    # 'OB_FOLHA',
-    # 'OB_REG',
     
-    # 'INDEXCINSTIT',
-    # 'DTEXCINSTIT',
-    # 'VALIMTIPO',
-    # 'VALIMDTINIC',
-    # 'VALIMDTFIM',
-    # 'RX',
-    # 'ORGREQ',
-    # 'CODVAGA',
-    # 'ANUEMES',
-    # 'RXPERC',
-    # 'GROCOREVERSAOATIV',
-    # 'OCORREVERSAOATIV',
+    'CTPS_NUMERO',    
+    'CTPS_SERIE',   
+    'CTPS_UF',
+    'BANCO_PAGAMENTO'
+    'AGENCIA_PAGAMENTO',
+    'CONTA_PAGAMENTO'
+    'AP_OP_INTG',
+    'APOSUORG'
+    'ORGDEST',
+    'DTLIBER',
+    'ORGORIGEM',
+    'ORGANT',
+    'DenoOrgAnt'
+    'MATRICANT',
+    'ORGEXTMOD',
+    'MATRICSERVEXT',
+    'ORGATUAL',
+    'MATRIC_ATUAL',
+    'MUDUPAGCOD',
+    'MUDUPAGDTLIB',
+    'MUDUPAGMOTI',
+    'I_PAGSERV',
+    'OBITOCART',
+    'OBITOLIVRO',
+    'OBITOFOLHA',
+    'OBITOREG',    
+    'I_EXCINSTI',
+    'DTEXCINSTIT',
+    'VALIMTIPO',
+    'VALIMDTINIC',
+    'VALIMDTFIM',
+    'RX',
+    'ORGREQ',
+    'DenoOrgrequisitante',
+    'CODVAGA',
+    'ANUEMES',
+    'RXPERC',
+    'GOCORREVAT',
+    'OCREVERATI',
     # 'DTREVERSAOATIV',
     # 'REVERSAO_CODIGO',
-    # 'DT_REVERSAO',
+    'DTREVERS',
     # 'REVERSAO_DIPLOMA_CODIGO',
     # 'REVERSAO_DIPLOMA_DATA_PUB',
     # 'REVERSAO_DIPLOMA_NUMERO',    
-    # 'I_CARGO',
-    # 'I_FUNCAO',
-    # 'I_SALARIO_FAMILIA',
-    # 'I_ANUENIO',
-    # 'I_FGTS',    
-    # 'I_PSS',
-    # 'I_IR',
-    # 'I_MARGEM_CONSIG',
-    # 'I_SINDICAL',
-    # 'I_ADIANTAMENTO_13',
-    # 'I_ABATE_TETO',
-    # 'I_13_SAL',
-    # 'I_PSS_6',
-    # 'I_FERIAS',
-    # 'I_PENSAO',    
-    # 'I_BENEFICIOS',
-    # 'I_IPMF_CPMF',    
-    # 'I_RAIS',
-    # 'I_DIF_URV',
-    # 'I_ADIANTAMENTO',
-    # 'I_PASEP'
+    'I_CARGO',
+    'I_FUNCAO',
+    'I_SALARIO_FAMILIA',
+    'I_ANUENIO',
+    'I_FGTS',    
+    'I_PSS',
+    'I_IR',
+    'I_MARGEM_CONSIG',
+    'I_SINDICAL',
+    'I_ADIANTAMENTO_13',
+    'I_ABATE_TETO',
+    'I_13_SAL',
+    'I_PSS_6',
+    'I_FERIAS',
+    'I_PENSAO',    
+    'I_BENEFICIOS',
+    'I_IPMF_CPMF',    
+    'I_RAIS',
+    'I_DIF_URV',
+    'I_ADIANTAMENTO',
+    'I_PASEP'
 #---------------------------------------------------------------------    
     # 'TIPO_REGISTRO',
 ]
@@ -423,6 +426,7 @@ CAMPOS_DATA_TIPO_1 = [
     'DT_EXP'
 ]
 CAMPOS_DATA_TIPO_2 = [
+    'DTEXCINSTIT',
     'DTCAD',
     # 'DTOCUP',
     # 'DTSAIDA',
@@ -432,14 +436,14 @@ CAMPOS_DATA_TIPO_2 = [
     'DTEXC',
     'DTAFASTINIC',
     'DTAFASTFIM',
-    'DTLIBER',
+    # 'DTLIBER',
     'OBITO_DT',
     'DATA_INGRESSO_FUNCAO_ANTERIOR',
     'FUNCDTSAIDA',
     'FUNCDTING',  
     'DLPUBLAPO' 
     'REVERSAO_DIPLOMA_DATA_PUB',
-    'DT_REVERSAO',
+    'DTREVERS',
     'POSSE_DIPLOMA_DATA',
     'POSSE_DATA',
     'INATIVIDADE_DATA',
@@ -449,11 +453,13 @@ CAMPOS_DATA_TIPO_2 = [
     'VALIMDTINIC',
     'VALIMDTFIM',
     'DTREVERSAOATIV',
-    'DT_REVERSAO',
+    'DTREVERS',
     'DTAPO',
     'DtChefInic',
     'DtChefFim',
     'DLPUBLINGRORG',
+    'VALIMDTINIC',
+    'VALIMDTFIM',
 ]
 TRADUCAO_DENO_ESCOL = {
     

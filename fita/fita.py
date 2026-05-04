@@ -143,9 +143,6 @@ def carregar_mapa_municipios(caminho_arquivo):
         print(f"Erro ao carregar municípios: {e}")
     return mapa
 
-
-
-
 def formatar_data(valor):
     if valor and len(valor) == 8 and valor.isdigit():
         return f'{valor[0:2]}/{valor[2:4]}/{valor[4:8]}'
@@ -184,10 +181,6 @@ def extrair_tipo_0(fita, fita_espelho):
                 
     print("AVISO: Linha Tipo 0 não encontrada no arquivo! Usando valores vazios.")
     return header
-
-
-
-
 
 # MAPA_ESCOLARIDADE = carregar_tabela_apoio(r'C:\Userswandersoncop\wandersoncop\Desktop\auto_fita_espelho\Tabela Escolaridade.txt')
 
