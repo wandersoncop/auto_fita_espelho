@@ -187,7 +187,7 @@ LAYOUT_TIPO_2 = {
     'RX': (665, 666),
     'OrgReq': (666, 671),
     'CodVaga': (671, 678),
-    'AnoMes': (678, 680),
+    'ANUEMES': (678, 680),
     'RxPerc': (680, 685),
     'GOcorreVat': (717, 719),
     'OcreverAti': (719, 722),
@@ -200,7 +200,7 @@ LAYOUT_TIPO_2 = {
     'I_CARG': (749, 750), 
     'I_FUNC': (750, 751),              # 1º S - Deu certo!
     'I_SalFam': (751, 752),     # 2º S
-    'Anuenio': (752, 753), # 3º S
+    'I_Anuenio': (752, 753), # 3º S
     'I_FGTS': (753, 754),               # 4º S
     'I_PSS': (754, 755),        # 5º S
     'I_IR': (755, 756),               # 6º S
@@ -216,7 +216,7 @@ LAYOUT_TIPO_2 = {
     'I_IPMF_CPMF': (765, 766),                 # 16º S
     'I_RAIS': (766, 767),                      # 17º S
     'I_DifUrv': (767, 768),                   # 18º S
-    'I_ADIANTAMENTO': (768, 769),              # 19º S
+    'I_Adiantam': (768, 769),              # 19º S
     'I_PASEP': (769, 770)                      # 20º S
 #---------------------------------------------------------------------------------------------------
     # 'POSSE_GRUPO_CODIGO': (679, 681),
@@ -316,13 +316,13 @@ HEADER_TIPO_2 = [
     'AGENCIA',
     'CONTA',
     'AP_OP_INTG',
-    'AposUorg'
+    'AposUorg',
     'OrgDest',
     'DtLiber',
     'OrgOrigem',
-    'DenoOrigem'
+    'DenoOrigem',
     'OrgAnt',
-    'DenoOrgAnt'
+    'DenoOrgAnt',
     'MatricAnt',
     'OrgExtMod',
     'MatServExt',
@@ -345,7 +345,7 @@ HEADER_TIPO_2 = [
     'OrgReq',
     'DenoOrgRequisitante',
     'CodVaga',
-    'AnoMes',
+    'ANUEMES',
     'RxPerc',
     'GOcorreVat',
     'OcreverAti',
@@ -369,10 +369,8 @@ HEADER_TIPO_2 = [
     'I_RAIS',
     'I_DifUrv',
     'I_Adiantam',
-    'I_PASEP'
-
-
-    'DtRevers',
+    'I_PASEP',
+    # 'DtRevers',
 
     
     # 'FUNCUNORG',
@@ -445,7 +443,7 @@ CAMPOS_DATA_TIPO_2 = [
     'INATIVIDADE_DATA',
     'DATA_EXCLUSAO_INSTITUIDOR',
     'DLPUBLINGRORG',
-    'VAlimDtIni'
+    'VAlimDtIni',
     'VAlimDtFim',
     'DTREVERSAOATIV',
     'DtApo',
