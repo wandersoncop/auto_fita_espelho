@@ -107,7 +107,7 @@ LAYOUT_TIPO_2 = {
     'REF': (126, 129),           
     'DtOcup': (129, 137),
     'DtSaida': (137, 145),
-    'Fun': (145, 148),
+    'FUN': (145, 148),
     'FunNiv': (148, 153),
     'DtChefInic': (156, 164),
     'DtChefFim': (164, 172),
@@ -276,7 +276,7 @@ HEADER_TIPO_2 = [
     'DtEx',
     'DtApo',
     'DtOb',   
-    'Fun',
+    'FUN',
     'FunNiv',
     'DtChefInic',
     'DtChefFim',
@@ -14998,12 +14998,3 @@ TRADUCAO_CARGO={
 
 
 
-# DICIONARIOS DE TRADUÇÃO DE CAMPOS
-# TRADUCAO_ESTADO_CIVIL = {
-#     '1': 'SOLTEIRO(A)',
-#     '2': 'CASADO(A)',
-#     '3': 'SEPARADO(A) JUDICIALMENTE',
-#     '4': 'DIVORCIADO',
-#     '5': 'VIUVO(A)',
-#     '6': 'NAO INFORMADO',
-# }

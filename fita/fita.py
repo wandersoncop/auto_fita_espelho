@@ -8,18 +8,16 @@ from mapeamentos import (
     HEADER_TIPO_2,
     CAMPOS_DATA_TIPO_1, 
     CAMPOS_DATA_TIPO_2, 
-    # TRADUCAO_ESTADO_CIVIL,
     TRADUCAO_DENO_ESCOL,
     TRADUCAO_TIT_FORM,
     TRADUCAO_ESCOLARIDADE,
     TRADUCAO_PAIS,
     TRADUCAO_SIT,
-    TRADUCAO_CARGO,
-    
+    TRADUCAO_CARGO,    
 )
 
-import csv
 import os
+import csv
 
 def carregar_mapa_unidades(caminho_arquivo):
     print(f"\n>>> INICIANDO LEITURA DE: {caminho_arquivo}")
@@ -39,7 +37,7 @@ def carregar_mapa_unidades(caminho_arquivo):
             for i, linha in enumerate(linhas[1:], 1):
                 valores = [val.strip().replace('"', '') for val in linha.split(';')]
                 
-                # Criamos o dicionário da linha
+                # Cria o dicionário da linha
                 dados_linha = dict(zip(cabecalho, valores))
                 cod = dados_linha.get('CodUnid')
 
@@ -276,16 +274,14 @@ def calcular_tem_funcao(dados):
     sit = str(dados.get('SIT', '')).strip()
     fun = str(dados.get('FUN', '')).strip()
     
-    # 2. O PONTO CRÍTICO: 
-    # Vamos capturar a data de qualquer campo que comece com 'DtChefFim'
-    # Isso protege caso haja algum caractere invisível no nome da chave
+
     dt_fim = ""
     for chave, valor in dados.items():
         if 'DtChefFim' in chave:
             dt_fim = str(valor).strip()
             break
 
-    # 3. A Lógica (Exatamente como você disse que já está no código)
+    
     c1 = (gr == '00' or gr == '0')
     c2 = (sit != '02')
     c3 = (fun != '' and fun != 'ETG')
@@ -372,13 +368,13 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                     dados['NomeUorgPaiExercicio'] = ''
 
 #---------------------------------------- 8. DEFINIÇÃO DO CAMPO TEMFUNCAO ---
-              #---------------------------------------- 8. DEFINIÇÃO DO CAMPO TEMFUNCAO ---
-            # --- 8. DEFINIÇÃO DO CAMPO TEMFUNCAO (CHAMADA ISOLADA) ---
+             
                 dados['TemFuncao'] = calcular_tem_funcao(dados)
+
 #------------------------------------------- 9. DEFINIÇÃO DO CAMPO FUNCSETOR ---
                 nov_fun_sigl = dados.get('NOVFUNCSIGLA','').strip()
                 nov_fun_unor = dados.get('NOVFUNCUNORG','').strip()
-                fun_unorg    = dados.get('FUNUNORG','').strip()
+                fun_unorg    = dados.get('FUNCUNORG','').strip()
 
                 if nov_fun_sigl != '' and nov_fun_unor != '000000000':
                     func_setor = nov_fun_unor
@@ -426,13 +422,13 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                 dados['NrUorgLocalAP'] = TRADUCAO_LOCAL_AP.get(str(dados.get('MATRIC')).zfill(7), '')
                 dados['DenoSetorLocalAP'] = TRADUCAO_DENO_LOCAL_AP.get(str(dados.get('MATRIC')).zfill(7), '')
 
-  # Tradução de municipio
+#------------------------------------- 14 Tradução de municipio
                 # Aqui usamos a variável 'exercicio_final' que você já criou no seu passo 10
                 dados['MunicipioUORGExercicio'] = buscar_municipio_isolado(exercicio_final, MAPA_PONTE_MUN, MAPA_MUNICIPIO)
 
 
 
-#---------------------------------------- 13. MONTAGEM FINAL PARA O CSV ---
+#---------------------------------------- 15 MONTAGEM FINAL PARA O CSV ---
                 try:
                     # Filtra apenas as colunas que estão no seu HEADER_TIPO_2 (mapeamentos.py)
                     dados_ordenado = {campo: dados.get(campo, '') for campo in HEADER_TIPO_2}
@@ -452,8 +448,6 @@ def salvar_em_csv(lista_dados, nome_arquivo):
         escritor.writeheader()
         escritor.writerows(lista_dados)
     print(f'Arquivo salvo: {nome_arquivo}')       
-
-
 
 # --------------------------------------- EXECUÇÃO e chamada das tabelas ---
 
@@ -508,6 +502,8 @@ salvar_em_csv(servidores_pessoais, os.path.join(diretorio, 'servidores_tipo1_pes
 
 servidores_funcionais = extrair_tipo_2(caminho_completo, dados_0,mapa_insc,mapa_nomes_aux)
 salvar_em_csv(servidores_funcionais, os.path.join(diretorio, 'servidores_tipo2_funcional.csv'))
+
+
 
 # ------------------------------------- RELATÓRIO FINAL ---
 print("-" * 50)
