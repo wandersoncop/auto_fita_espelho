@@ -408,6 +408,29 @@ HEADER_TIPO_2 = [
     # 'TIPO_REGISTRO',
 ]
 
+#TIPO 6
+LAYOUT_TIPO_6 = {
+    "LIXO": (0, 9),
+    "MATRIC": (9, 16),
+    "DIG": (16, 17),
+    "TREG": (17, 18),
+    "UF_UPAG": (18, 20),
+    "TotRegAfast": (20, 80),   
+}
+HEADER_TIPO_6 =[
+    "LIXO",
+    "MATRIC",
+    "DIG",
+    "TREG",
+    "UF_UPAG",
+    "TotRegAfast",   
+
+]
+
+
+
+
+
 # INSIRA AQUI TODOS OS CAMPOS QUE SÃO DATA
 CAMPOS_DATA_TIPO_1 = [
     'DT_NASC', 

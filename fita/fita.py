@@ -6,6 +6,8 @@ from mapeamentos import (
     HEADER_TIPO_1,
     LAYOUT_TIPO_2, 
     HEADER_TIPO_2,
+    LAYOUT_TIPO_6, 
+    HEADER_TIPO_6,
     CAMPOS_DATA_TIPO_1, 
     CAMPOS_DATA_TIPO_2, 
     TRADUCAO_DENO_ESCOL,
@@ -447,9 +449,29 @@ def salvar_em_csv(lista_dados, nome_arquivo):
         escritor = csv.DictWriter(f, fieldnames=colunas, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL,lineterminator='\r\n')
         escritor.writeheader()
         escritor.writerows(lista_dados)
-    print(f'Arquivo salvo: {nome_arquivo}')       
+    print(f'Arquivo salvo: {nome_arquivo}')  
 
-# --------------------------------------- EXECUÇÃO e chamada das tabelas ---
+
+def extrair_tipo_6(caminho_arquivo, header):
+    lista_tipo_6 = []
+    # Pegamos o mês do header (Tipo 0) para o dado não ficar 'solto' no tempo
+    valor_do_mes = header.get('mes_fita')
+    
+    with open(caminho_arquivo, 'r', encoding='latin-1') as f:
+        for linha in f:
+            # Verifica se a linha tem o tipo 6 na posição 17 (índice 17 é a 18ª posição)
+            if len(linha) > 18 and linha[17] == '6': 
+                dados = {'mes_fita': valor_do_mes}
+                
+                # Percorre o layout que você definiu no mapeamentos.py
+                for campo, (inicio, fim) in LAYOUT_TIPO_6.items():
+                    valor = linha[inicio:fim].strip()
+                    dados[campo] = valor
+                
+                # ADICIONA na lista (Isso faltou no seu!)
+                lista_tipo_6.append(dados)
+                
+    return lista_tipo_6 # RETORNA a lista preenchida---------------- EXECUÇÃO e chamada das tabelas ---
 
 # Identifica automaticamente se o PC é Wanderson, Wandersoncop ou qualquer outro
 diretorio = os.path.join(os.path.expanduser("~"), "Desktop", "auto_fita_espelho")
@@ -503,6 +525,8 @@ salvar_em_csv(servidores_pessoais, os.path.join(diretorio, 'servidores_tipo1_pes
 servidores_funcionais = extrair_tipo_2(caminho_completo, dados_0,mapa_insc,mapa_nomes_aux)
 salvar_em_csv(servidores_funcionais, os.path.join(diretorio, 'servidores_tipo2_funcional.csv'))
 
+servidores_tipo_6 = extrair_tipo_6(caminho_completo,dados_0)
+salvar_em_csv(servidores_tipo_6,os.path.join(diretorio,'servidores_tipo6_afastamento.txt'))
 
 
 # ------------------------------------- RELATÓRIO FINAL ---
@@ -512,6 +536,7 @@ print(f"PROCESSAMENTO CONCLUÍDO")
 print(f"Tipo 1 (Dados Pessoais): {len(servidores_pessoais)} registros extraídos.")
 # len(servidores_funcionais) conta quantos itens existem na lista do Tipo 2
 print(f"Tipo 2 (Dados Funcionais): {len(servidores_funcionais)} registros extraídos.")
+print(f"Tipo 6 (Afastamentos): {len(servidores_tipo_6)} registros extraídos.")
 print("-" * 50)
 
 print(list(MAPA_MUNICIPIO.items())[:5])
