@@ -408,21 +408,133 @@ HEADER_TIPO_2 = [
     # 'TIPO_REGISTRO',
 ]
 
-#TIPO 6
+
+
+#----------------------------TIPO 3
+
+LAYOUT_TIPO_3 = {
+    "Lixo1": (0, 9),
+    "Matric": (9, 16),
+    "Dig": (16, 17),
+    "TReg": (17, 18),
+    "Lixo2": (18, 20),
+    "RendDesc": (20, 21),
+    "CodRub": (21, 26),
+    "Seq": (26, 27),
+    "Valor": (27, 38),
+    "Prazo": (38, 41),
+    "Perc": (41, 46),
+    "Numer": (46, 49),
+    "Denom": (49, 52),
+    "AssCalc": (52, 54),
+    "Sist": (54, 55),
+    "NivSal": (55, 67),
+    "PANome": (67, 107),
+    "PABanco": (107, 110),
+    "PAAgen": (110, 116),
+    "PAConta": (116, 129),
+    "PAAnoMesRub": (129, 135),
+    "Lixo3": (135, 764),
+}                         
+   
+
+HEADER_TIPO_3 = [
+    "Lixo1",
+    "Matric",
+    "Dig",
+    "TReg",
+    "Lixo2",
+    "RendDesc",
+    "CodRub",
+    "Seq",
+    "Valor",
+    "Prazo",
+    "Perc",
+    "Numer",
+    "Denom",
+    "AssCalc",
+    "Sist",
+    "NivSal",
+    "PANome",
+    "PABanco",
+    "PAAgen",
+    "PAConta",
+    "PAAnoMesRub",
+    "Lixo3",
+]
+
+LAYOUT_TIPO_4 = {
+    "Lixo1": (0, 9),
+    "Matric": (9, 16),
+    "Dig": (16, 17),
+    "TReg": (17, 18),
+    "Lixo2": (18, 20),
+    "TotBruto": (20, 32),
+    "TotDesc": (32, 44),
+    "Liquido": (44, 56),
+    "TotReg": (56, 59),
+    "Lixo3": (59, 764),
+}
+HEADER_TIPO_4 = [
+    "Lixo1",
+    "Matric",
+    "Dig",
+    "TReg",
+    "Lixo2",
+    "TotBruto",
+    "TotDesc",
+    "Liquido",
+    "TotReg",
+    "Lixo3",
+]
+
+
+#----------------------------TIPO 5
+LAYOUT_TIPO_5 = {
+    "UnidPagadora": (0, 9),
+    "Siape": (9, 16),
+    "DigSiape": (16, 17),
+    "TipoReg": (17, 18),
+    "UfUpag": (18, 20),    
+    "CodAfast": (20,24),                             
+    "DenAfast" : (24,84),                             
+    "DtInicAfast":  (84,92),                          
+    "DtFimAfast": (92,100),                           
+    "DiplomAfast": (100,102),                            
+    "DtPublAfast":  (102,110),                         
+    "NumDiplomAfast": (110,129),                         
+    
+}
+HEADER_TIPO_5 =[
+    "UnidPagadora",
+    "Siape" ,
+    "DigSiape",
+    "TipoReg",
+    "UfUpag",    
+    "CodAfast",                             
+    "DenAfast" ,                             
+    "DtInicAfast",                          
+    "DtFimAfast",                           
+    "DiplomAfast",                            
+    "DtPublAfast",                         
+    "NumDiplomAfast",   
+
+]
+#----------------------------TIPO 6
 LAYOUT_TIPO_6 = {
-    "LIXO": (0, 9),
-    "MATRIC": (9, 16),
-    "DIG": (16, 17),
-    "TREG": (17, 18),
-    "UF_UPAG": (18, 20),
+    # "UnidPagadora": (0, 9),
+    "Siape": (9, 16),
+    "DigSiape": (16, 17),
+    "TipoReg": (17, 18),
+    # "UfUpag": (18, 20),
     "TotRegAfast": (20, 80),   
 }
 HEADER_TIPO_6 =[
-    "LIXO",
-    "MATRIC",
-    "DIG",
-    "TREG",
-    "UF_UPAG",
+    # "UnidPagadora",
+    "Siape",
+    "DigSiape",
+    "TipoReg",
+    # "UfUpag",
     "TotRegAfast",   
 
 ]
@@ -473,8 +585,17 @@ CAMPOS_DATA_TIPO_2 = [
     'DtChefInic',
     'DtChefFim',
     'DLPUBLINGRORG',
-    
-    
+]
+CAMPOS_DATA_TIPO_3 = [
+  
+]
+CAMPOS_DATA_TIPO_4 = [
+  
+]
+CAMPOS_DATA_TIPO_5 = [
+    'DtInicAfast',                          
+    'DtFimAfast',             
+    'DtPublAfast',
 ]
 TRADUCAO_DENO_ESCOL = {
     

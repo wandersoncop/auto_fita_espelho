@@ -2,24 +2,40 @@ import os
 import csv
 import pandas as pd
 from mapeamentos import (
-    LAYOUT_TIPO_1, 
+    LAYOUT_TIPO_1,
     HEADER_TIPO_1,
-    LAYOUT_TIPO_2, 
+    LAYOUT_TIPO_2,
     HEADER_TIPO_2,
-    LAYOUT_TIPO_6, 
+    LAYOUT_TIPO_3,
+    HEADER_TIPO_3,
+    LAYOUT_TIPO_4,
+    HEADER_TIPO_4,
+    LAYOUT_TIPO_5,
+    HEADER_TIPO_5,
+    LAYOUT_TIPO_6,
     HEADER_TIPO_6,
-    CAMPOS_DATA_TIPO_1, 
-    CAMPOS_DATA_TIPO_2, 
+    CAMPOS_DATA_TIPO_1,
+    CAMPOS_DATA_TIPO_2,
+    CAMPOS_DATA_TIPO_3,
+    CAMPOS_DATA_TIPO_4,
+    CAMPOS_DATA_TIPO_5,
     TRADUCAO_DENO_ESCOL,
     TRADUCAO_TIT_FORM,
     TRADUCAO_ESCOLARIDADE,
     TRADUCAO_PAIS,
     TRADUCAO_SIT,
-    TRADUCAO_CARGO,    
+    TRADUCAO_CARGO,
 )
+MAPA_CLASSES = {}
+MAPA_ESTADO_CIVIL = {}
+TRADUCAO_DENOATIV = {}
+TRADUCAO_EMAIL = {}
+TRADUCAO_LOCAL_AP = {}
+TRADUCAO_DENO_LOCAL_AP = {}
+MAPA_PONTE_MUN = {}
+MAPA_MUNICIPIO = {}
+MAPA_UNIDADES = {}
 
-import os
-import csv
 
 def carregar_mapa_unidades(caminho_arquivo):
     print(f"\n>>> INICIANDO LEITURA DE: {caminho_arquivo}")
@@ -182,8 +198,6 @@ def extrair_tipo_0(fita, fita_espelho):
     print("AVISO: Linha Tipo 0 não encontrada no arquivo! Usando valores vazios.")
     return header
 
-# MAPA_ESCOLARIDADE = carregar_tabela_apoio(r'C:\Userswandersoncop\wandersoncop\Desktop\auto_fita_espelho\Tabela Escolaridade.txt')
-
 def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
     lista_dados_pessoais = []
     # aqui vais guardar os nomes para usar em outras tabelas
@@ -247,55 +261,6 @@ def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
                 lista_dados_pessoais.append(dados_ordenado)
                 
     return lista_dados_pessoais, mapa_nomes
-
-def calcular_escolaridade(dados):
-    # Tenta pegar pelo nome novo ou pelo nome bruto do layout
-    cod_escol = str(dados.get('COD_ESCOL') or dados.get('ESCOL') or '').strip().zfill(2)
-    cod_tit = str(dados.get('COD_TITULACAO') or dados.get('TIT_FORM') or '').strip().zfill(2)
-
-    grau_escol = TRADUCAO_ESCOLARIDADE.get(cod_escol, -1)
-    grau_tit = TRADUCAO_ESCOLARIDADE.get(cod_tit, -1)
-
-    deno_escol = dados.get('DENO_ESCOL', '')
-    deno_tit = dados.get('DENO_TIT', '')
-
-    # Lógica de comparação
-    if grau_escol >= 0 and grau_tit >= 0:
-        return deno_escol if grau_escol >= grau_tit else deno_tit
-    if grau_tit >= 0:
-        return deno_tit
-    if grau_escol >= 0:
-        return deno_escol
-    
-    return ''
-
-def calcular_tem_funcao(dados):
-    # 1. Pegamos os valores e forçamos a limpeza de espaços
-    # Usamos o .get() com fallback para string vazia para evitar erros
-    gr  = str(dados.get('GREXC', '')).strip()
-    sit = str(dados.get('SIT', '')).strip()
-    fun = str(dados.get('FUN', '')).strip()
-    
-
-    dt_fim = ""
-    for chave, valor in dados.items():
-        if 'DtChefFim' in chave:
-            dt_fim = str(valor).strip()
-            break
-
-    
-    c1 = (gr == '00' or gr == '0')
-    c2 = (sit != '02')
-    c3 = (fun != '' and fun != 'ETG')
-    c4 = (dt_fim == '00000000' or dt_fim == '00/00/0000' or dt_fim == '')
-
-    if c1 and c2 and c3 and c4:
-        return 'S'
-    
-    return 'N'
-
- 
-
 
 def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
     lista_dados_funcionais = []
@@ -440,17 +405,78 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
 
     return lista_dados_funcionais
 
-def salvar_em_csv(lista_dados, nome_arquivo):
-    if not lista_dados:
-        print(f'Aviso: Lista para {nome_arquivo} está vazia.')    
-        return
-    colunas = lista_dados[0].keys()
-    with open(nome_arquivo, 'w', newline='', encoding='latin-1') as f:
-        escritor = csv.DictWriter(f, fieldnames=colunas, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL,lineterminator='\r\n')
-        escritor.writeheader()
-        escritor.writerows(lista_dados)
-    print(f'Arquivo salvo: {nome_arquivo}')  
+def extrair_tipo_3(caminho_arquivo, header):
+    lista_tipo_3 = [] 
+    valor_do_mes = header.get('mes_fita')
 
+    with open(caminho_arquivo, 'r', encoding='latin-1') as f:
+        for linha in f:
+            # Verifica se a linha tem tamanho suficiente e se é tipo 4
+            if len(linha) > 18 and linha[17] == '3':
+                dados = {'mes_fita': valor_do_mes} # Variável criada aqui
+                
+                # O loop de extração DEVE estar alinhado com o dicionário 'dados'
+                for campo, (inicio, fim) in LAYOUT_TIPO_3.items():
+                    valor = linha[inicio:fim].strip()
+                    if not valor:
+                        dados[campo] = None
+                    elif campo in CAMPOS_DATA_TIPO_3:
+                        dados[campo] = formatar_data(valor)
+                    else:
+                        dados[campo] = valor
+                
+    
+                lista_tipo_3.append(dados)
+                
+    return lista_tipo_3  
+
+def extrair_tipo_4(caminho_arquivo, header):
+    lista_tipo_4 = [] 
+    valor_do_mes = header.get('mes_fita')
+
+    with open(caminho_arquivo, 'r', encoding='latin-1') as f:
+        for linha in f:
+            # Verifica se a linha tem tamanho suficiente e se é tipo 4
+            if len(linha) > 18 and linha[17] == '4':
+                dados = {'mes_fita': valor_do_mes} # Variável criada aqui
+                
+                # O loop de extração DEVE estar alinhado com o dicionário 'dados'
+                for campo, (inicio, fim) in LAYOUT_TIPO_4.items():
+                    valor = linha[inicio:fim].strip()
+                    if not valor:
+                        dados[campo] = None
+                    elif campo in CAMPOS_DATA_TIPO_4:
+                        dados[campo] = formatar_data(valor)
+                    else:
+                        dados[campo] = valor
+                
+                # O append também deve estar dentro do IF, para salvar apenas o tipo 4
+                lista_tipo_4.append(dados)
+                
+    return lista_tipo_4                               
+
+def extrair_tipo_5(caminho_arquivo,header):
+    lista_tipo_5 = []
+    valor_do_mes = header.get('mes_fita')
+    
+    with open(caminho_arquivo,'r',encoding='latin-1') as f:
+        for linha in f:
+            if len(linha)>18 and linha[17]=='5':
+                dados = {'mes_fita':valor_do_mes}                
+              # 1. Extração do layout com FORMATAÇÃO DE DATA integrada  
+                for campo,(inicio,fim)in LAYOUT_TIPO_5.items():
+                    valor=linha[inicio:fim].strip()
+                    if not valor:
+                        dados[campo]=None
+                    elif campo in CAMPOS_DATA_TIPO_5:
+                        dados[campo]=formatar_data(valor)
+                    else:
+                        dados[campo] = valor
+                    
+                lista_tipo_5.append(dados) 
+
+                       
+    return lista_tipo_5  
 
 def extrair_tipo_6(caminho_arquivo, header):
     lista_tipo_6 = []
@@ -468,77 +494,64 @@ def extrair_tipo_6(caminho_arquivo, header):
                     valor = linha[inicio:fim].strip()
                     dados[campo] = valor
                 
-                # ADICIONA na lista (Isso faltou no seu!)
+                
                 lista_tipo_6.append(dados)
                 
-    return lista_tipo_6 # RETORNA a lista preenchida---------------- EXECUÇÃO e chamada das tabelas ---
+    return lista_tipo_6 
 
-# Identifica automaticamente se o PC é Wanderson, Wandersoncop ou qualquer outro
-diretorio = os.path.join(os.path.expanduser("~"), "Desktop", "auto_fita_espelho")
+def calcular_tem_funcao(dados):
+    # 1. Pegamos os valores e forçamos a limpeza de espaços
+    # Usamos o .get() com fallback para string vazia para evitar erros
+    gr  = str(dados.get('GREXC', '')).strip()
+    sit = str(dados.get('SIT', '')).strip()
+    fun = str(dados.get('FUN', '')).strip()
+    
 
-arquivo = 'fita_espelho.txt'
-arquivo_insc = 'Pescad_InscUFMG.txt'
+    dt_fim = ""
+    for chave, valor in dados.items():
+        if 'DtChefFim' in chave:
+            dt_fim = str(valor).strip()
+            break
 
-tbl_classe = os.path.join(diretorio,'Tabela Classe.txt')
-MAPA_CLASSES = carregar_tabela_apoio(tbl_classe, col_chave=0,col_valor=3)
+    
+    c1 = (gr == '00' or gr == '0')
+    c2 = (sit != '02')
+    c3 = (fun != '' and fun != 'ETG')
+    c4 = (dt_fim == '00000000' or dt_fim == '00/00/0000' or dt_fim == '')
 
-tbl_estado_civil = os.path.join(diretorio,'Tabela Estado Civil.txt')
-MAPA_ESTADO_CIVIL = carregar_tabela_apoio(tbl_estado_civil,col_chave=0,col_valor=1)
+    if c1 and c2 and c3 and c4:
+        return 'S'
+    
+    return 'N'
 
-tbl_atividade = os.path.join(diretorio,'Tabela Atividade.txt')
-TRADUCAO_DENOATIV = carregar_tabela_apoio(tbl_atividade,col_chave=2,col_valor=3)
+def calcular_escolaridade(dados):
+    # Tenta pegar pelo nome novo ou pelo nome bruto do layout
+    cod_escol = str(dados.get('COD_ESCOL') or dados.get('ESCOL') or '').strip().zfill(2)
+    cod_tit = str(dados.get('COD_TITULACAO') or dados.get('TIT_FORM') or '').strip().zfill(2)
 
-tbl_uorg_endereco = os.path.join(diretorio,'Tabela UORG Endereco.txt')
-TRADUCAO_EMAIL = carregar_tabela_apoio(tbl_uorg_endereco,col_chave=16,col_valor=13)
+    grau_escol = TRADUCAO_ESCOLARIDADE.get(cod_escol, -1)
+    grau_tit = TRADUCAO_ESCOLARIDADE.get(cod_tit, -1)
 
-local_ap = os.path.join(diretorio,'Tabela Local Aposentadoria.txt')
-TRADUCAO_LOCAL_AP = carregar_tabela_apoio(local_ap,col_chave=0,col_valor=1)
+    deno_escol = dados.get('DENO_ESCOL', '')
+    deno_tit = dados.get('DENO_TIT', '')
 
-deno_local_ap = os.path.join(diretorio,'Tabela Local Aposentadoria.txt')
-TRADUCAO_DENO_LOCAL_AP = carregar_tabela_apoio(deno_local_ap,col_chave=0,col_valor=2)
+    # Lógica de comparação
+    if grau_escol >= 0 and grau_tit >= 0:
+        return deno_escol if grau_escol >= grau_tit else deno_tit
+    if grau_tit >= 0:
+        return deno_tit
+    if grau_escol >= 0:
+        return deno_escol
+    
+    return ''
 
-
-
-
-caminho_municipio = os.path.join(diretorio,'Tabela Municipio.txt')
-MAPA_MUNICIPIO = carregar_tabela_apoio(caminho_municipio)
-caminho_endereco = os.path.join(diretorio, 'Tabela UORG Endereco.txt')
-MAPA_PONTE_MUN = carregar_tabela_apoio(caminho_endereco, col_chave=16, col_valor=3)
-
-caminho_unidade = os.path.join(diretorio,'Tabela Unidade Atual.txt')
-MAPA_UNIDADES = carregar_mapa_unidades(caminho_unidade)
-# Agora o código usa o diretório dinâmico para carregar os arquivos
-mapa_insc = carregar_dicionario_inscricoes(diretorio, arquivo_insc)
-caminho_completo = os.path.join(diretorio, arquivo)
-
-# Exemplo de como abrir a Tabela de Estado Civil usando o mesmo diretório
-# caminho_estado_civil = os.path.join(diretorio, 'Tabela Estado Civil.txt')
-
-print(f"Diretório detectado: {diretorio}")
-
-# ------------------------------------ PROCESSAMENTO ---
-dados_0 = extrair_tipo_0(diretorio, arquivo)
-
-servidores_pessoais,mapa_nomes_aux = extrair_tipo_1(caminho_completo, dados_0,mapa_insc) 
-salvar_em_csv(servidores_pessoais, os.path.join(diretorio, 'servidores_tipo1_pessoal.csv')) 
-
-servidores_funcionais = extrair_tipo_2(caminho_completo, dados_0,mapa_insc,mapa_nomes_aux)
-salvar_em_csv(servidores_funcionais, os.path.join(diretorio, 'servidores_tipo2_funcional.csv'))
-
-servidores_tipo_6 = extrair_tipo_6(caminho_completo,dados_0)
-salvar_em_csv(servidores_tipo_6,os.path.join(diretorio,'servidores_tipo6_afastamento.txt'))
-
-
-# ------------------------------------- RELATÓRIO FINAL ---
-print("-" * 50)
-print(f"PROCESSAMENTO CONCLUÍDO")
-# len(servidores_pessoais) conta quantos itens existem na lista do Tipo 1
-print(f"Tipo 1 (Dados Pessoais): {len(servidores_pessoais)} registros extraídos.")
-# len(servidores_funcionais) conta quantos itens existem na lista do Tipo 2
-print(f"Tipo 2 (Dados Funcionais): {len(servidores_funcionais)} registros extraídos.")
-print(f"Tipo 6 (Afastamentos): {len(servidores_tipo_6)} registros extraídos.")
-print("-" * 50)
-
-print(list(MAPA_MUNICIPIO.items())[:5])
-
-df = pd.DataFrame(servidores_pessoais)
+def salvar_em_csv(lista_dados, nome_arquivo):
+    if not lista_dados:
+        print(f'Aviso: Lista para {nome_arquivo} está vazia.')    
+        return
+    colunas = lista_dados[0].keys()
+    with open(nome_arquivo, 'w', newline='', encoding='latin-1') as f:
+        escritor = csv.DictWriter(f, fieldnames=colunas, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL,lineterminator='\r\n')
+        escritor.writeheader()
+        escritor.writerows(lista_dados)
+    print(f'Arquivo salvo: {nome_arquivo}')  
