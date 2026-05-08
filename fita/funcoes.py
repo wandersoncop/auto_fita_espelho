@@ -1,6 +1,7 @@
 import os
 import csv
 import pandas as pd
+from sqlalchemy import text 
 from mapeamentos import (
     LAYOUT_TIPO_1,
     HEADER_TIPO_1,
@@ -235,9 +236,9 @@ def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
                 # Alimenta o mapa de nomes para usar no Tipo 2
                 mapa_nomes[matric_limpa] = nome_servidor
                 
-                # Estado Civil------------------------------------------
-                codigo_eciv = str(dados.get('ECIV') or '').strip()
-                dados['DENO_E_CIV'] = MAPA_ESTADO_CIVIL.get(codigo_eciv, 'NÃO INFORMADO')
+                #  APAGAR DEPOIS DE TESTAR ***************Estado Civil------------------------------------------
+                # codigo_eciv = str(dados.get('ECIV') or '').strip()
+                # dados['DENO_E_CIV'] = MAPA_ESTADO_CIVIL.get(codigo_eciv, 'NÃO INFORMADO')
                 
                 # Preparação para Escolaridade
                 dados['COD_ESCOL'] = str(dados.get('ESCOL', '')).zfill(2)
@@ -554,4 +555,44 @@ def salvar_em_csv(lista_dados, nome_arquivo):
         escritor = csv.DictWriter(f, fieldnames=colunas, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL,lineterminator='\r\n')
         escritor.writeheader()
         escritor.writerows(lista_dados)
-    print(f'Arquivo salvo: {nome_arquivo}')  
+    print(f'Arquivo salvo: {nome_arquivo}') 
+
+
+from sqlalchemy import text
+
+def consolidar_dados_pessoal(engine,query_sql):
+    # 1. Primeiro comando: Limpar a área
+    sql_drop = text("DROP TABLE IF EXISTS tb_pessoal_consolidada")
+    
+    # 2. Segundo comando: Criar a tabela com a ordem que você definiu
+    # Aqui você lista os campos do seu Header intercalados com as traduções
+    sql_create = text("""
+        CREATE TABLE tb_pessoal_consolidada AS
+        SELECT 
+            p.mes_fita,
+            p.MATRIC,
+            p.NOME,
+            p.ECIV,
+            ec.DenoECiv AS DENO_E_CIV, -- Tradução logo após o código
+            p.PAIS,
+            pa.DenoPais AS DENO_PAIS, -- Tradução logo após o código
+            p.CPF
+            -- Continue listando os outros campos do seu HEADER_TIPO_1 aqui
+        FROM tipo_1_pessoal p
+        LEFT JOIN estado_civil ec ON p.ECIV = ec.CodECiv
+        LEFT JOIN pais pa ON p.PAIS = pa.CodPais
+    """)
+
+    try:
+        with engine.connect() as conexao:
+            print(">>> Removendo tabela antiga...")
+            conexao.execute(sql_drop)
+            
+            print(">>> Criando nova consolidação com todos os campos...")
+            conexao.execute(sql_create)
+            
+            conexao.commit()
+            print("✅ CONSOLIDAÇÃO CONCLUÍDA COM SUCESSO!")
+            
+    except Exception as e:
+        print(f"❌ ERRO CRÍTICO NA CONSOLIDAÇÃO: {e}")

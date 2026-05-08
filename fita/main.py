@@ -32,9 +32,6 @@ from mapeamentos import (
 import os
 import csv
 
-engine = create_engine(
-    "mysql+pymysql://root:123456localhost/fita_espelho"
-)
 
 
 
@@ -51,6 +48,7 @@ MAPA_CLASSES = carregar_tabela_apoio(tbl_classe, col_chave=0,col_valor=3)
 
 tbl_estado_civil = os.path.join(diretorio,'Tabela Estado Civil.txt')
 MAPA_ESTADO_CIVIL = carregar_tabela_apoio(tbl_estado_civil,col_chave=0,col_valor=1)
+
 
 tbl_atividade = os.path.join(diretorio,'Tabela Atividade.txt')
 TRADUCAO_DENOATIV = carregar_tabela_apoio(tbl_atividade,col_chave=2,col_valor=3)
@@ -102,6 +100,11 @@ servidores_tipo_6 = extrair_tipo_6(caminho_completo,dados_0)
 salvar_em_csv(servidores_tipo_6,os.path.join(diretorio,'tipo_6_totalizador_afastamento.csv'))
 
 
+
+
+
+
+
 # ------------------------------------- RELATÓRIO FINAL ---
 print("-" * 50)
 print(f"PROCESSAMENTO CONCLUÍDO")
@@ -116,3 +119,22 @@ print("-" * 50)
 print(list(MAPA_MUNICIPIO.items())[:5])
 
 df = pd.DataFrame(servidores_pessoais)
+
+#------------------------------ PARA ENVIAR A TABELA DE TIPO PARA O BANCO SALVAR NO BD
+
+
+# PASSO 1: Envia os dados "crus" para o MySQL
+df.to_sql(
+    'tipo_1_pessoal',
+    engine,
+    if_exists='replace',
+    index=False
+)
+
+# PASSO 2: Chama a função que criamos no funcoes.py
+
+# Ela vai usar a "receita" que está no arquivo SQL para criar a tabela final
+from consulta_sql import QUERY_CONSOLIDACAO_PESSOAL
+import funcoes
+
+funcoes.consolidar_dados_pessoal(engine, QUERY_CONSOLIDACAO_PESSOAL)
