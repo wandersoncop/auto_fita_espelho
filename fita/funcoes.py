@@ -23,9 +23,9 @@ from mapeamentos import (
     TRADUCAO_DENO_ESCOL,
     TRADUCAO_TIT_FORM,
     TRADUCAO_ESCOLARIDADE,
-    TRADUCAO_PAIS,
-    TRADUCAO_SIT,
-    TRADUCAO_CARGO,
+    # TRADUCAO_PAIS,
+    # TRADUCAO_SIT,
+    # TRADUCAO_CARGO,
 )
 MAPA_CLASSES = {}
 MAPA_ESTADO_CIVIL = {}
@@ -237,8 +237,8 @@ def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
                 mapa_nomes[matric_limpa] = nome_servidor
                 
                 #  APAGAR DEPOIS DE TESTAR ***************Estado Civil------------------------------------------
-                # codigo_eciv = str(dados.get('ECIV') or '').strip()
-                # dados['DENO_E_CIV'] = MAPA_ESTADO_CIVIL.get(codigo_eciv, 'NÃO INFORMADO')
+                # codigo_CodEstadoCiv = str(dados.get('CodEstadoCiv') or '').strip()
+                # dados['DENO_E_CIV'] = MAPA_ESTADO_CIVIL.get(codigo_CodEstadoCiv, 'NÃO INFORMADO')
                 
                 # Preparação para Escolaridade
                 dados['COD_ESCOL'] = str(dados.get('ESCOL', '')).zfill(2)
@@ -252,8 +252,8 @@ def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
                 # Cálculo do maior grau
                 dados['ESCOLARIDADE'] = calcular_escolaridade(dados)
                 
-                # Tradução de País
-                dados['DENO_PAIS'] = TRADUCAO_PAIS.get(str(dados.get('PAIS')).zfill(3), '')
+                # # Tradução de País
+                # dados['DENO_PAIS'] = TRADUCAO_PAIS.get(str(dados.get('PAIS')).zfill(3), '')
                 
                 
 
@@ -305,11 +305,11 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                 v_ca = str(dados.get('CARGO', '')).zfill(3)
                 dados['CodCargo'] = v_gr + v_ca
                 
-                cod_sit = str(dados.get('SIT') or '').zfill(2)
-                dados['DENO_SIT'] = TRADUCAO_SIT.get(cod_sit, f'SIT {cod_sit}')
+                # cod_sit = str(dados.get('SIT') or '').zfill(2)
+                # dados['DENO_SIT'] = TRADUCAO_SIT.get(cod_sit, f'SIT {cod_sit}')
                 
-                cod_cargo_full = dados['CodCargo'].zfill(6)
-                dados['DENOCARG'] = TRADUCAO_CARGO.get(cod_cargo_full, f'DENOCARG {cod_cargo_full}')
+                # cod_cargo_full = dados['CodCargo'].zfill(6)
+                # dados['DENOCARG'] = TRADUCAO_CARGO.get(cod_cargo_full, f'DENOCARG {cod_cargo_full}')
 
                 # --- 5. MATRICULA E NOME ---
                 matric_func = str(dados.get('MATRIC', '')).strip()
@@ -560,39 +560,17 @@ def salvar_em_csv(lista_dados, nome_arquivo):
 
 from sqlalchemy import text
 
-def consolidar_dados_pessoal(engine,query_sql):
-    # 1. Primeiro comando: Limpar a área
-    sql_drop = text("DROP TABLE IF EXISTS tb_pessoal_consolidada")
-    
-    # 2. Segundo comando: Criar a tabela com a ordem que você definiu
-    # Aqui você lista os campos do seu Header intercalados com as traduções
-    sql_create = text("""
-        CREATE TABLE tb_pessoal_consolidada AS
-        SELECT 
-            p.mes_fita,
-            p.MATRIC,
-            p.NOME,
-            p.ECIV,
-            ec.DenoECiv AS DENO_E_CIV, -- Tradução logo após o código
-            p.PAIS,
-            pa.DenoPais AS DENO_PAIS, -- Tradução logo após o código
-            p.CPF
-            -- Continue listando os outros campos do seu HEADER_TIPO_1 aqui
-        FROM tipo_1_pessoal p
-        LEFT JOIN estado_civil ec ON p.ECIV = ec.CodECiv
-        LEFT JOIN pais pa ON p.PAIS = pa.CodPais
-    """)
+def criar_tbl_pessoal(engine, query_sql):
 
     try:
-        with engine.connect() as conexao:
-            print(">>> Removendo tabela antiga...")
-            conexao.execute(sql_drop)
-            
-            print(">>> Criando nova consolidação com todos os campos...")
-            conexao.execute(sql_create)
-            
-            conexao.commit()
+        with engine.begin() as conexao:
+
+            for comando in query_sql.split(";"):
+
+                if comando.strip():
+                    conexao.execute(text(comando))
+
             print("✅ CONSOLIDAÇÃO CONCLUÍDA COM SUCESSO!")
-            
-    except Exception as e:
-        print(f"❌ ERRO CRÍTICO NA CONSOLIDAÇÃO: {e}")
+
+    except Exception as erro:
+        print(f"❌ ERRO CRÍTICO NA CONSOLIDAÇÃO: {erro}")

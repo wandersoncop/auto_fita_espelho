@@ -1,21 +1,65 @@
-from conexao import engine
-
 # Concentre todas as queries aqui
 QUERY_CONSOLIDACAO_PESSOAL = """
--- Primeiro, mata a tabela antiga para não dar erro de coluna duplicada
-DROP TABLE IF EXISTS tb_pessoal_consolidada;
+DROP TABLE IF EXISTS tbl_pessoal;
 
--- Cria a tabela nova
-CREATE TABLE tb_pessoal_consolidada AS
+CREATE TABLE tbl_pessoal AS
 SELECT 
-    p.*, 
-    e.DenoECiv AS DENO_E_CIV
-FROM tipo_1_pessoal p
-LEFT JOIN estado_civil e ON p.ECiv = e.CodECiv;
+    p.mes_fita,
+    p.UnidPag,
+    p.InscUFMG,
+    p.SIAPE,
+    p.SiapeDig,
+    p.TipoReg,
+    p.Nome,
+    p.CPF,
+    p.PASEP,
+    p.Sexo,
+    p.DataNasc,
+    p.Mae,
+    p.CodEstadoCiv,
 
--- COMANDO MÁGICO PARA MOVER A COLUNA (Só funciona no MySQL)
--- Isso coloca o DENO_E_CIV logo após o ECiv automaticamente!
-ALTER TABLE tb_pessoal_consolidada MODIFY COLUMN DENO_E_CIV TEXT AFTER ECiv;
+
+    ec.DenoECiv AS EstadoCiv,
+
+
+
+
+p.CodEscol,
+    # p.DENO_ESCOL,
+    p.ESCOLARIDADE,
+p.CodTitulacao,
+    # p.DENO_TIT,
+
+    p.CodNaturalidade,
+
+    p.CodPais,
+    pa.DenoPais AS Pais,
+    p.AnoChegada,
+    p.DepImpRenda,
+    p.Sf,
+    p.DataPrimEmprego,
+    p.SiapeCad,
+    p.Logradouro,
+    p.Numero,
+    p.Complemento,
+    p.Bairro,
+    p.Municipio,
+    p.CEP,
+    p.UF,
+    p.Identidade,
+    p.OrgaoExpedidor,
+    p.DataExpedicao,
+    p.UfIdent,
+    p.TituloEleitor
+
+FROM tipo_1_pessoal p
+
+LEFT JOIN aux_estado_civil ec
+    ON p.CodEstadoCiv = ec.CodECiv
+
+LEFT JOIN aux_pais pa
+    ON p.CODPAIS = pa.CodPais
+;
 """
 
-# QUERY_LIMPEZA_TEMPORARIOS = "DROP TABLE IF EXISTS tipo_1_pessoal;"
+QUERY_LIMPEZA_TEMPORARIOS = "DROP TABLE IF EXISTS tipo_1_pessoal;"

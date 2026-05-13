@@ -3,6 +3,7 @@ import csv
 import pandas as pd
 from funcoes import *
 from conexao import engine
+from consulta_sql import QUERY_CONSOLIDACAO_PESSOAL
 from mapeamentos import (
     LAYOUT_TIPO_1, 
     HEADER_TIPO_1,
@@ -24,9 +25,9 @@ from mapeamentos import (
     TRADUCAO_DENO_ESCOL,
     TRADUCAO_TIT_FORM,
     TRADUCAO_ESCOLARIDADE,
-    TRADUCAO_PAIS,
-    TRADUCAO_SIT,
-    TRADUCAO_CARGO,    
+    # TRADUCAO_PAIS,
+    # TRADUCAO_SIT,
+    # TRADUCAO_CARGO,    
 )
 
 import os
@@ -46,9 +47,12 @@ arquivo_insc = 'Pescad_InscUFMG.txt'
 tbl_classe = os.path.join(diretorio,'Tabela Classe.txt')
 MAPA_CLASSES = carregar_tabela_apoio(tbl_classe, col_chave=0,col_valor=3)
 
-tbl_estado_civil = os.path.join(diretorio,'Tabela Estado Civil.txt')
-MAPA_ESTADO_CIVIL = carregar_tabela_apoio(tbl_estado_civil,col_chave=0,col_valor=1)
+# tbl_estado_civil = os.path.join(diretorio,'Tabela Estado Civil.txt')
+# MAPA_ESTADO_CIVIL = carregar_tabela_apoio(tbl_estado_civil,col_chave=0,col_valor=1)
 
+
+# aux_pais = os.path.join(diretorio,'Pais.txt')
+# MAPA_PAIS = carregar_tabela_apoio(aux_pais,col_chave=1,col_valor=3)
 
 tbl_atividade = os.path.join(diretorio,'Tabela Atividade.txt')
 TRADUCAO_DENOATIV = carregar_tabela_apoio(tbl_atividade,col_chave=2,col_valor=3)
@@ -134,7 +138,4 @@ df.to_sql(
 # PASSO 2: Chama a função que criamos no funcoes.py
 
 # Ela vai usar a "receita" que está no arquivo SQL para criar a tabela final
-from consulta_sql import QUERY_CONSOLIDACAO_PESSOAL
-import funcoes
-
-funcoes.consolidar_dados_pessoal(engine, QUERY_CONSOLIDACAO_PESSOAL)
+criar_tbl_pessoal(engine, QUERY_CONSOLIDACAO_PESSOAL)
