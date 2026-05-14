@@ -1,4 +1,4 @@
-# MAPEAMENTO TIPO 1  
+# MAPEAMENTO NOS LAYOOUT E OREM DAS COLUNAS  
 LAYOUT_TIPO_1 = {
     "UnidPag": (0, 9),
     "SIAPE": (9, 16),
@@ -35,7 +35,6 @@ LAYOUT_TIPO_1 = {
     "UfIdent": (360, 362),
     "TituloEleitor": (362, 375)
 }
-
 # ORDEM DAS COLUNAS (TIPO 1)
 HEADER_TIPO_1 = [
     "mes_fita",
@@ -408,10 +407,6 @@ HEADER_TIPO_2 = [
     # 'TIPO_REGISTRO',
 ]
 
-
-
-#----------------------------TIPO 3
-
 LAYOUT_TIPO_3 = {
     "Lixo1": (0, 9),
     "SIAPE": (9, 16),
@@ -436,8 +431,6 @@ LAYOUT_TIPO_3 = {
     "PAAnoMesRub": (129, 135),
     "Lixo3": (135, 764),
 }                         
-   
-
 HEADER_TIPO_3 = [
     "Lixo1",
     "SIAPE",
@@ -488,8 +481,6 @@ HEADER_TIPO_4 = [
     "Lixo3",
 ]
 
-
-#----------------------------TIPO 5
 LAYOUT_TIPO_5 = {
     "UnidPagadora": (0, 9),
     "Siape": (9, 16),
@@ -520,7 +511,7 @@ HEADER_TIPO_5 =[
     "NumDiplomAfast",   
 
 ]
-#----------------------------TIPO 6
+
 LAYOUT_TIPO_6 = {
     # "UnidPagadora": (0, 9),
     "Siape": (9, 16),
@@ -539,11 +530,7 @@ HEADER_TIPO_6 =[
 
 ]
 
-
-
-
-
-# INSIRA AQUI TODOS OS CAMPOS QUE SÃO DATA
+#------------------------------ INSIRA AQUI TODOS OS CAMPOS QUE SÃO DATA
 CAMPOS_DATA_TIPO_1 = [
     'DT_NASC', 
     'DT_1_EMP', 
@@ -597,164 +584,3 @@ CAMPOS_DATA_TIPO_5 = [
     'DtFimAfast',             
     'DtPublAfast',
 ]
-TRADUCAO_DENO_ESCOL = {
-    
-    '01': 'ANALFABETO',
-    '02': 'ALFABETIZADO SEM CURSOS REGULARES',
-    '03': 'PRIMEIRO GRAU INCOMP - ATE A 4A.SERIE INCOMP',
-    '04': '4A.SERIE DO PRIMEIRO GRAU COMPLETA',
-    '05': 'ENSINO FUNDAMENTAL INCOMPLETO',
-    '06': 'ENSINO FUNDAMENTAL',
-    '07': 'SEGUNDO GRAU INCOMPLETO',
-    '08': 'ENSINO MEDIO',
-    '09': 'SUPERIOR INCOMPLETO',
-    '10': 'ENSINO SUPERIOR',
-    '11': 'APERFEICOAMENTO',
-    '12': 'ESPECIALIZACAO',
-    '13': 'MESTRADO',
-    '14': 'DOUTORADO',
-    '15': 'ESPECIALIZACAO NIVEL SUPERIOR',
-    '16': 'PHD',   
-    '17': 'LIVRE DOCENCIA',
-    '18': 'POS-DOUTORADO',
-    '19': 'LIVRE DOCENCIA',
-}
-TRADUCAO_TIT_FORM= {
-
-    '01': 'PROFISSIONAL EM MAT EM REDE NACIONAL',
-    '02': 'APERFEICOAMENTO (LEI 12772/12 ART 18)',
-    '20': 'TECNICO (NIVEL MEDIO COMPLETO)',
-    '21': 'APERFEICOAMENTO NIVEL MEDIO',
-    '22': 'ESPECIALIZACAO NIVEL MEDIO',
-    '23': 'GRADUACAO (NIVEL SUPERIOR COMPLETO)',
-    '24': 'APERFEICOAMENTO NIVEL SUPERIOR',
-    '25': 'ESPECIALIZACAO NIVEL SUPERIOR',
-    '26': 'MESTRADO',
-    '27': 'DOUTORADO',
-    '28': 'POS-DOUTORADO',
-    '29': 'ALTOS ESTUDOS (RMI)',
-    '30': 'APERFEICOAMENTO (RMI)',
-    '31': 'ESPECIALIZACAO (RMI)',
-    '32': 'FORMACAO (RMI)',
-    '33': 'AUXILIAR DE ENFERMAGEM',
-    '34': 'LICENCIATURA PLENA',
-    '35': 'LICENCIATURA',
-    '36': 'POS-GRADUACAO',
-    '37': 'BACHAREL',
-    '38': 'APERFEICOAMENTO PROFISSIONAL DE NS',
-    '39': 'APERFEICOAMENTO - NA',
-    '40': 'ESPECIALIAZACA - NA',
-    '41': 'APERFEICOAMENTO - NA',
-    '42': 'ESPECIALIZACAO - NA',
-    '43': 'APERFEICOAMENTO - NA',
-    '44': 'ESPECIALIZACAO - NA',
-    '45': 'NIVEL MEDIO',
-    '46': 'ENSINO FUNDAMENTAL',
-    '47': 'SOLOS E NUTRICAO DE PLANTAS',
-    '48': 'GRADUAÇÃO+RSC-I (LEI 12772/12 ART. 18)',
-    '49': 'POS-GRADUAÇÃO+RSC-II LEI 12772/12 ART 18',
-    '50': 'MESTRE+RSC-III (LEI 12772/12 ART 18)',
-    '51': 'CURSO QUALIFICACAO PROFISSIONAL MIN 180H',
-    '52': 'CURSO QUALIFICACAO PROFISSIONAL MIN 250H',
-    '53': 'CURSO QUALIFICACAO PROFISSIONAL MIN 360H',
-    '54': 'CURSO CAPACIT/QUALIFIC PROFISSI MIN 180H',
-    '55': 'CURSOS EQUIPARADOS - GQ - 360 HORAS'
-}
-TRADUCAO_ESCOLARIDADE = {
-    # TITULAÇÃO
-    '20': 5,
-    '22': 7,
-    '23': 9,
-    '24': 10,
-    '25': 11,
-    '26': 12,
-    '27': 13,
-    '28': 14,
-    '36': 11,
-    '49': 12,
-    '50': 13,
-
-    # ESCOLARIDADE
-    '01': 0,
-    '02': 1,
-    '04': 2,
-    '05': 3,
-    '06': 4,
-    '08': 6,
-    '09': 8,
-    '10': 9,
-    '12': 11,
-    '13': 12,
-    '14': 13,
-    '15': 11,
-    '18': 14,
-}
-# TRADUCAO_SIT = {
-#     '01': 'ATIVO PERMANENTE',
-#     '02': 'APOSENTADO',
-#     '03': 'REQUISITADO',
-#     '04': 'NOMEADO CARGO COMIS.',
-#     '05': 'SEM VINCULO',
-#     '06': 'TABELISTA(ESP/EMERG)',
-#     '07': 'NATUREZA ESPECIAL',
-#     '08': 'CEDIDO',
-#     '09': 'REDISTRIBUIDO',
-#     '10': 'ATIVO TRANSITORIO',
-#     '11': 'EXCEDENTE A LOTACAO',
-#     '12': 'CONTRATO TEMPORARIO',
-#     '13': 'EM DISPONIBILIDADE',
-#     '14': 'REQ.DE OUTROS ORGAOS',
-#     '15': 'INSTITUIDOR PENSAO',
-#     '16': 'REQ. MILITAR',
-#     '17': 'APOSENTADO TCU733/94',
-#     '18': 'EXERC DESCENT CARREI',
-#     '19': 'EXERCICIO PROVISORIO',
-#     '20': 'CELETISTA',
-#     '21': 'ATIVO PERM L.8878/94',
-#     '22': 'ANISTIADO ADCT CF',
-#     '23': 'CELETISTA/EMPREGADO',
-#     '24': 'CLT CONT DETERMINADO',
-#     '25': 'CLT ANS DEC JUDICIAL',
-#     '26': 'CLT REQUISITADO',
-#     '27': 'CLT ANS JUD. CEDIDO',
-#     '28': 'NOMEADO PARA FUNCAO',
-#     '29': 'CLT-APOS.COMPLEMENTO',
-#     '30': 'CLT-APS.DEC.JUDICIAL',
-#     '31': 'INST.PS DEC JUD',
-#     '32': 'EMPREGO PUBLICO',
-#     '33': 'REFORMA CBM / PM',
-#     '34': 'RESERVA CBM / PM',
-#     '35': 'REQUISITADO MILITAR',
-#     '36': 'ANIST.PUBLICO L10559',
-#     '37': 'ANIST.PRIVADO L10559',
-#     '38': 'ATIVO - DEC. JUDIC',
-#     '39': 'APOSENTADO-DEC JUDIC',
-#     '40': 'CONTRATO TEMPORARIO',
-#     '41': 'COLABORADOR PCCTAE',
-#     '42': 'COLABORADOR ICT',
-#     '43': 'CLT ANS -DEC 6657/08',
-#     '44': 'EXERC. 7 ART93 8112',
-#     '45': 'CEDIDO SUS/LEI 8270',
-#     '46': 'INST.ANIST.PUBLICO',
-#     '47': 'INST.ANIST.PRIVADO',
-#     '48': 'DECISAO JUDICIAL',
-#     '49': 'CONTR.TEMPORARIO CLT',
-#     '51': 'EXC. INDISCIPLINA',
-#     '52': 'CONT.PROF.SUBSTITUTO',
-#     '53': 'CONTR.PROF.VISITANTE',
-#     '54': 'CONT.PROF.TEMPORARIO',
-#     '66': 'ESTAGIARIO',
-#     '67': 'ESTAGIARIO PGFN',
-#     '70': 'ESTAGIARIO',
-#     '71': 'RESIDENTES',
-#     '80': 'EXERC. LEI 13681/84',
-#     '91': 'PENSIONISTA',
-#     '92': 'BENEF.PEN. MONTEPIO',
-#     '93': 'BENEFICIARIO PENSAO',
-#     '94': 'BENEF.PENS.ANS46',
-#     '95': 'BENEF.PENS.ANS 47',
-#     '96': 'QE/MRE - CEDIDO',
-#     '97': 'QUADRO ESPEC.-QE/MRE',
-#     '98': 'EXCEDENTE A LOT/MRE',
-#     '99': 'PENSIONISTA'
-# }

@@ -20,115 +20,7 @@ from mapeamentos import (
     CAMPOS_DATA_TIPO_3,
     CAMPOS_DATA_TIPO_4,
     CAMPOS_DATA_TIPO_5,
-    TRADUCAO_DENO_ESCOL,
-    TRADUCAO_TIT_FORM,
-    TRADUCAO_ESCOLARIDADE,
-    # TRADUCAO_PAIS,
-    # TRADUCAO_SIT,
-    # TRADUCAO_CARGO,
 )
-MAPA_CLASSES = {}
-MAPA_ESTADO_CIVIL = {}
-TRADUCAO_DENOATIV = {}
-TRADUCAO_EMAIL = {}
-TRADUCAO_LOCAL_AP = {}
-TRADUCAO_DENO_LOCAL_AP = {}
-MAPA_PONTE_MUN = {}
-MAPA_MUNICIPIO = {}
-MAPA_UNIDADES = {}
-
-
-def carregar_mapa_unidades(caminho_arquivo):
-    print(f"\n>>> INICIANDO LEITURA DE: {caminho_arquivo}")
-    mapa = {}
-    try:
-        with open(caminho_arquivo, 'r', encoding='latin-1') as f:
-            # Lemos as linhas e limpamos as aspas duplas de tudo
-            linhas = f.readlines()
-            if not linhas:
-                print("ERRO: O arquivo está totalmente vazio.")
-                return mapa
-
-            # Processamos o cabeçalho manualmente para garantir que não haja erros
-            cabecalho = [col.strip().replace('"', '') for col in linhas[0].split(';')]
-            print(f">>> Colunas detectadas no arquivo: {cabecalho}")
-
-            for i, linha in enumerate(linhas[1:], 1):
-                valores = [val.strip().replace('"', '') for val in linha.split(';')]
-                
-                # Cria o dicionário da linha
-                dados_linha = dict(zip(cabecalho, valores))
-                cod = dados_linha.get('CodUnid')
-
-                if cod:
-                    mapa[cod] = dados_linha
-                    
-                    # DIAGNÓSTICO FORÇADO NA PRIMEIRA LINHA ÚTIL
-                    if len(mapa) == 1:
-                        print("-" * 30)
-                        print(f"DEBUG - Primeira chave carregada: {repr(cod)}")
-                        print(f"DEBUG - Conteúdo da Unid: {repr(dados_linha.get('Unid'))}")
-                        print("-" * 30)
-
-        print(f"SUCESSO: {len(mapa)} unidades mapeadas.")
-    except Exception as e:
-        print(f"ERRO CRÍTICO: {e}")
-    
-    return mapa
-
-#  AS TABELAS TEM QUE ESTA COM CABEÇALHO E ESTE SERÁ PULADO a chave tem que PASSAR  A CHAVE  E O VALOR DE CADA TABELA A SER USADA se não sera atribuido 0 e 1
-def carregar_tabela_apoio(caminho_arquivo, col_chave=0, col_valor=1):
-    """
-    Carrega qualquer CSV de apoio indicando qual coluna é a chave e qual é o valor.
-    """
-    traducao = {}
-    if not os.path.exists(caminho_arquivo):
-        print(f"ERRO: Arquivo não encontrado em: {caminho_arquivo}")
-        return traducao
-
-    try:
-        with open(caminho_arquivo, mode='r', encoding='latin-1') as f:
-            # Lemos linha a linha para não carregar o arquivo inteiro na memória (mais seguro)
-            for i, linha in enumerate(f):
-                linha = linha.replace('"', '').strip()
-                if not linha: continue 
-                
-                colunas = linha.split(';')
-                
-                # Pula o cabeçalho sempre
-                if i == 0: continue
-
-                # Verifica se a linha tem colunas suficientes para o que foi pedido
-                max_indice_necessario = max(col_chave, col_valor)
-                
-                if len(colunas) > max_indice_necessario:
-                    chave = colunas[col_chave].strip()
-                    valor = colunas[col_valor].strip()
-                    
-                    if chave:
-                        traducao[chave] = valor
-                        
-        print(f"SUCESSO: {os.path.basename(caminho_arquivo)} carregado.")
-    except Exception as e:
-        print(f"ERRO ao carregar {caminho_arquivo}: {e}")
-        
-    return traducao
-
-def buscar_municipio_isolado(codigo_uorg, mapa_ponte, mapa_nomes_cidades):
-    if not codigo_uorg: 
-        return ""
-    
-    # Limpa e formata o código que veio da fita
-    chave = str(codigo_uorg).strip().zfill(9)
-    
-    # Busca o código do município na tabela de endereços
-    cod_mun = mapa_ponte.get(chave)
-    
-    if cod_mun:
-        cod_mun_limpo = str(cod_mun).replace('"', '').strip()
-        return mapa_nomes_cidades.get(cod_mun_limpo, f"Cod {cod_mun_limpo}")
-    
-    return ""
 
 def carregar_dicionario_inscricoes(fita, Pescad_InscUFMG):
     caminho = os.path.join(fita, Pescad_InscUFMG)
@@ -143,22 +35,6 @@ def carregar_dicionario_inscricoes(fita, Pescad_InscUFMG):
     except Exception as e:
         print(f"Erro ao carregar arquivo de inscrições: {e}")
     return mapa_inscricoes
-
-def carregar_mapa_municipios(caminho_arquivo):
-    mapa = {}
-    try:
-        with open(caminho_arquivo, 'r', encoding='latin-1') as f:
-            import csv
-            # Lendo como dicionário para facilitar o acesso pelas colunas
-            leitor = csv.DictReader(f, delimiter=';')
-            for linha in leitor:
-                # Remove aspas extras se existirem e limpa espaços
-                cod = linha['CODMUNICIP'].replace('"', '').strip()
-                mapa[cod] = linha['DENOMUNIC'].replace('"', '').strip()
-        print(f"SUCESSO: {len(mapa)} municípios carregados.")
-    except Exception as e:
-        print(f"Erro ao carregar municípios: {e}")
-    return mapa
 
 def formatar_data(valor):
     if valor and len(valor) == 8 and valor.isdigit():
@@ -241,16 +117,16 @@ def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
                 # dados['DENO_E_CIV'] = MAPA_ESTADO_CIVIL.get(codigo_CodEstadoCiv, 'NÃO INFORMADO')
                 
                 # Preparação para Escolaridade
-                dados['COD_ESCOL'] = str(dados.get('ESCOL', '')).zfill(2)
-                dados['COD_TITULACAO'] = str(dados.get('TIT_FORM', '')).zfill(2)
+                # dados['COD_ESCOL'] = str(dados.get('ESCOL', '')).zfill(2)
+                # dados['COD_TITULACAO'] = str(dados.get('TIT_FORM', '')).zfill(2)
 
-                # Traduções de escolaridade e título
-                dados['DENO_ESCOL'] = TRADUCAO_DENO_ESCOL.get(dados['COD_ESCOL'], '')
+                # # Traduções de escolaridade e título
+                # dados['DENO_ESCOL'] = TRADUCAO_DENO_ESCOL.get(dados['COD_ESCOL'], '')
                 
-                dados['DENO_TIT'] = TRADUCAO_TIT_FORM.get(dados['COD_TITULACAO'], '')
+                # dados['DENO_TIT'] = TRADUCAO_TIT_FORM.get(dados['COD_TITULACAO'], '')
                 
                 # Cálculo do maior grau
-                dados['ESCOLARIDADE'] = calcular_escolaridade(dados)
+                # dados['ESCOLARIDADE'] = calcular_escolaridade(dados)
                 
                 # # Tradução de País
                 # dados['DENO_PAIS'] = TRADUCAO_PAIS.get(str(dados.get('PAIS')).zfill(3), '')
@@ -298,7 +174,7 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                     chave_final = f"{cat_letra}{gr_cargo}{val_classe}{primeiro_dig_ref}"
 
                 dados['ChaveClass'] = chave_final
-                dados['DenoClasse'] = MAPA_CLASSES.get(chave_final, '') if MAPA_CLASSES else "ERRO: MAPA VAZIO"
+                # dados['DenoClasse'] = MAPA_CLASSES.get(chave_final, '') if MAPA_CLASSES else "ERRO: MAPA VAZIO"
 
                 # --- 4. CODCARGO E TRADUÇÕES (SITUAÇÃO/CARGO) ---
                 v_gr = str(dados.get('GRCARGO', '')).zfill(3)
@@ -320,20 +196,20 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                 valor_rtrab = dados.get('RTRAB','').strip()
                 dados['RT'] = 'DE' if valor_rtrab == '99' else valor_rtrab
 
-#----------------------------------------7. TRADUÇÃO DA UNIDADE DE LOTAÇÃO ---
-                uorg_lotacao = dados.get('NrUorgLotacao', '').strip()
-                unidade_lot_info = MAPA_UNIDADES.get(uorg_lotacao)
+# #----------------------------------------7. TRADUÇÃO DA UNIDADE DE LOTAÇÃO ---
+#                 uorg_lotacao = dados.get('NrUorgLotacao', '').strip()
+#                 unidade_lot_info = MAPA_UNIDADES.get(uorg_lotacao)
 
-                if isinstance(unidade_lot_info, dict):
-                    dados['UnidLotacao'] = unidade_lot_info.get('Unid', '')
-                    dados['DenoSetorLotacao'] = unidade_lot_info.get('DenoSetor', '')
-                    dados['UorgPaiExercicio'] = unidade_lot_info.get('UorgPai','').strip()
-                    dados['NomeUorgPaiExercicio'] = unidade_lot_info.get('NomeUorgPai','').strip()
-                else:
-                    dados['UnidLotacao'] = ''
-                    dados['DenoSetorLotacao'] = ''
-                    dados['UorgPaiExercicio'] = ''
-                    dados['NomeUorgPaiExercicio'] = ''
+#                 if isinstance(unidade_lot_info, dict):
+#                     dados['UnidLotacao'] = unidade_lot_info.get('Unid', '')
+#                     dados['DenoSetorLotacao'] = unidade_lot_info.get('DenoSetor', '')
+#                     dados['UorgPaiExercicio'] = unidade_lot_info.get('UorgPai','').strip()
+#                     dados['NomeUorgPaiExercicio'] = unidade_lot_info.get('NomeUorgPai','').strip()
+#                 else:
+#                     dados['UnidLotacao'] = ''
+#                     dados['DenoSetorLotacao'] = ''
+#                     dados['UorgPaiExercicio'] = ''
+#                     dados['NomeUorgPaiExercicio'] = ''
 
 #---------------------------------------- 8. DEFINIÇÃO DO CAMPO TEMFUNCAO ---
              
@@ -352,47 +228,47 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                 dados['FuncSetor'] = func_setor
                 
 #----------------------------------------10. DEFINIÇÃO DO NrUorgExercicio ---
-                rj = dados.get('RJ', '').strip()
+                # rj = dados.get('RJ', '').strip()
 
-                if (rj == "ETG" and func_setor != "000000000" and func_setor != "") or dados.get('TemFuncao') == "S":
-                    exercicio_final = func_setor
-                else:
-                    exercicio_final = uorg_lotacao
+                # if (rj == "ETG" and func_setor != "000000000" and func_setor != "") or dados.get('TemFuncao') == "S":
+                #     exercicio_final = func_setor
+                # else:
+                #     exercicio_final = uorg_lotacao
 
-                dados['NrUorgExercicio'] = exercicio_final
+                # dados['NrUorgExercicio'] = exercicio_final
                 
 
 #---------------------------------------- 11. TRADUÇÃO DA UNIDADE DE EXERCÍCIO ---
-                unidade_ex_info = MAPA_UNIDADES.get(exercicio_final)
+                # unidade_ex_info = MAPA_UNIDADES.get(exercicio_final)
 
-                if isinstance(unidade_ex_info, dict):
-                    dados['UnidExercicio'] = unidade_ex_info.get('Unid', '')
-                    dados['DenoSetorExercicio'] = unidade_ex_info.get('DenoSetor', '')
-                    dados['UnidFunc'] = unidade_ex_info.get('Unid', '')
-                    dados['DenoSetorFunc'] = unidade_ex_info.get('DenoSetor', '')
-                else:
-                    dados['UnidExercicio'] = ''
-                    dados['DenoSetorExercicio'] = ''
-                    dados['UnidFunc'] =''
-                    dados['DenoSetorFunc'] = ''
+                # if isinstance(unidade_ex_info, dict):
+                #     dados['UnidExercicio'] = unidade_ex_info.get('Unid', '')
+                #     dados['DenoSetorExercicio'] = unidade_ex_info.get('DenoSetor', '')
+                #     dados['UnidFunc'] = unidade_ex_info.get('Unid', '')
+                #     dados['DenoSetorFunc'] = unidade_ex_info.get('DenoSetor', '')
+                # else:
+                #     dados['UnidExercicio'] = ''
+                #     dados['DenoSetorExercicio'] = ''
+                #     dados['UnidFunc'] =''
+                #     dados['DenoSetorFunc'] = ''
 
 
 #---------------------------------------- 12. TRADUÇÃO DE DENOATIV --- 
 
             # Tradução de DENOATIV
-                dados['DENOATIV'] = TRADUCAO_DENOATIV.get(str(dados.get('ATIVFUNC')).zfill(4), '')
+                # dados['DENOATIV'] = TRADUCAO_DENOATIV.get(str(dados.get('ATIVFUNC')).zfill(4), '')
 #---------------------------------------- 13. TRADUÇÃO DE email --- 
 
             # Tradução de email uorg
-                dados['EmailUORGExercicio'] = TRADUCAO_EMAIL.get(str(dados.get('NrUorgLotacao')).zfill(9), '')
+                # dados['EmailUORGExercicio'] = TRADUCAO_EMAIL.get(str(dados.get('NrUorgLotacao')).zfill(9), '')
             
             # Tradução de NrUorgLocalAP
-                dados['NrUorgLocalAP'] = TRADUCAO_LOCAL_AP.get(str(dados.get('MATRIC')).zfill(7), '')
-                dados['DenoSetorLocalAP'] = TRADUCAO_DENO_LOCAL_AP.get(str(dados.get('MATRIC')).zfill(7), '')
+                # dados['NrUorgLocalAP'] = TRADUCAO_LOCAL_AP.get(str(dados.get('MATRIC')).zfill(7), '')
+                # dados['DenoSetorLocalAP'] = TRADUCAO_DENO_LOCAL_AP.get(str(dados.get('MATRIC')).zfill(7), '')
 
 #------------------------------------- 14 Tradução de municipio
                 # Aqui usamos a variável 'exercicio_final' que você já criou no seu passo 10
-                dados['MunicipioUORGExercicio'] = buscar_municipio_isolado(exercicio_final, MAPA_PONTE_MUN, MAPA_MUNICIPIO)
+                # dados['MunicipioUORGExercicio'] = buscar_municipio_isolado(exercicio_final, MAPA_PONTE_MUN, MAPA_MUNICIPIO)
 
 
 
@@ -559,6 +435,8 @@ def salvar_em_csv(lista_dados, nome_arquivo):
 
 
 from sqlalchemy import text
+
+
 
 def criar_tbl_pessoal(engine, query_sql):
 

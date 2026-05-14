@@ -4,30 +4,15 @@ import pandas as pd
 from funcoes import *
 from conexao import engine
 from consulta_sql import QUERY_CONSOLIDACAO_PESSOAL
+from consulta_sql import QUERY_LIMPEZA_TEMPORARIOS
 from mapeamentos import (
-    LAYOUT_TIPO_1, 
-    HEADER_TIPO_1,
-    LAYOUT_TIPO_2, 
-    HEADER_TIPO_2,
-    LAYOUT_TIPO_3, 
-    HEADER_TIPO_3,
-    LAYOUT_TIPO_4, 
-    HEADER_TIPO_4,
-    LAYOUT_TIPO_5,
-    HEADER_TIPO_5,
-    LAYOUT_TIPO_6, 
-    HEADER_TIPO_6,
-    CAMPOS_DATA_TIPO_1, 
-    CAMPOS_DATA_TIPO_2, 
-    CAMPOS_DATA_TIPO_3,
-    CAMPOS_DATA_TIPO_4, 
-    CAMPOS_DATA_TIPO_5, 
-    TRADUCAO_DENO_ESCOL,
-    TRADUCAO_TIT_FORM,
-    TRADUCAO_ESCOLARIDADE,
-    # TRADUCAO_PAIS,
-    # TRADUCAO_SIT,
-    # TRADUCAO_CARGO,    
+    LAYOUT_TIPO_1, HEADER_TIPO_1,CAMPOS_DATA_TIPO_1, 
+    LAYOUT_TIPO_2, HEADER_TIPO_2, CAMPOS_DATA_TIPO_2, 
+    LAYOUT_TIPO_3, HEADER_TIPO_3,CAMPOS_DATA_TIPO_3,
+    LAYOUT_TIPO_4, HEADER_TIPO_4,CAMPOS_DATA_TIPO_4, 
+    LAYOUT_TIPO_5, HEADER_TIPO_5,CAMPOS_DATA_TIPO_5, 
+    LAYOUT_TIPO_6, HEADER_TIPO_6, 
+    
 )
 
 import os
@@ -44,36 +29,8 @@ diretorio = os.path.join(os.path.expanduser("~"), "Desktop", "auto_fita_espelho"
 arquivo = 'fita_espelho.txt'
 arquivo_insc = 'Pescad_InscUFMG.txt'
 
-tbl_classe = os.path.join(diretorio,'Tabela Classe.txt')
-MAPA_CLASSES = carregar_tabela_apoio(tbl_classe, col_chave=0,col_valor=3)
 
-# tbl_estado_civil = os.path.join(diretorio,'Tabela Estado Civil.txt')
-# MAPA_ESTADO_CIVIL = carregar_tabela_apoio(tbl_estado_civil,col_chave=0,col_valor=1)
-
-
-# aux_pais = os.path.join(diretorio,'Pais.txt')
-# MAPA_PAIS = carregar_tabela_apoio(aux_pais,col_chave=1,col_valor=3)
-
-tbl_atividade = os.path.join(diretorio,'Tabela Atividade.txt')
-TRADUCAO_DENOATIV = carregar_tabela_apoio(tbl_atividade,col_chave=2,col_valor=3)
-
-tbl_uorg_endereco = os.path.join(diretorio,'Tabela UORG Endereco.txt')
-TRADUCAO_EMAIL = carregar_tabela_apoio(tbl_uorg_endereco,col_chave=16,col_valor=13)
-
-local_ap = os.path.join(diretorio,'Tabela Local Aposentadoria.txt')
-TRADUCAO_LOCAL_AP = carregar_tabela_apoio(local_ap,col_chave=0,col_valor=1)
-
-deno_local_ap = os.path.join(diretorio,'Tabela Local Aposentadoria.txt')
-TRADUCAO_DENO_LOCAL_AP = carregar_tabela_apoio(deno_local_ap,col_chave=0,col_valor=2)
-
-caminho_municipio = os.path.join(diretorio,'Tabela Municipio.txt')
-MAPA_MUNICIPIO = carregar_tabela_apoio(caminho_municipio)
-caminho_endereco = os.path.join(diretorio, 'Tabela UORG Endereco.txt')
-MAPA_PONTE_MUN = carregar_tabela_apoio(caminho_endereco, col_chave=16, col_valor=3)
-
-caminho_unidade = os.path.join(diretorio,'Tabela Unidade Atual.txt')
-MAPA_UNIDADES = carregar_mapa_unidades(caminho_unidade)
-# Agora o código usa o diretório dinâmico para carregar os arquivos
+# # Agora o código usa o diretório dinâmico para carregar os arquivos
 mapa_insc = carregar_dicionario_inscricoes(diretorio, arquivo_insc)
 caminho_completo = os.path.join(diretorio, arquivo)
 
@@ -120,7 +77,7 @@ print(f"Tipo 5 (Registro Afastamentos): {len(servidores_tipo_5)} registros extra
 print(f"Tipo 6 (Totalizador Afastamentos): {len(servidores_tipo_6)} registros extraídos.")
 print("-" * 50)
 
-print(list(MAPA_MUNICIPIO.items())[:5])
+# print(list(MAPA_MUNICIPIO.items())[:5])
 
 df = pd.DataFrame(servidores_pessoais)
 

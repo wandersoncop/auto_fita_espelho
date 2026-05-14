@@ -1,6 +1,6 @@
-"ChaveClasse";"Categ";"CodClasse";"DenoClasse";
-"M70545";"M";"4";"PROF ASSISTENTE-A";
-"M70546";"M";"4";"PROF ADJUNTO-A";
+"ChaveClasse";"Categ";"CodClasse";"DenoClasse";"ObsClasse"
+"M70545";"M";"4";"PROF ASSISTENTE-A";"Campo chaveClasse composta por CAT + GrupoCargo + Classe + 1º Número campo REF"
+"M70546";"M";"4";"PROF ADJUNTO-A";"Campo chaveClasse composta por CAT + GrupoCargo + Classe + 1º Número campo REF"
 "MU";"M";"U";"ÚNICO";
 "TM";"T";"M";"M";
 "TP";"T";"P";"P";
@@ -25,4 +25,3 @@
 "MS";"M";"S";"ESPECIAL";
 "M7";"M";"7";"PROF ASSOCIADO";
 "MV";"M";"V";"PROF ASSOCIADO";
-"

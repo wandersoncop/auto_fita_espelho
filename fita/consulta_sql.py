@@ -17,16 +17,16 @@ SELECT
     p.DataNasc,
     p.Mae,
     p.CodEstadoCiv,
-
-
-    ec.DenoECiv AS EstadoCiv,
+    ec.DenoECiv AS EstadoCiv, # campo criado
 
 
 
 
-p.CodEscol,
-    # p.DENO_ESCOL,
-    p.ESCOLARIDADE,
+    p.CodEscol,
+    es.DenoEscol AS Escolaridade,
+   
+
+
 p.CodTitulacao,
     # p.DENO_TIT,
 
@@ -59,6 +59,9 @@ LEFT JOIN aux_estado_civil ec
 
 LEFT JOIN aux_pais pa
     ON p.CODPAIS = pa.CodPais
+
+LEFT JOIN aux_escolaridade es
+    ON p.CodEscol = es.CodEsco   
 ;
 """
 
