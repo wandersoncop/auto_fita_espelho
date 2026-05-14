@@ -401,26 +401,26 @@ def calcular_tem_funcao(dados):
     
     return 'N'
 
-def calcular_escolaridade(dados):
-    # Tenta pegar pelo nome novo ou pelo nome bruto do layout
-    cod_escol = str(dados.get('COD_ESCOL') or dados.get('ESCOL') or '').strip().zfill(2)
-    cod_tit = str(dados.get('COD_TITULACAO') or dados.get('TIT_FORM') or '').strip().zfill(2)
-
-    grau_escol = TRADUCAO_ESCOLARIDADE.get(cod_escol, -1)
-    grau_tit = TRADUCAO_ESCOLARIDADE.get(cod_tit, -1)
-
-    deno_escol = dados.get('DENO_ESCOL', '')
-    deno_tit = dados.get('DENO_TIT', '')
-
-    # Lógica de comparação
-    if grau_escol >= 0 and grau_tit >= 0:
-        return deno_escol if grau_escol >= grau_tit else deno_tit
-    if grau_tit >= 0:
-        return deno_tit
-    if grau_escol >= 0:
-        return deno_escol
+# def calcular_escolaridade(dados):
     
-    return ''
+#     cod_escol = str(dados.get('CodEscol') or dados.get('ESCOL') or '').strip().zfill(2)
+#     cod_tit = str(dados.get('CodTitulacao') or dados.get('TIT_FORM') or '').strip().zfill(2)
+
+#     grau_escol = TRADUCAO_ESCOLARIDADE.get(cod_escol, -1)
+#     grau_tit = TRADUCAO_ESCOLARIDADE.get(cod_tit, -1)
+
+#     deno_escol = dados.get('DENO_ESCOL', '')
+#     deno_tit = dados.get('DENO_TIT', '')
+
+#     # Lógica de comparação
+#     if grau_escol >= 0 and grau_tit >= 0:
+#         return deno_escol if grau_escol >= grau_tit else deno_tit
+#     if grau_tit >= 0:
+#         return deno_tit
+#     if grau_escol >= 0:
+#         return deno_escol
+    
+#     return ''
 
 def salvar_em_csv(lista_dados, nome_arquivo):
     if not lista_dados:

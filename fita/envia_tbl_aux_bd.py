@@ -13,10 +13,12 @@ diretorio = os.path.join(
 #----------------------------------------------TABELAS AUXILIARES----------------------------------------------
 """
     Todas as tabelas devem estar:
+    em .txt
     com a primeira linha de cabeçalho
     padrão Unicode(UTF-8)  
     separados por ';' 
     e entre ""
+    o sitema enviará tudo como texto para o bd
 """
 #-----------------------ESTADO CIVIL
 
@@ -104,3 +106,10 @@ tbl_uorg_endereco = os.path.join(diretorio,'Tabela UORG Endereco.txt')
 df_uorg_endereco = pd.read_csv(tbl_uorg_endereco,sep=';',encoding='latin-1',dtype=str)
 df_uorg_endereco.to_sql('aux_uorg_endereco',engine,if_exists='replace',index=False)
 print('Tabela UORG Endereco enviada')
+
+#-----------------------titulação correção
+
+tbl_titulacao_correcao = os.path.join(diretorio,'Tabela Titulacao Correção.txt')
+df_titulacao_correcao = pd.read_csv(tbl_titulacao_correcao,sep=';',encoding='latin-1',dtype=str)
+df_titulacao_correcao.to_sql('aux_titulacao_correcao',engine,if_exists='replace',index=False)
+print('Tabela Titulação Correção enviada')

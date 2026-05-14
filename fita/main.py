@@ -1,5 +1,5 @@
-import os
-import csv
+# import os
+# import csv
 import pandas as pd
 from funcoes import *
 from conexao import engine
@@ -68,10 +68,10 @@ salvar_em_csv(servidores_tipo_6,os.path.join(diretorio,'tipo_6_totalizador_afast
 
 # ------------------------------------- RELATÓRIO FINAL ---
 print("-" * 50)
-print(f"PROCESSAMENTO CONCLUÍDO")
+print("PROCESSAMENTO CONCLUÍDO")
 print(f"Tipo 1 (Dados Pessoais): {len(servidores_pessoais)} registros extraídos.")
 print(f"Tipo 2 (Dados Funcionais): {len(servidores_funcionais)} registros extraídos.")
-print(f"Tipo 3 (Registro Pagamentos): {len(servidores_tipo_4)} registros extraídos.")
+print(f"Tipo 3 (Registro Pagamentos): {len(servidores_tipo_3)} registros extraídos.")
 print(f"Tipo 4 (Totalizador Pagamentos): {len(servidores_tipo_4)} registros extraídos.")
 print(f"Tipo 5 (Registro Afastamentos): {len(servidores_tipo_5)} registros extraídos.")
 print(f"Tipo 6 (Totalizador Afastamentos): {len(servidores_tipo_6)} registros extraídos.")
@@ -92,7 +92,6 @@ df.to_sql(
     index=False
 )
 
-# PASSO 2: Chama a função que criamos no funcoes.py
 
 # Ela vai usar a "receita" que está no arquivo SQL para criar a tabela final
 criar_tbl_pessoal(engine, QUERY_CONSOLIDACAO_PESSOAL)
