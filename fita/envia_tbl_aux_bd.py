@@ -113,3 +113,10 @@ tbl_titulacao_correcao = os.path.join(diretorio,'Tabela Titulacao Correção.txt
 df_titulacao_correcao = pd.read_csv(tbl_titulacao_correcao,sep=';',encoding='latin-1',dtype=str)
 df_titulacao_correcao.to_sql('aux_titulacao_correcao',engine,if_exists='replace',index=False)
 print('Tabela Titulação Correção enviada')
+
+#-----------------------titulação correção
+
+tbl_rubrica_incentivo_qualificacao = os.path.join(diretorio,'Tabela Rubrica Incentivo Qualificacao.txt')
+df_rubrica_incentivo_qualificacao = pd.read_csv(tbl_rubrica_incentivo_qualificacao,sep=';',encoding='latin-1',dtype=str)
+df_rubrica_incentivo_qualificacao.to_sql('aux_rubrica_incentivo_qualificacao',engine,if_exists='replace',index=False)
+print('Tabela Rubrica Incentivo Qualificacao enviada')
