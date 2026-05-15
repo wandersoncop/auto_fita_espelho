@@ -120,3 +120,11 @@ tbl_rubrica_incentivo_qualificacao = os.path.join(diretorio,'Tabela Rubrica Ince
 df_rubrica_incentivo_qualificacao = pd.read_csv(tbl_rubrica_incentivo_qualificacao,sep=';',encoding='latin-1',dtype=str)
 df_rubrica_incentivo_qualificacao.to_sql('aux_rubrica_incentivo_qualificacao',engine,if_exists='replace',index=False)
 print('Tabela Rubrica Incentivo Qualificacao enviada')
+
+#-----------------------000_PgtoIcentivoQualificacao
+
+tbl_000_PgtoIcentivoQualificacao = os.path.join(diretorio,'000_PgtoIcentivoQualificacao.txt')
+df_000_PgtoIcentivoQualificacao = pd.read_csv(tbl_000_PgtoIcentivoQualificacao,sep=';',encoding='latin-1',dtype=str)
+df_000_PgtoIcentivoQualificacao.to_sql('aux_pgtoicentivoqualificacao',engine,if_exists='replace',index=False)
+print('000_PgtoIcentivoQualificacao enviada')
+

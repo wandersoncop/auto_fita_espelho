@@ -12,7 +12,7 @@ LAYOUT_TIPO_1 = {
     "Sexo": (152, 153),
     "DataNasc": (153, 161),
     "CodEstadoCiv": (161, 162),
-    "CodEscol": (162, 164),
+    "CodEscolaridade": (162, 164),
     "CodTitulacao": (164, 166),
     "CodNaturalidade": (171, 172),
     "Naturalidade": (172, 174),
@@ -51,7 +51,7 @@ HEADER_TIPO_1 = [
     "DataNasc",
     "CodEstadoCiv",
     # "EstadoCiv", # CAMPO CRIADO POR TBL AUX
-    "CodEscol",
+    "CodEscolaridade",
     "DenoEscol", # CAMPO CRIADO POR TBL AUX
     "Escolaridade", # CAMPO CRIADO POR TBL AUX
     "CodTitulacao",
@@ -408,11 +408,11 @@ HEADER_TIPO_2 = [
 ]
 
 LAYOUT_TIPO_3 = {
-    "Lixo1": (0, 9),
+    "UnidPag": (0, 9),
     "SIAPE": (9, 16),
     "SiapeDig": (16, 17),
     "TipoReg": (17, 18),
-    "Lixo2": (18, 20),
+    # "UF_UPAG": (18, 20),
     "RendDesc": (20, 21),
     "CodRub": (21, 26),
     "Seq": (26, 27),
@@ -432,11 +432,11 @@ LAYOUT_TIPO_3 = {
     "Lixo3": (135, 764),
 }                         
 HEADER_TIPO_3 = [
-    "Lixo1",
+    "UnidPag",
     "SIAPE",
     "SiapeDig",
     "TipoReg",
-    "Lixo2",
+    # "UF_UPAG",
     "RendDesc",
     "CodRub",
     "Seq",
@@ -453,7 +453,7 @@ HEADER_TIPO_3 = [
     "PAAgen",
     "PAConta",
     "PAAnoMesRub",
-    "Lixo3",
+    
 ]
 
 LAYOUT_TIPO_4 = {
@@ -532,9 +532,9 @@ HEADER_TIPO_6 =[
 
 #------------------------------ INSIRA AQUI TODOS OS CAMPOS QUE SÃO DATA
 CAMPOS_DATA_TIPO_1 = [
-    'DT_NASC', 
-    'DT_1_EMP', 
-    'DT_EXP'
+    'DataNasc', 
+    'DataPrimEmprego', 
+    'DataExpedicao'
 ]
 CAMPOS_DATA_TIPO_2 = [
     'DtExcInst',

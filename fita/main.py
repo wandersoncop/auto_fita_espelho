@@ -3,7 +3,8 @@
 import pandas as pd
 from funcoes import *
 from conexao import engine
-from consulta_sql import QUERY_CONSOLIDACAO_PESSOAL
+from consulta_sql import CRIA_TBL_PESSOAL
+from consulta_sql import CRIA_TBL_REGISTRO_PAGAMENTO
 from consulta_sql import QUERY_LIMPEZA_TEMPORARIOS
 from mapeamentos import (
     LAYOUT_TIPO_1, HEADER_TIPO_1,CAMPOS_DATA_TIPO_1, 
@@ -79,19 +80,20 @@ print("-" * 50)
 
 # print(list(MAPA_MUNICIPIO.items())[:5])
 
-df = pd.DataFrame(servidores_pessoais)
+df_pessoal = pd.DataFrame(servidores_pessoais)
+df_pessoal.to_sql('tipo_1_pessoal',engine,if_exists='replace',index=False)
 
-#------------------------------ PARA ENVIAR A TABELA DE TIPO PARA O BANCO SALVAR NO BD
-
-
-# PASSO 1: Envia os dados "crus" para o MySQL
-df.to_sql(
-    'tipo_1_pessoal',
-    engine,
-    if_exists='replace',
-    index=False
-)
+df_reg_pagamento = pd.DataFrame(servidores_tipo_3)
+df_reg_pagamento.to_sql('tipo_3_rg_pagamento',engine,if_exists='replace',index=False)
 
 
 # Ela vai usar a "receita" que está no arquivo SQL para criar a tabela final
-criar_tbl_pessoal(engine, QUERY_CONSOLIDACAO_PESSOAL)
+lista_tbl_banco= [
+    CRIA_TBL_PESSOAL,
+    CRIA_TBL_REGISTRO_PAGAMENTO
+    # Se houver mais queries no futuro, basta adicioná-las aqui
+]
+print('Iniciando a criação de tabelas...')
+for query in lista_tbl_banco:
+    criar_tbl_banco(engine,query)
+print('Processo de craição finalizado')    

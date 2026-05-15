@@ -110,30 +110,9 @@ def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
                 matric_limpa = str(dados.get('MATRIC', '')).strip()
                 dados['InscUFMG'] = mapa_inscricoes.get(matric_limpa, '')
                 # Alimenta o mapa de nomes para usar no Tipo 2
-                mapa_nomes[matric_limpa] = nome_servidor
+                mapa_nomes[matric_limpa] = nome_servidor   
                 
-                #  APAGAR DEPOIS DE TESTAR ***************Estado Civil------------------------------------------
-                # codigo_CodEstadoCiv = str(dados.get('CodEstadoCiv') or '').strip()
-                # dados['DENO_E_CIV'] = MAPA_ESTADO_CIVIL.get(codigo_CodEstadoCiv, 'NÃO INFORMADO')
-                
-                # Preparação para Escolaridade
-                # dados['COD_ESCOL'] = str(dados.get('ESCOL', '')).zfill(2)
-                # dados['COD_TITULACAO'] = str(dados.get('TIT_FORM', '')).zfill(2)
-
-                # # Traduções de escolaridade e título
-                # dados['DENO_ESCOL'] = TRADUCAO_DENO_ESCOL.get(dados['COD_ESCOL'], '')
-                
-                # dados['DENO_TIT'] = TRADUCAO_TIT_FORM.get(dados['COD_TITULACAO'], '')
-                
-                # Cálculo do maior grau
-                # dados['ESCOLARIDADE'] = calcular_escolaridade(dados)
-                
-                # # Tradução de País
-                # dados['DENO_PAIS'] = TRADUCAO_PAIS.get(str(dados.get('PAIS')).zfill(3), '')
-                
-                
-
-                # 3. Montagem final conforme a ordem do HEADER_TIPO_1
+              # 3. Montagem final conforme a ordem do HEADER_TIPO_1
                 dados_ordenado = {campo: dados.get(campo) for campo in HEADER_TIPO_1}
                 lista_dados_pessoais.append(dados_ordenado)
                 
@@ -438,16 +417,23 @@ from sqlalchemy import text
 
 
 
-def criar_tbl_pessoal(engine, query_sql):
 
+
+def criar_tbl_banco(engine, query_sql):
+    """
+    cria as tabelas finais no banco de dados
+
+    Args:
+        engine: Objeto de conexão SQLAlchemy
+        query_sql (str): String contendo uma ou mais consultas SQL separadas por ';'
+    """
     try:
         with engine.begin() as conexao:
-
             for comando in query_sql.split(";"):
-
-                if comando.strip():
-                    conexao.execute(text(comando))
-
+                comando_limpo = comando.strip()
+                if comando_limpo:  # Evita executar strings vazias
+                    conexao.execute(text(comando_limpo))
+            
             print("✅ CONSOLIDAÇÃO CONCLUÍDA COM SUCESSO!")
 
     except Exception as erro:
