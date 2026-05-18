@@ -83,7 +83,7 @@ LAYOUT_TIPO_2 = {
     'UPAG': (0, 9),
     'SIAPE': (9, 16),
     'DIG': (16, 17),
-    'TIPO_REGISTRO': (17, 18),
+    'TipoReg': (17, 18),
     'RJ': (20, 23),
     'SIT': (23, 25),
     'CtNum': (25, 31),

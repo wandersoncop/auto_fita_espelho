@@ -1,10 +1,14 @@
-# import os
-# import csv
 import pandas as pd
 from funcoes import *
 from conexao import engine
-from consulta_sql import CRIA_TBL_PESSOAL
-from consulta_sql import CRIA_TBL_REGISTRO_PAGAMENTO
+from consulta_sql import(
+    CRIA_TBL_PESSOAL,
+    CRIA_TBL_FUNCIONAL,
+    CRIA_TBL_REGISTRO_PAGAMENTO,
+    # COLOQUE AS TABELAS QUE NECESSITAR
+) 
+    
+
 from consulta_sql import QUERY_LIMPEZA_TEMPORARIOS
 from mapeamentos import (
     LAYOUT_TIPO_1, HEADER_TIPO_1,CAMPOS_DATA_TIPO_1, 
@@ -13,7 +17,6 @@ from mapeamentos import (
     LAYOUT_TIPO_4, HEADER_TIPO_4,CAMPOS_DATA_TIPO_4, 
     LAYOUT_TIPO_5, HEADER_TIPO_5,CAMPOS_DATA_TIPO_5, 
     LAYOUT_TIPO_6, HEADER_TIPO_6, 
-    
 )
 
 import os
@@ -31,12 +34,10 @@ arquivo = 'fita_espelho.txt'
 arquivo_insc = 'Pescad_InscUFMG.txt'
 
 
-# # Agora o código usa o diretório dinâmico para carregar os arquivos
+
 mapa_insc = carregar_dicionario_inscricoes(diretorio, arquivo_insc)
 caminho_completo = os.path.join(diretorio, arquivo)
 
-# Exemplo de como abrir a Tabela de Estado Civil usando o mesmo diretório
-# caminho_estado_civil = os.path.join(diretorio, 'Tabela Estado Civil.txt')
 
 print(f"Diretório detectado: {diretorio}")
 
@@ -64,10 +65,7 @@ salvar_em_csv(servidores_tipo_6,os.path.join(diretorio,'tipo_6_totalizador_afast
 
 
 
-
-
-
-# ------------------------------------- RELATÓRIO FINAL ---
+# ------------------------------------- RELATÓRIO FINAL  ---
 print("-" * 50)
 print("PROCESSAMENTO CONCLUÍDO")
 print(f"Tipo 1 (Dados Pessoais): {len(servidores_pessoais)} registros extraídos.")
@@ -78,19 +76,22 @@ print(f"Tipo 5 (Registro Afastamentos): {len(servidores_tipo_5)} registros extra
 print(f"Tipo 6 (Totalizador Afastamentos): {len(servidores_tipo_6)} registros extraídos.")
 print("-" * 50)
 
-# print(list(MAPA_MUNICIPIO.items())[:5])
 
 df_pessoal = pd.DataFrame(servidores_pessoais)
 df_pessoal.to_sql('tipo_1_pessoal',engine,if_exists='replace',index=False)
+
+df_funcional = pd.DataFrame(servidores_funcionais)
+df_funcional.to_sql('tipo_2_funcional',engine,if_exists='replace',index=False)
 
 df_reg_pagamento = pd.DataFrame(servidores_tipo_3)
 df_reg_pagamento.to_sql('tipo_3_rg_pagamento',engine,if_exists='replace',index=False)
 
 
-# Ela vai usar a "receita" que está no arquivo SQL para criar a tabela final
+# Ela vai usar a o arquivo consulta_sql.py para criar a tabela final
 lista_tbl_banco= [
     CRIA_TBL_PESSOAL,
-    CRIA_TBL_REGISTRO_PAGAMENTO
+    CRIA_TBL_FUNCIONAL,
+    CRIA_TBL_REGISTRO_PAGAMENTO,
     # Se houver mais queries no futuro, basta adicioná-las aqui
 ]
 print('Iniciando a criação de tabelas...')
