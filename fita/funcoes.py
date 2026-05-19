@@ -167,8 +167,8 @@ def extrair_tipo_2(caminho_arquivo, header, mapa_inscricoes, mapa_nomes):
                 # dados['DENOCARG'] = TRADUCAO_CARGO.get(cod_cargo_full, f'DENOCARG {cod_cargo_full}')
 
                 # --- 5. MATRICULA E NOME ---
-                matric_func = str(dados.get('MATRIC', '')).strip()
-                dados['NOME'] = mapa_nomes.get(matric_func, 'NOME NAO ENCONTRADO')
+                matric_func = str(dados.get('SIAPE', '')).strip()
+                dados['Nome'] = mapa_nomes.get(matric_func, 'NOME NAO ENCONTRADO')
                 dados['InscUFMG'] = mapa_inscricoes.get(matric_func, '')
 
 #---------------------------------------- 6. REGRA DO RT ---
