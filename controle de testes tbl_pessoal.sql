@@ -26,6 +26,13 @@ GROUP BY SEXO;
 SELECT COUNT(DISTINCT PAIS)AS QTD
 FROM fita_espelho.tbl_pessoal;
 
-SELECT CodPais AS TOT
+SELECT 
+    Escolaridade,
+    COUNT(*) AS TOTAL
 FROM fita_espelho.tbl_pessoal
-group by CodPais;
+GROUP BY Escolaridade;
+
+
+
+
+

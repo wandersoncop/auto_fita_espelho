@@ -1,11 +1,41 @@
-servidores_tipo_3 = extrair_tipo_3(caminho_completo,dados_0)
-salvar_em_csv(servidores_tipo_3,os.path.join(diretorio,'tipo_3_registro_pagamento.csv'))
+CASE 
+    WHEN es.grauEscolaridade IS NOT NULL 
+         AND tit.grauEscolaridade IS NOT NULL THEN
+        CASE 
+            WHEN CAST(es.grauEscolaridade AS SIGNED) 
+                 >= CAST(tit.grauEscolaridade AS SIGNED)
+                THEN es.denoEscolaridade
 
-servidores_tipo_4 = extrair_tipo_4(caminho_completo,dados_0)
-salvar_em_csv(servidores_tipo_4,os.path.join(diretorio,'tipo_4_totalizador_pagamento.csv'))
+            ELSE tit.denoEscolaridade 
+        END
 
-servidores_tipo_5 = extrair_tipo_5(caminho_completo,dados_0)
-salvar_em_csv(servidores_tipo_5,os.path.join(diretorio,'tipo_5_registro_afastamento.csv'))
+        -- 2. Se houver apenas Titulação válida
+        WHEN tit.grauEscolaridade IS NOT NULL THEN
+            tit.denoEscolaridade
 
-servidores_tipo_6 = extrair_tipo_6(caminho_completo,dados_0)
-sal
+        -- 3. Se houver apenas Escolaridade válida
+        WHEN es.grauEscolaridade IS NOT NULL THEN
+            es.denoEscolaridade
+
+        -- 4. Se não houver titulação válida,
+        -- tenta descobrir pelo incentivo PERQUALIF
+        WHEN (
+            p.CodTitulacao IS NULL 
+            OR p.CodTitulacao = '00' 
+            OR p.CodTitulacao = ''
+        ) THEN
+            CASE 
+                WHEN riq.PERQUALIF IN (52, 50, 35) 
+                    THEN 'MESTRADO'
+
+                WHEN riq.PERQUALIF = 75 
+                    THEN 'DOUTORADO'
+
+                WHEN riq.PERQUALIF = 30 
+                    THEN 'ESPECIALIZACAO NIVEL SUPERIOR'
+
+                ELSE es.denoEscolaridade
+            END
+
+        ELSE es.denoEscolaridade
+    END AS Escolaridade,
