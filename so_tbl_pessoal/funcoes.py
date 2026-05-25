@@ -34,10 +34,14 @@ def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
             #     raise ValueError(
             #         f'❌ Tradução não encontrada para {nome_campo}: "{valor}"'
             #     )
+
+            # se tiver problema de tradução descomentar as linhas 39-42
             if valor not in mapa:
                 registro[nome_campo_novo] = ""
             else:
                 registro[nome_campo_novo] = mapa[valor]
+
+                
 #aqui cria o novo campo que vem das traduções da tabela auxuliar
 
 #descomentar depois

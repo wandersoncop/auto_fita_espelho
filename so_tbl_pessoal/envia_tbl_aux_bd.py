@@ -10,7 +10,7 @@ diretorio = os.path.join(
     'auto_fita_espelho',
     'tbl_Auxiliares'
 )
-#----------------------------------------------TABELAS AUXILIARES----------------------------------------------
+#---------------------------TABELAS AUXILIARES
 """
     Todas as tabelas devem estar:
     em .txt
@@ -27,7 +27,7 @@ df_estado_civil= pd.read_csv(tbl_estado_civil, sep=';',encoding='latin-1',dtype=
 df_estado_civil.to_sql( 'aux_estado_civil',engine,if_exists='replace',index=False)
 print ('Tabela estado civil enviada')
 
-#-----------------------PAIS
+#-----------------------pais
 
 tbl_pais = os.path.join(diretorio, 'Tabela Pais.txt')
 df_pais= pd.read_csv(tbl_pais, sep=';',encoding='latin-1',dtype=str)
@@ -40,7 +40,6 @@ tbl_escolaridade = os.path.join(diretorio,'Tabela Escolaridade.txt')
 df_escolaridade = pd.read_csv(tbl_escolaridade,sep=';',encoding='latin-1',dtype=str)
 df_escolaridade.to_sql('aux_escolaridade',engine,if_exists='replace',index=False)
 print('Tabela Escolaridade enviada')
-
 
 #-----------------------titulação
 
@@ -62,3 +61,9 @@ tbl_rubrica_incentivo_qualificacao = os.path.join(diretorio,'Tabela Rubrica Ince
 df_rubrica_incentivo_qualificacao = pd.read_csv(tbl_rubrica_incentivo_qualificacao,sep=';',encoding='latin-1',dtype=str)
 df_rubrica_incentivo_qualificacao.to_sql('aux_rubrica_incentivo_qualificacao',engine,if_exists='replace',index=False)
 print('Tabela Rubrica Incentivo Qualificacao enviada')
+
+#-----------------------pescad
+tbl_pescad_Insc_Ufmg = os.path.join(diretorio,'Pescad_InscUFMG.txt')
+df_pescad_Insc_Ufmg = pd.read_csv(tbl_pescad_Insc_Ufmg,sep=';',encoding='latin-1',dtype=str)
+df_pescad_Insc_Ufmg.to_sql('aux_pescad_insc_ufmg',engine,if_exists='replace',index=False)
+print('Tabela Pescad Isnc UFMG enviada')
