@@ -115,6 +115,11 @@ def extrair_tipo_1(caminho_arquivo, header, mapa_inscricoes):
               # 3. Montagem final conforme a ordem do HEADER_TIPO_1
                 dados_ordenado = {campo: dados.get(campo) for campo in HEADER_TIPO_1}
                 lista_dados_pessoais.append(dados_ordenado)
+
+
+
+
+             
                 
     return lista_dados_pessoais, mapa_nomes
 
@@ -283,6 +288,8 @@ def extrair_tipo_3(caminho_arquivo, header):
                 
     
                 lista_tipo_3.append(dados)
+
+           
                 
     return lista_tipo_3  
 

@@ -5,6 +5,7 @@ from consulta_sql import(
     CRIA_TBL_PESSOAL,
     CRIA_TBL_FUNCIONAL,
     CRIA_TBL_REGISTRO_PAGAMENTO,
+    CRIA_TBL_PGTO_INCENTIVO_QUALIFICACAO,
     # COLOQUE AS TABELAS QUE NECESSITAR
 ) 
     
@@ -91,6 +92,7 @@ df_reg_pagamento.to_sql('tipo_3_rg_pagamento',engine,if_exists='replace',index=F
 lista_tbl_banco= [
     CRIA_TBL_PESSOAL,
     CRIA_TBL_FUNCIONAL,
+    CRIA_TBL_PGTO_INCENTIVO_QUALIFICACAO,
     CRIA_TBL_REGISTRO_PAGAMENTO,
     # Se houver mais queries no futuro, basta adicioná-las aqui
 ]

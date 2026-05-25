@@ -28,10 +28,10 @@ SELECT
 
     p.CodEscolaridade,
     esc.DenoEscol AS DenoEscolaridade,
-    
+
     CASE 
-        WHEN es.codEscolaridade IS NOT NULL 
-         AND tit.codTitulacao IS NOT NULL
+       WHEN es.grauEscolaridade IS NOT NULL 
+       AND tit.grauEscolaridade IS NOT NULL
         THEN
             CASE 
                 WHEN CAST(es.grauEscolaridade AS SIGNED) >
@@ -42,15 +42,12 @@ SELECT
 
         WHEN p.CodTitulacao IS NULL 
           OR p.CodTitulacao = '00'
-          OR p.CodTitulacao = ''
+          
         THEN
             CASE 
-                WHEN riq.PERQUALIF IN (52, 50, 35) 
-                    THEN 'MESTRADO'
-                WHEN riq.PERQUALIF = 75 
-                    THEN 'DOUTORADO'
-                WHEN riq.PERQUALIF = 30 
-                    THEN 'ESPECIALIZACAO NIVEL SUPERIOR'
+                WHEN TRIM(riq.PERQUALIF) IN ('52', '50', '35') THEN 'MESTRADO'
+                WHEN TRIM(riq.PERQUALIF) = '75' THEN 'DOUTORADO'
+                WHEN TRIM(riq.PERQUALIF) = '30' THEN 'ESPECIALIZACAO NIVEL SUPERIOR'
                 ELSE esc.DenoEscol
             END
 
@@ -59,6 +56,7 @@ SELECT
 
     p.CodTitulacao,
     at.DenoTit AS DenoTitulacao,
+
     p.CodNaturalidade,
     p.Naturalidade,
     p.CodPais,
@@ -261,7 +259,29 @@ FROM tipo_2_funcional f;
 
 
 # ---------------------------------------------------------------------------------------
+CRIA_TBL_PGTO_INCENTIVO_QUALIFICACAO = """
+DROP TABLE IF EXISTS `000_PgtoIncentivoQualificacao`;
 
+CREATE TABLE `000_PgtoIncentivoQualificacao` AS
+SELECT
+    rp.SIAPE,
+    rp.CodRub,
+    rp.Seq,
+    rp.RendDesc,
+    rp.Valor,
+
+    riq.DENOQUALIF,
+    riq.PERQUALIF
+
+FROM tipo_3_rg_pagamento rp
+
+LEFT JOIN aux_rubrica_incentivo_qualificacao riq
+    ON rp.CodRub = riq.CODQUALIF
+
+WHERE
+    rp.RendDesc = '1'
+    AND rp.Seq IN ('0', '1');
+"""
 
 
 CRIA_TBL_REGISTRO_PAGAMENTO = """
