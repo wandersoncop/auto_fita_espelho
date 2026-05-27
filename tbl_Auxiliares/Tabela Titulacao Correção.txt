@@ -1,4 +1,5 @@
 "codTitulacao";"codEscolaridade";"denoEscolaridade";"grauEscolaridade"
+"00";;"SEM TITULACAO";
 "28";"18";"POS-DOUTORADO";14
 "27";"14";"DOUTORADO";13
 "50";;"MESTRE+RSC-III (LEI 12772/12 ART 18)";13

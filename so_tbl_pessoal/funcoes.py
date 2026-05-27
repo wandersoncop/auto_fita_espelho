@@ -1,3 +1,6 @@
+
+
+import pandas as pd
 def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
     """Traduz uma linha da fita espelho usando as posições do layout."""
 
@@ -29,23 +32,24 @@ def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
         if nome_campo in mapas_auxiliares:
             nome_campo_novo = mapas_auxiliares[nome_campo]['nome_campo']
             mapa = mapas_auxiliares[nome_campo]['mapa']
+            #faz a verificação de novo campo
 # descomentar depois as linhas 33-36 e apagar as 37-39
-            # if valor not in mapa:
-            #     raise ValueError(
-            #         f'❌ Tradução não encontrada para {nome_campo}: "{valor}"'
-            #     )
+            if valor not in mapa:
+                raise ValueError(
+                    f'❌ Tradução não encontrada para {nome_campo}: "{valor}"'
+                )
 
             # se tiver problema de tradução descomentar as linhas 39-42
-            if valor not in mapa:
-                registro[nome_campo_novo] = ""
-            else:
-                registro[nome_campo_novo] = mapa[valor]
+            # if valor not in mapa:
+            #     registro[nome_campo_novo] = ""
+            # else:
+            #     registro[nome_campo_novo] = mapa[valor]
 
                 
 #aqui cria o novo campo que vem das traduções da tabela auxuliar
 
 #descomentar depois
-            # registro[nome_campo_novo] = mapa[valor]
+            registro[nome_campo_novo] = mapa[valor]
 
     return registro
 
@@ -109,7 +113,7 @@ def formatar_sexo(valor):
         return'Feminino'
     return valor
 
-def criar_escolaridade(df_pessoal, df_titulacao_correcao,mapa_perqualif=None):
+def criar_escolaridade(df_pessoal, df_titulacao_correcao, mapa_perqualif=None):
     """Cria o campo Escolaridade comparando escolaridade e titulação."""
 
     if mapa_perqualif is None:
@@ -137,10 +141,9 @@ def criar_escolaridade(df_pessoal, df_titulacao_correcao,mapa_perqualif=None):
         cod_titulacao = linha['CodTitulacao']
         deno_escolaridade = linha['DenoEscolaridade']
         siape = linha['SIAPE']
-        perqualif = str(mapa_perqualif.get(siape,'')).strip()
+        perqualif = str(mapa_perqualif.get(siape, '')).strip()
 
         dados_escolaridade = mapa_escolaridade.get(cod_escolaridade)
-
         dados_titulacao = mapa_titulacao.get(cod_titulacao)
 
         if cod_titulacao in ('', '00'):
@@ -157,41 +160,43 @@ def criar_escolaridade(df_pessoal, df_titulacao_correcao,mapa_perqualif=None):
                 escolaridades.append('ESPECIALIZACAO NIVEL SUPERIOR')
                 continue
 
-
         if dados_escolaridade and dados_titulacao:
 
             grau_escolaridade = int(
                 dados_escolaridade['grauEscolaridade']
             )
 
-            grau_titulacao = int(
-                dados_titulacao['grauEscolaridade']
-            )
+            grau_titulacao_valor = dados_titulacao['grauEscolaridade']
 
-            if grau_escolaridade > grau_titulacao:
+            if pd.isna(grau_titulacao_valor):
+                grau_titulacao = None
+            else:
+                grau_titulacao = int(grau_titulacao_valor)
 
+            if grau_titulacao is not None:
+
+                if grau_escolaridade > grau_titulacao:
+                    escolaridades.append(
+                        dados_escolaridade['denoEscolaridade']
+                    )
+                else:
+                    escolaridades.append(
+                        dados_titulacao['denoEscolaridade']
+                    )
+
+            else:
                 escolaridades.append(
                     dados_escolaridade['denoEscolaridade']
                 )
 
-            else:
-
-                escolaridades.append(
-                    dados_titulacao['denoEscolaridade']
-                )
-
         else:
-
             escolaridades.append(
                 deno_escolaridade
             )
 
-    
-    
-    
-
-    if 'Escolaridade'in df_pessoal.columns:
+    if 'Escolaridade' in df_pessoal.columns:
         df_pessoal = df_pessoal.drop(columns=['Escolaridade'])
+
     posicao = df_pessoal.columns.get_loc('CodTitulacao')
 
     df_pessoal.insert(
@@ -200,7 +205,7 @@ def criar_escolaridade(df_pessoal, df_titulacao_correcao,mapa_perqualif=None):
         escolaridades
     )
 
-    return df_pessoal      
+    return df_pessoal     
 
 
 

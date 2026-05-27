@@ -1,4 +1,5 @@
 "CodTit";"DenoTit";"CodAnterior";"CodEscolaridade"
+
 "20";"TECNICO (NIVEL MEDIO COMPLETO)";"08";"08"
 "21";"APERFEICOAMENTO NIVEL MEDIO";"08";"08"
 "22";"ESPECIALIZACAO NIVEL MEDIO";"08";"08"

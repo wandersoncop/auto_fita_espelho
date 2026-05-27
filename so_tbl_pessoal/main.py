@@ -94,8 +94,8 @@ df_titulacao_correcao = pd.read_sql(
 df_pescad_matricula_ufmg = pd.read_sql(
     """
     SELECT
-        InscUFMG,
-        MATRIC
+        Inscr,
+       SIAPE
     FROM aux_pescad_insc_ufmg   
     """,
     engine
@@ -103,8 +103,8 @@ df_pescad_matricula_ufmg = pd.read_sql(
 
 mapa_insc_ufmg = dict(
     zip(
-        df_pescad_matricula_ufmg['MATRIC'],
-        df_pescad_matricula_ufmg['InscUFMG']
+        df_pescad_matricula_ufmg['SIAPE'],
+        df_pescad_matricula_ufmg['Inscr']
     )
 )
 

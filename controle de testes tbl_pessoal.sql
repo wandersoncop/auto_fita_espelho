@@ -32,4 +32,3 @@ SELECT
 FROM fita_espelho.tbl_pessoal
 GROUP BY Escolaridade;
 
-
