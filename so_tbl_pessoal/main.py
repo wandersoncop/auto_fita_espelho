@@ -11,9 +11,11 @@ from funcoes import (
     criar_escolaridade
 )
 
-# aqui os imports do que vem la do mapeamento
+# aqui fazemos os imports dos mapeamento dos campos  que vem la do mapeamento
 from mapeamentos import (
     LAYOUT_TIPO_1,
+    LAYOUT_TIPO_2,
+    HEADER_TIPO_2,
     LAYOUT_TIPO_3,
     CAMPOS_DATA
 )
@@ -22,7 +24,7 @@ from conexao import engine
 
 
 # =========================
-# TABELAS AUXILIARES
+#  REGRA DE CRIAÇÃO DOS CAMPOS COM BASE NAS TABELAS AUXILIARES
 # =========================
 
 # ESTADO CIVIL-----------------------------------------------------------------------------------------------
@@ -91,10 +93,11 @@ df_titulacao_correcao = pd.read_sql(
 )
 
 # pescad matricula ufmg------------------------------------------------------------------------
+#cria o campo In
 df_pescad_matricula_ufmg = pd.read_sql(
     """
     SELECT
-        Inscr,
+       Inscr,
        SIAPE
     FROM aux_pescad_insc_ufmg   
     """,
@@ -107,7 +110,24 @@ mapa_insc_ufmg = dict(
         df_pescad_matricula_ufmg['Inscr']
     )
 )
+# situação------------------------------------------------------------------------
+df_situacao = pd.read_sql(
+    """
+    SELECT 
+        CodSit,
+        DenoSit
+    FROM aux_situacao    
 
+    """,
+    engine
+)
+mapa_situacao = dict(
+    zip(
+        df_situacao['CodSit'],
+        df_situacao['DenoSit']
+
+    )
+)
 
 # =========================
 # CAMINHOS
@@ -132,7 +152,7 @@ if os.path.exists(caminho_arquivo):
 
     print("✅ Arquivo encontrado:")
 
-    # aqui é colocado todos os campos auxiliares que criam novos campos
+    # aqui é cria  todos os campos com bse nas regras que vem dos mapas tbl auxiliares 
     mapas_auxiliares = {
         'CodEstadoCiv': {
             'nome_campo': 'EstadoCiv',
@@ -153,6 +173,10 @@ if os.path.exists(caminho_arquivo):
         'SIAPE': {
             'nome_campo': 'InscUFMG',
             'mapa': mapa_insc_ufmg
+        },
+        'CodSituacao':{#nome referencia na tabela
+            'nome_campo':'Situacao',
+            'mapa':mapa_situacao
         }
     }
 
@@ -168,16 +192,16 @@ if os.path.exists(caminho_arquivo):
     # =========================
     # TIPO 1 - PESSOAL
     # =========================
-
+    #extração e estruturação dos dados
     registros_tipo_1 = ler_fita_por_tipo(
-        caminho_arquivo,
-        LAYOUT_TIPO_1,
-        '1',
-        CAMPOS_DATA,
-        mapas_auxiliares
+        caminho_arquivo,# onde esta o arquivo
+        LAYOUT_TIPO_1,# mapeamento
+        '1',#tipo do arquivo ex:tipo_1,tipo_2,tipo_3....
+        CAMPOS_DATA,#lista de campos que são data
+        mapas_auxiliares, # e o dicionario para configuracao dos novos campos
     )
 
-    print(f'Tipo_1_pessoal finalizado: {len(registros_tipo_1)} registros')
+    print(f'Tipo_1_pessoal finalizado: {len(registros_tipo_1)} registros') #exibe mensagem com quantidade de registros encontrados
 
     df_pessoal = pd.DataFrame(registros_tipo_1)
 
@@ -187,6 +211,70 @@ if os.path.exists(caminho_arquivo):
         'mes_fita',
         mes_fita
     )
+    # =========================
+    # TIPO 2 - FUNCIONAL
+    # =========================
+    registros_tipo_2 = ler_fita_por_tipo(
+        caminho_arquivo, #onde esta o arquivo
+        LAYOUT_TIPO_2, #chama o mapeamento da fita
+        '2',#tipo do arquivo
+        CAMPOS_DATA,#busca os campos que são data
+        mapas_auxiliares,
+    )
+    print(f'Tipo_2_funcional finalizado: {len(registros_tipo_2)} registros')#exibe mensagem com quantidade de registros encontrados
+
+    df_funcional = pd.DataFrame(registros_tipo_2)# cria como se fosse um excel na memoria
+    print(df_funcional.columns.tolist())
+#insere o campo categoria
+    df_funcional['Categoria'] = df_funcional['GrCargo'].apply(
+    lambda gr_cargo: 'Docente'
+    if gr_cargo in ('060', '702', '705', '706', '707')
+    else 'Tec-Administrativo'
+)
+
+    df_funcional = df_funcional.merge( #busca o campo Nome da tabela pessoal e coloca na ultima posicao
+        df_pessoal[['SIAPE','Nome']],
+        on= 'SIAPE',
+        how='left'
+    )
+    
+    nome_coluna = df_funcional.pop('Nome')# remove a coluna da ultima posicao para reinserir na posição indicada
+
+    posicao = df_funcional.columns.get_loc('SiapeDig') + 1 #aqui indica onde colocar o campo apos SiapeDig
+
+    df_funcional.insert(# aqui inserre de fato o campo na posição
+        posicao,
+        'Nome',
+        nome_coluna
+    )
+
+    df_funcional.insert(# faz a inserção do campo mes_fita na tbl funcional
+        0,#posição 1 coluna
+        'mes_fita', #nome da coluna
+         mes_fita #valor da coluna
+    )
+
+  
+
+    df_funcional = df_funcional[HEADER_TIPO_2]
+
+    df_funcional.to_csv(#cria o csv
+        'tipo_2_funcional.csv',
+        sep=';',
+        index=False,
+        encoding='utf-8-sig'
+
+    )
+    # aqui envia para o banco com o .to_sql
+    df_funcional.to_sql(
+        'tbl_funcional',
+        engine,
+        if_exists='replace',
+        index=False
+    )
+
+    print("✅ tipo_2_funcional salvo no banco!")
+
 
     # =========================
     # TIPO 3 - PAGAMENTO

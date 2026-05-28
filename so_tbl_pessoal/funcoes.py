@@ -91,6 +91,31 @@ def ler_fita_por_tipo(
                     mapas_auxiliares
                 )
 
+ #---------------------------------------- CRIAÇÃO Categoria ---
+   #---------------------------------------- CRIAÇÃO Categoria ---
+
+                if 'GrCargo' in dados:
+
+                    gr_cargo = dados.get('GrCargo', '')
+
+                    cat_letra = (
+                        'M'
+                        if gr_cargo in (
+                            '060',
+                            '702',
+                            '705',
+                            '706',
+                            '707'
+                        )
+                        else 'T'
+                    )
+
+                    dados['Categoria'] = (
+                        'Docente'
+                        if cat_letra == 'M'
+                        else 'Tec-Administrativo'
+                    )
+
                 registros.append(dados)
 
     return registros
@@ -206,6 +231,7 @@ def criar_escolaridade(df_pessoal, df_titulacao_correcao, mapa_perqualif=None):
     )
 
     return df_pessoal     
+
 
 
 

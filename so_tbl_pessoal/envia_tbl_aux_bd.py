@@ -63,7 +63,16 @@ df_rubrica_incentivo_qualificacao.to_sql('aux_rubrica_incentivo_qualificacao',en
 print('Tabela Rubrica Incentivo Qualificacao enviada')
 
 #-----------------------pescad
+
 tbl_pescad_Insc_Ufmg = os.path.join(diretorio,'Pescad_InscUFMG.txt')
 df_pescad_Insc_Ufmg = pd.read_csv(tbl_pescad_Insc_Ufmg,sep=';',encoding='latin-1',dtype=str)
 df_pescad_Insc_Ufmg.to_sql('aux_pescad_insc_ufmg',engine,if_exists='replace',index=False)
 print('Tabela Pescad Isnc UFMG enviada')
+
+
+#-----------------------situação
+
+tbl_situacao = os.path.join(diretorio, 'Tabela Situacao.txt')
+df_situacao= pd.read_csv(tbl_situacao, sep=';',encoding='latin-1',dtype=str)
+df_situacao.to_sql( 'aux_situacao',engine,if_exists='replace',index=False)
+print ('Tabela Situacao enviada')
