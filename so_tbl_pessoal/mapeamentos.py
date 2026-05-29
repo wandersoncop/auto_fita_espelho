@@ -62,40 +62,40 @@ LAYOUT_TIPO_2 = {
     'REF': (126, 129),           
     'DtOcup': (129, 137),
     'DtSaida': (137, 145),
-    'FUN': (145, 148),
-    'FunNiv': (148, 153),
-    'DtChefInic': (156, 164),
-    'DtChefFim': (164, 172),
-    'FuncEsc': (153, 155),
-    'FuncOpcao': (155, 156),
-    'FUNCUNORG': (172, 181),
+    'Funcao': (145, 148),
+    'FuncaoNivel': (148, 153),
+    'DataChefInic': (156, 164),
+    'DataChefFim': (164, 172),
+    'FuncaoEsc': (153, 155),
+    'FuncaoOpcao': (155, 156),
+    'FUNCUNORG': (172, 181),#numero uorg exercicio
     'NOVFUNCSIGLA': (181, 184),
     'NOVFUNCNIV': (184, 189),
-    'NovaFunEsco': (189, 191),   
-    'NovaFunOpca': (191, 192),
+    'NovaFuncEsc': (189, 191),   
+    'NovaFuncOpcao': (191, 192),
     'NOVFUNCDTING': (192, 200),
     'NOVFUNCDTSAIDA': (200, 208),
     'NOVFUNCUNORG': (208, 217),
-    'AtivFunc': (217, 221),
+    'CodFuncao': (217, 221),
     'NrUorgLotacao': (221, 230),   # ERA LOTAC E TAMBEM PODE SER LOCAL
     'DtLotacao': (230, 238),
     'LOCALIZ': (238, 243),
-    'SETOR': (243, 252),
+    'Setor': (243, 252),
     'GrOcIngOrg': (252, 254),
     'OcIngOrg': (254, 257),
-    'DtIngOrg': (257, 265),
+    'DataIngOrg': (257, 265),
     'DLINGRORG': (265, 267),
     'DLNUMINGRORG': (267, 276),
     'DLPUBLINGRORG': (276, 284),
     'GrOcIngSp': (284, 286),
     'OcIngSp': (286, 289),
-    'DtIngSp': (289, 297),
+    'DataIngSP': (289, 297),
     'DLINGRSP': (297, 299),
     'DLNUMINGRSP': (299, 308),
     'DLPUBLINGRSP': (308, 316),
-    'GREXC': (316, 318),
+    'GrExclusao': (316, 318),
     'OcorExc': (318, 321),
-    'DtEx': (321, 329),
+    'DataExclusao': (321, 329),
     'DLEXC': (329, 331),
     'DLNUMEXC': (331, 340),
     'DLPUBLEXC': (340, 348),
@@ -108,7 +108,7 @@ LAYOUT_TIPO_2 = {
     'DLPUBLAFAST': (380, 388),
     'GrOcoApos': (388, 390),
     'OcorApos': (390, 393),
-    'DtApo': (393, 401),
+    'DataAposentadoria': (393, 401),
     'DLAPO': (401, 403),
     'DLNUMAPO': (403, 412),
     'DLPUBLAPO': (412, 420),
@@ -133,7 +133,7 @@ LAYOUT_TIPO_2 = {
     'ObitoLivro': (609, 617),
     'ObitoFolha': (617, 623),
     'ObitoReg': (623, 631),
-    'DtOb': (631, 639),
+    'DataObito': (631, 639),
     'DtExcInti': (640, 648),
     'IExcInsti': (639, 640),
     'VAlimTipo': (648, 649),
@@ -212,39 +212,39 @@ HEADER_TIPO_2 = [
     'Classe',
     'DenoClasse', #CAMPO CRIADO
     'REF',
-    # 'Setor',    
-    # 'NrUorgLotacao', # NUMERO UORG LOTAÇÃO 'LOTAC'
-    # 'UnidLotacao',
-    # 'DenoSetorLotacao',#CAMPO CRIADO
-    # 'NrUorgExercicio', #CAMPO CRIADO
-    # 'UnidExercicio',#CAMPO CRIADO
-    # 'DenoSetorExercicio',#CAMPO CRIADO
-    # 'MunicipioUORGExercicio',#CAMPO CRIADO
-    # 'EmailUORGExercicio',#CAMPO CRIADO
-    # 'UorgPaiExercicio',
-    # 'NomeUorgPaiExercicio',
-    # 'NrUorgLocalAP',
-    # 'DenoSetorLocalAp',   
-    # 'GrExclusao',
-    # 'DataIngOrg',
-    # 'DataIngSP',
-    # 'DataExclusao',
-    # 'DataAposentadoria',
-    # 'DataObito',   
-    # 'Funcao',
-    # 'FuncaoNivel',
-    # 'DataChefInic',
-    # 'DataChefFim',
-    # 'TemFuncao', # CAMPO CRIADO
-    # 'FuncSetor', # CAMPO CRIADO É O NrUorgExercicio
-    # 'UnidFuncao',
-    # 'DenoSetorFunc',
-    # 'FuncaoEsc',
-    # 'FuncaoOpcao',
-    # 'NovaFuncEsc',
-    # 'NovaFuncOpcao',
-    # 'CodFuncao',
-    # 'DenoAtiv',# CAMPO CRIADO
+    'Setor',    
+    'NrUorgLotacao', # NUMERO UORG LOTAÇÃO 'LOTAC'
+    'UnidLotacao',#CAMPO CRIADO
+    'DenoSetorLotacao',#CAMPO CRIADO
+    'NrUorgExercicio', #CAMPO CRIADO
+    'UnidExercicio',#CAMPO CRIADO
+    'DenoSetorExercicio',#CAMPO CRIADO
+    'MunicipioUORGExercicio',#CAMPO CRIADO
+    'EmailUORGExercicio',#CAMPO CRIADO
+    'UorgPaiExercicio',
+    'NomeUorgPaiExercicio',
+    'NrUorgLocalAp',
+    'DenoSetorLocalAp',   
+    'GrExclusao',
+    'DataIngOrg',
+    'DataIngSP',
+    'DataExclusao',
+    'DataAposentadoria',
+    'DataObito',   
+    'Funcao',
+    'FuncaoNivel',
+    'DataChefInic',
+    'DataChefFim',
+    'TemFuncao', # CAMPO CRIADO
+    'FuncSetor', # CAMPO CRIADO É O NrUorgExercicio
+    'UnidFuncao',
+    'DenoSetorFunc',
+    'FuncaoEsc',
+    'FuncaoOpcao',
+    'NovaFuncEsc',
+    'NovaFuncOpcao',
+    'CodFuncao',
+    'DenoAtiv',# CAMPO CRIADO
     # 'GrOcorrAposent',
     # 'OcorrAposent',
     # 'DenoAposent',
@@ -391,4 +391,9 @@ CAMPOS_DATA = [
     "DataNasc",
     "DataPrimEmprego",
     "DataExpedicao",
+    'DataIngOrg',
+    'DataIngSP',
+    'DataExclusao',
+    'DataAposentadoria',
+    'DataObito'
 ]
