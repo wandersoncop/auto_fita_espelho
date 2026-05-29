@@ -76,3 +76,18 @@ tbl_situacao = os.path.join(diretorio, 'Tabela Situacao.txt')
 df_situacao= pd.read_csv(tbl_situacao, sep=';',encoding='latin-1',dtype=str)
 df_situacao.to_sql( 'aux_situacao',engine,if_exists='replace',index=False)
 print ('Tabela Situacao enviada')
+
+#-----------------------cargo
+
+tbl_cargo = os.path.join(diretorio, 'Tabela Cargo.txt')
+df_cargo= pd.read_csv(tbl_cargo, sep=';',encoding='latin-1',dtype=str)
+df_cargo.to_sql( 'aux_cargo',engine,if_exists='replace',index=False)
+print ('Tabela Cargo enviada')
+
+
+#-----------------------classe
+
+tbl_classe = os.path.join(diretorio,'Tabela Classe.txt')
+df_classe = pd.read_csv(tbl_classe, sep=';',encoding='latin-1',dtype=str)
+df_classe.to_sql( 'aux_classe',engine,if_exists='replace',index=False)
+print('Tabela Classe enviada')

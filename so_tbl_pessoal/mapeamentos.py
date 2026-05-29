@@ -53,8 +53,8 @@ LAYOUT_TIPO_2 = {
     'DtCadastro': (94, 102),
     'SupPag': (102, 103),
     'DtSusp':(103,109),
-    'NUMAPOS': (109, 114),
-    'DENOAPOS': (114, 119),
+    'NumApos': (109, 114),
+    'DenoApos': (114, 119),
     'GrCargo': (119, 122),# 701    
     'Cargo': (122, 125),# 062 ok    
     'CodCargo': (119, 125),# CAMPO CRIADO  JUNÇÃO DE GRUPO E CARGO                
@@ -201,17 +201,17 @@ HEADER_TIPO_2 = [
     'CodSituacao',
     'Situacao', # CAMPO CRIADO 
     'Categoria',  # CAMPO CRIADO 
-    # 'RT', # CAMPO CRIADO 
-    # 'ANUE', 
-    # 'NumApos',    
-    # 'DenoApos',
+    'RegimeTrab', # CAMPO CRIADO 
+    'ANUE', 
+    'NumApos',    
+    'DenoApos',
     'GrCargo',
     'Cargo',
-    # 'CodCargo',# CAMPO CRIADO  JUNÇÃO DE GRUPO E CARGO 
-    # 'DenoCargo', #CAMPO CRIADO
-    # 'Classe',
-    # # 'DenoClasse', #CAMPO CRIADO
-    # 'Referencia',
+    'CodCargo',# CAMPO CRIADO  JUNÇÃO DE GRUPO E CARGO 
+    'DenoCargo', #CAMPO CRIADO
+    'Classe',
+    'DenoClasse', #CAMPO CRIADO
+    'REF',
     # 'Setor',    
     # 'NrUorgLotacao', # NUMERO UORG LOTAÇÃO 'LOTAC'
     # 'UnidLotacao',

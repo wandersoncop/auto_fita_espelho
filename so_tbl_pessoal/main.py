@@ -128,6 +128,40 @@ mapa_situacao = dict(
 
     )
 )
+# ------------------------------------------------------------------------
+df_deno_cargo = pd.read_sql(
+    """
+    SELECT
+        GRCARGO,
+        CARGO,
+        NOME_CARGO
+    FROM aux_cargo    
+    """,
+    engine
+)
+mapa_deno_cargo = dict(
+    zip(
+        df_deno_cargo['GRCARGO'].astype(str).str.zfill(3) 
+        + df_deno_cargo['CARGO'].astype(str).str.zfill(3),
+        df_deno_cargo['NOME_CARGO'] 
+    )
+)
+
+df_classe = pd.read_sql(
+    """
+    SELECT
+        ChaveClasse,
+        DenoClasse
+    FROM aux_classe    
+    """,
+    engine
+)
+mapa_classe = dict(
+    zip(
+        df_classe['ChaveClasse'],
+        df_classe['DenoClasse'],
+    )
+)
 
 # =========================
 # CAMINHOS
@@ -177,6 +211,14 @@ if os.path.exists(caminho_arquivo):
         'CodSituacao':{#nome referencia na tabela
             'nome_campo':'Situacao',
             'mapa':mapa_situacao
+        },
+        'CodCargo':{
+            'nome_campo': 'DenoCargo',
+            'mapa':mapa_deno_cargo
+        },
+        'ChaveClass': {
+            'nome_campo': 'DenoClasse',
+            'mapa': mapa_classe
         }
     }
 
@@ -224,7 +266,7 @@ if os.path.exists(caminho_arquivo):
     print(f'Tipo_2_funcional finalizado: {len(registros_tipo_2)} registros')#exibe mensagem com quantidade de registros encontrados
 
     df_funcional = pd.DataFrame(registros_tipo_2)# cria como se fosse um excel na memoria
-    print(df_funcional.columns.tolist())
+    
 #insere o campo categoria
     df_funcional['Categoria'] = df_funcional['GrCargo'].apply(
     lambda gr_cargo: 'Docente'
@@ -253,6 +295,7 @@ if os.path.exists(caminho_arquivo):
         'mes_fita', #nome da coluna
          mes_fita #valor da coluna
     )
+
 
   
 

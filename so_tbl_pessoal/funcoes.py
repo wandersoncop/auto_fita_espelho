@@ -91,7 +91,7 @@ def ler_fita_por_tipo(
                     mapas_auxiliares
                 )
 
- #---------------------------------------- CRIAÇÃO Categoria ---
+ 
    #---------------------------------------- CRIAÇÃO Categoria ---
 
                 if 'GrCargo' in dados:
@@ -100,13 +100,7 @@ def ler_fita_por_tipo(
 
                     cat_letra = (
                         'M'
-                        if gr_cargo in (
-                            '060',
-                            '702',
-                            '705',
-                            '706',
-                            '707'
-                        )
+                        if gr_cargo in ('060','702','705','706','707')
                         else 'T'
                     )
 
@@ -115,7 +109,39 @@ def ler_fita_por_tipo(
                         if cat_letra == 'M'
                         else 'Tec-Administrativo'
                     )
+     #---------------------------------------- CRIAÇÃO RegimeTrab ---  
 
+                valor_rtrab = dados.get('RTRAB','').strip()
+                dados['RegimeTrab']='DE' if valor_rtrab == '99' else valor_rtrab
+                
+     #---------------------------------------- CRIAÇÃO CodCargo---    
+                valor_grcargo = dados.get('GrCargo','').strip()
+                valor_cargo = dados.get('Cargo','').strip()
+                dados['CodCargo']= valor_grcargo + valor_cargo
+
+       #---------------------------------------- CRIAÇÃO deno classe---
+               
+                valor_grcargo = dados.get('GrCargo', '').strip()
+
+                cat_letra = (
+                    'M'
+                    if valor_grcargo in ('060','702','705','706','707')
+                    else 'T'
+                )
+                valor_classe = dados.get('Classe', '').strip()
+                ref = dados.get('REF', '').strip()
+                primeiro_dig_ref = ref[0] if ref else ""
+
+                chave_final = f"{cat_letra}{valor_classe}"
+
+                if valor_grcargo == '705' and valor_classe == '4' and primeiro_dig_ref != '4':
+                    chave_final = f"{cat_letra}{gr_cargo}{valor_classe}{primeiro_dig_ref}"
+
+                dados['ChaveClass'] = chave_final
+                dados['DenoClasse'] = (
+                    mapas_auxiliares['ChaveClass']['mapa'].get(chave_final, ''))
+                
+                
                 registros.append(dados)
 
     return registros
