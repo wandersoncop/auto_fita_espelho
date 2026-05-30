@@ -190,7 +190,7 @@ df_email_uorg = pd.read_sql(
     SELECT
         UORGSiape,
         `ED-EMAIL-UORG`,
-        `NO-MUNICIPIO-END-UORG`,
+        `ED-MUNICIPIO-ENDERECO-UORG`,
         `SG-UF-END-UORG`
     FROM aux_uorg_endereco
     """,
@@ -200,7 +200,7 @@ mapa_email_uorg = (
     df_email_uorg
     .drop_duplicates(subset=['UORGSiape'], keep='first')
     .set_index('UORGSiape')
-    [['ED-EMAIL-UORG', 'NO-MUNICIPIO-END-UORG', 'SG-UF-END-UORG']]
+    [['ED-EMAIL-UORG', 'ED-MUNICIPIO-ENDERECO-UORG', 'SG-UF-END-UORG']]
     .to_dict('index')
 )
 df_municipio = pd.read_sql(
@@ -254,6 +254,45 @@ mapa_atividade = dict(
         df_atividade['DENOATIV']
     )
 )
+#mapa ocorrencia --------------------------------------------------------------
+df_ocorrencia = pd.read_sql(#faz o select na tabela aux
+    """
+    SELECT
+        GROCOR,
+        CODOCOR,
+        DESC_OCORR     
+        
+    FROM aux_ocorrencia
+    """,
+    engine
+)
+mapa_ocorrencia = dict(
+  zip(
+      df_ocorrencia['GROCOR'].astype(str).str.zfill(2)
+      + df_ocorrencia['CODOCOR'].astype(str).str.zfill(3),
+
+      df_ocorrencia['DESC_OCORR']
+  )
+
+)
+df_orgaos = pd.read_sql(
+   """ SELECT
+        COD_ORGAO,
+        NOME_ORGAO
+    FROM aux_orgaos  
+    """,
+    engine  
+)
+mapa_orgaos = dict(
+    zip(
+        df_orgaos['COD_ORGAO'],
+        df_orgaos['NOME_ORGAO']
+    )
+)
+
+
+
+
 
 # =========================
 # CAMINHOS
@@ -312,11 +351,7 @@ if os.path.exists(caminho_arquivo):
             'nome_campo': 'DenoClasse',
             'mapa': mapa_classe
         },
-        'CodFunc':{
-            'nome_campo':'DenoAtiv',
-            'mapa':mapa_atividade
-        }
-        
+       
 
     }
 
@@ -402,11 +437,12 @@ if os.path.exists(caminho_arquivo):
     lambda codigo: mapa_email_uorg.get(codigo, {}).get('ED-EMAIL-UORG', '')
     )
     df_funcional['CodMunicipioUORGExercicio'] = df_funcional['NrUorgExercicio'].apply(
-        lambda codigo: mapa_email_uorg.get(codigo, {}).get('ED-MUNICIPIO-ENDERECO-UORG', '')
-    )
+    lambda codigo: mapa_email_uorg.get(codigo, {}).get('ED-MUNICIPIO-ENDERECO-UORG', '')
+)
+
     df_funcional['MunicipioUORGExercicio'] = df_funcional['CodMunicipioUORGExercicio'].apply(
     lambda codigo: mapa_municipio.get(codigo, '')
-    )
+)
     df_funcional['NrUorgLocalAp'] = df_funcional['SIAPE'].apply(
     lambda siape: mapa_local_ap.get(str(siape).zfill(7), {}).get('NrUorgLocalAp', '')
     )
@@ -422,7 +458,38 @@ if os.path.exists(caminho_arquivo):
     df_funcional['DenoAtiv'] = df_funcional['CodFuncao'].apply(
     lambda codigo: mapa_atividade.get(codigo, '')
     )
+    df_funcional['DenoAposent'] = (# nomes iguai ao do mapeamento que vai ser exibido na tabela
+        df_funcional['GrOcorrAposent'].astype(str).str.zfill(2)
+        + df_funcional['OcorrAposent'].astype(str).str.zfill(3)
+    ).apply(
+        lambda codigo:mapa_ocorrencia.get(codigo,'')
+    )
+    df_funcional['DenoIngOrgao'] = (
+        df_funcional['GrOcorrIngOrg'].astype(str).str.zfill(2)
+       + df_funcional['OcorrIngOrg'].astype(str).str.zfill(3)
+    ).apply(
+        lambda codigo:mapa_ocorrencia.get(codigo,'')
+    )
+    df_funcional['DenoIngSerPublico'] = (
+        df_funcional['GrOcorrIngSp'].astype(str).str.zfill(2)
+        + df_funcional['OcorrIngSp'].astype(str).str.zfill(3)
+    ).apply(
+        lambda codigo:mapa_ocorrencia.get(codigo,'')
+    )
+    df_funcional['DenoExclusao'] = (        
+        df_funcional['GrExclusao'].astype(str).str.zfill(2)
+        +df_funcional['OcorrExclusao'].astype(str).str.zfill(3)
+    ).apply(lambda codigo:mapa_ocorrencia.get(codigo,''))
     
+    df_funcional['DenoOrigem'] = df_funcional['OrgOrigem'].apply(
+        lambda codigo:mapa_orgaos.get(codigo,'')
+    )
+    df_funcional['DenoOrgAnt'] = df_funcional['OrgAnt'].apply(
+        lambda codigo: mapa_orgaos.get(codigo,'')
+    )
+    df_funcional['DenoOrgRequisitante'] = df_funcional['OrgAnt'].apply(
+        lambda codigo: mapa_orgaos.get(codigo,'')
+    )
 
 
 

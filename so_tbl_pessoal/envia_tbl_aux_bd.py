@@ -118,3 +118,17 @@ tbl_rubrica_incentivo_qualificacao = os.path.join(diretorio,'Tabela Rubrica Ince
 df_rubrica_incentivo_qualificacao = pd.read_csv(tbl_rubrica_incentivo_qualificacao,sep=';',encoding='latin-1',dtype=str)
 df_rubrica_incentivo_qualificacao.to_sql('aux_rubrica_incentivo_qualificacao',engine,if_exists='replace',index=False)
 print('Tabela Rubrica Incentivo Qualificacao enviada')
+
+#-----------------------ocorrencia
+
+tbl_ocorrencia = os.path.join(diretorio,'Tabela Ocorrencia.txt')
+df_ocorrencia = pd.read_csv(tbl_ocorrencia,sep=';',encoding='latin-1',dtype=str)
+df_ocorrencia.to_sql('aux_ocorrencia',engine,if_exists='replace',index=False)
+print('Tabela Ocorrencia enviada')
+
+#-----------------------orgaos
+
+tbl_orgaos = os.path.join(diretorio,'Tabela Orgaos.txt')
+df_orgaos = pd.read_csv(tbl_orgaos,sep=';',encoding='latin-1',dtype=str)
+df_orgaos.to_sql('aux_orgaos',engine,if_exists='replace',index=False)
+print('Tabela Orgaos enviada')
