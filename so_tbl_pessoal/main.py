@@ -3,24 +3,24 @@
 import os  # biblioteca padrão do py serve para interagir com o sistema operacional(caminhos,pasta...)
 import pandas as pd  # blibioteca para manipulaçao de dados, como se fosse um excel dentro do py
 
-from sqlalchemy import text  # vai importar os sql ex do tipo 3 que fizemos
+from sqlalchemy import text  # Biblioteca para trabalhar com banco de dados. O text() faz o SQLAlchemy reconhecer o texto como um comando SQL.
 
 from funcoes import (
-    ler_fita_por_tipo,  # chama a função que Le o registros fa fita e os separa por tipo
+    ler_fita_por_tipo,  # chama a função que Le o registros da fita e os separa por tipo
     extrair_tipo_0,  # serve somente para extrair o mes fita
-    criar_escolaridade
+    criar_escolaridade #Cria o campo Escolaridade comparando escolaridade e titulação
 )
 
 # aqui fazemos os imports dos mapeamento dos campos  que vem la do mapeamento
 from mapeamentos import (
-    LAYOUT_TIPO_1,
-    LAYOUT_TIPO_2,
-    HEADER_TIPO_2,
-    LAYOUT_TIPO_3,
-    CAMPOS_DATA
+    LAYOUT_TIPO_1,# são as posições na fita ex:'SIAPE': (9, 16),#
+    LAYOUT_TIPO_2,# são as posições na fita ex:'SIAPE': (9, 16),#
+    HEADER_TIPO_2,# é a sequencia que deseja do campos na tabela os nomes tem que ser iguais
+    LAYOUT_TIPO_3,# são as posições na fita ex:'SIAPE': (9, 16),#
+    CAMPOS_DATA # aqui é  lista de campos de data que serão formatados pela função formatar_data
 )
 
-from conexao import engine
+from conexao import engine  # Importa o objeto de conexão (engine) utilizado para acessar o banco de dados MySQL.
 
 
 # =========================
