@@ -144,6 +144,6 @@ print('Tabela Pescad enviada')
 #-----------------------cad_apf resolve situação da categoria MAGISTERIO X TEC-ADMINISTRATIVO
 
 tbl_cad_apf = os.path.join(diretorio,'CadAPF.txt')
-tbl_cad_apf = pd.read_csv(tbl_cad_apf,sep=';',encoding='latin-1',dtype=str)
+tbl_cad_apf = pd.read_csv(tbl_cad_apf,sep=';',encoding='utf-8-sig',dtype=str)
 tbl_cad_apf.to_sql('aux_cad_apf',engine,if_exists='replace',index=False)
-print('Tabela Pescad enviada')
+print('Tabela CadAPF enviada')

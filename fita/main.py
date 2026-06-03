@@ -147,11 +147,20 @@ df_deno_cargo = pd.read_sql(
 )
 mapa_deno_cargo = dict(
     zip(
-        df_deno_cargo['GRCARGO'].astype(str).str.zfill(3) 
-        + df_deno_cargo['CARGO'].astype(str).str.zfill(3),
-        df_deno_cargo['NOME_CARGO'] 
+        df_deno_cargo['GRCARGO']
+            .astype(str)
+            .str.replace('.0', '', regex=False)
+            .str.zfill(3)
+        +
+        df_deno_cargo['CARGO']
+            .astype(str)
+            .str.replace('.0', '', regex=False)
+            .str.zfill(3),
+
+        df_deno_cargo['NOME_CARGO']
     )
 )
+
 
 df_classe = pd.read_sql(
     """
@@ -301,10 +310,11 @@ mapa_orgaos = dict(
 
 df_cad_apf = pd.read_sql(
     """
-    SELECT
+   SELECT
         Mat,
         A0300_carcod,
-        A0300_grccod
+        A0300_grccod,
+        f0300_ctfsgr
     FROM aux_cad_apf
     """,
     engine
@@ -312,14 +322,21 @@ df_cad_apf = pd.read_sql(
 
 mapa_cad_apf_cargo = dict(
     zip(
-        df_cad_apf['Mat'].astype(str).str.zfill(7),
-        df_cad_apf['A0300_carcod'].astype(str).str.zfill(3)
+        df_cad_apf['Mat'].astype(str).str.replace('.0', '', regex=False).str.zfill(7),
+        df_cad_apf['A0300_carcod'].astype(str).str.replace('.0', '', regex=False).str.zfill(3)
     )
 )
+
 mapa_cad_apf_gr_cargo = dict(
     zip(
-        df_cad_apf['Mat'].astype(str).str.zfill(7),
-        df_cad_apf['A0300_grccod'].astype(str).str.zfill(3)
+        df_cad_apf['Mat'].astype(str).str.replace('.0', '', regex=False).str.zfill(7),
+        df_cad_apf['A0300_grccod'].astype(str).str.replace('.0', '', regex=False).str.zfill(3)
+    )
+)
+mapa_cad_apf_clas = dict(
+    zip(
+        df_cad_apf['Mat'].astype(str).str.replace('.0', '', regex=False).str.zfill(7),
+        df_cad_apf['f0300_ctfsgr'].astype(str).str.replace('.0', '', regex=False)
     )
 )
 
@@ -453,8 +470,12 @@ if os.path.exists(caminho_arquivo):
         lambda linha:
             linha['FuncSetor']
             if str(linha['FuncSetor']).strip() not in ('', '000000000')
-            else linha['NrUorgLotacao'],
-        axis=1 #faz a leitura por linha
+            else (
+                linha['NrUorgLotacao']
+                if str(linha['NrUorgLotacao']).strip() not in ('', '000000000')
+                else linha['Setor']
+            ),
+        axis=1
     )
     
     df_funcional['UnidExercicio'] = df_funcional['NrUorgExercicio'].apply(
@@ -523,45 +544,98 @@ if os.path.exists(caminho_arquivo):
 
 #-----------------------CRIA As REGRAS DE NEGOCIO Do CARGO QUE INFLUENCIA NA CATEGORIA MAGISTERIO
    
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+   
+   
+   
     df_funcional['GrCargo'] = df_funcional.apply(
-        lambda linha:
-        mapa_cad_apf_gr_cargo.get(
-            str(linha['SIAPE']).zfill(7),
-            linha['GrCargo']
-        )
-        if str(linha['CodSituacao']).strip()=='19'
-        else linha['GrCargo'],
-        axis=1
-        
+    lambda linha:
+        mapa_cad_apf_gr_cargo.get(str(linha['SIAPE']).zfill(7))
+        if str(linha['CodSituacao']).strip() == '19'
+        and mapa_cad_apf_gr_cargo.get(str(linha['SIAPE']).zfill(7)) is not None
+        else str(linha['GrCargo']).replace('.0', '').zfill(3),
+    axis=1
     )
-   
-   
-   
-    df_funcional['CodCargo'] = df_funcional.apply(
+
+    df_funcional['Cargo'] = df_funcional.apply(
         lambda linha:
-            mapa_cad_apf_cargo.get(
-                str(linha['SIAPE']).zfill(7),
-                linha['CodCargo']
-            )
+            mapa_cad_apf_cargo.get(str(linha['SIAPE']).zfill(7))
             if str(linha['CodSituacao']).strip() == '19'
-            else linha['CodCargo'],
+            and mapa_cad_apf_cargo.get(str(linha['SIAPE']).zfill(7)) is not None
+            else str(linha['CodCargo']).replace('.0', '')[-3:].zfill(3),
         axis=1
     )
 
-    chave_cargo = (
-        df_funcional['GrCargo'].astype(str).str.zfill(3)
-        + df_funcional['CodCargo'].astype(str).str.zfill(3)
+    df_funcional['CodCargo'] = df_funcional['GrCargo'] + df_funcional['Cargo']
+
+    df_funcional['DenoCargo'] = df_funcional['CodCargo'].apply(
+        lambda codigo: mapa_deno_cargo.get(codigo, '')
     )
-    df_funcional['DenoCargo'] = chave_cargo.apply(
-        lambda codigo:mapa_deno_cargo.get(codigo,'')
+
+
+
+#-----------------------CRIA A REGRA DE NEGOCIO DA CLASSE CONFORME ACCESS
+    df_funcional['Classe'] = df_funcional.apply(
+        lambda linha:
+            mapa_cad_apf_clas.get(str(linha['SIAPE']).zfill(7))
+            if str(linha['CodSituacao']).strip() == '19'
+            and mapa_cad_apf_clas.get(str(linha['SIAPE']).zfill(7)) is not None
+            else str(linha['Classe']).replace('.0', '').strip(),
+        axis=1
     )
 
 #-----------------------CRIA A COLUNA E ESTABELECE REGRAS DE NEGOCIO DE CATEGORIA
     df_funcional['Categoria'] = df_funcional['GrCargo'].apply(
-    lambda gr_cargo: 'Docente'
-    if gr_cargo in ('60','060', '702', '705', '706', '707')
-    else 'Tec-Administrativo'
+        lambda gr_cargo: 'Docente'
+        if str(gr_cargo).strip().zfill(3) in ('060', '702', '705', '706', '707')
+        else 'Tec-Administrativo'
     )
+
+
+#-----------------------CRIA A CHAVE DA CLASSE CONFORME REGRA DO ACCESS
+    def codigo_categoria_classe(gr_cargo):
+        return (
+            'M'
+            if str(gr_cargo).strip().zfill(3) in ('060', '702', '705', '706', '707')
+            else 'T'
+        )
+
+    df_funcional['ChaveClass'] = df_funcional.apply(
+        lambda linha:
+            codigo_categoria_classe(linha['GrCargo'])
+            + str(linha['GrCargo']).strip().zfill(3)
+            + str(linha['Classe']).strip()
+            + str(linha['REF']).strip()[:1]
+            if (
+                str(linha['GrCargo']).strip().zfill(3) == '705'
+                and str(linha['Classe']).strip() == '4'
+                and str(linha['REF']).strip()[:1] != '4'
+            )
+            else
+            codigo_categoria_classe(linha['GrCargo'])
+            + str(linha['Classe']).strip(),
+        axis=1
+    )
+
+    df_funcional['DenoClasse'] = df_funcional['ChaveClass'].apply(
+        lambda codigo: mapa_classe.get(codigo, '')
+    )
+
+
+
 #-----------------------CRIA A COLUNA E ESTABELECE REGRAS DE NEGOCIO DO TEM FUNCAO   
     df_funcional['TemFuncao'] = df_funcional.apply(
     lambda linha: 'S'
