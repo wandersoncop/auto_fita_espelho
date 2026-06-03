@@ -10,7 +10,7 @@ diretorio = os.path.join(
     'auto_fita_espelho',
     'tbl_Auxiliares'
 )
-#----------------------------------------------TABELAS AUXILIARES----------------------------------------------
+#---------------------------TABELAS AUXILIARES
 """
     Todas as tabelas devem estar:
     em .txt
@@ -20,8 +20,6 @@ diretorio = os.path.join(
     e entre ""
     o sitema enviará tudo como texto para o bd
 """
-#-----------------------ESTADO CIVIL
-
 tbl_estado_civil = os.path.join(diretorio, 'Tabela Estado Civil.txt')
 df_estado_civil= pd.read_csv(tbl_estado_civil, sep=';',encoding='latin-1',dtype=str)
 df_estado_civil.to_sql( 'aux_estado_civil',engine,if_exists='replace',index=False)
@@ -121,10 +119,31 @@ df_rubrica_incentivo_qualificacao = pd.read_csv(tbl_rubrica_incentivo_qualificac
 df_rubrica_incentivo_qualificacao.to_sql('aux_rubrica_incentivo_qualificacao',engine,if_exists='replace',index=False)
 print('Tabela Rubrica Incentivo Qualificacao enviada')
 
-#-----------------------000_PgtoIcentivoQualificacao
+#-----------------------ocorrencia
 
-tbl_000_PgtoIcentivoQualificacao = os.path.join(diretorio,'000_PgtoIcentivoQualificacao.txt')
-df_000_PgtoIcentivoQualificacao = pd.read_csv(tbl_000_PgtoIcentivoQualificacao,sep=';',encoding='latin-1',dtype=str)
-df_000_PgtoIcentivoQualificacao.to_sql('aux_pgtoicentivoqualificacao',engine,if_exists='replace',index=False)
-print('000_PgtoIcentivoQualificacao enviada')
+tbl_ocorrencia = os.path.join(diretorio,'Tabela Ocorrencia.txt')
+df_ocorrencia = pd.read_csv(tbl_ocorrencia,sep=';',encoding='latin-1',dtype=str)
+df_ocorrencia.to_sql('aux_ocorrencia',engine,if_exists='replace',index=False)
+print('Tabela Ocorrencia enviada')
 
+#-----------------------orgaos
+
+tbl_orgaos = os.path.join(diretorio,'Tabela Orgaos.txt')
+df_orgaos = pd.read_csv(tbl_orgaos,sep=';',encoding='latin-1',dtype=str)
+df_orgaos.to_sql('aux_orgaos',engine,if_exists='replace',index=False)
+print('Tabela Orgaos enviada')
+
+
+#-----------------------pescad
+
+tbl_pescad = os.path.join(diretorio,'Pescad_InscUFMG.txt')
+df_pescad = pd.read_csv(tbl_pescad,sep=';',encoding='latin-1',dtype=str)
+df_pescad.to_sql('aux_pescad_insc_ufmg',engine,if_exists='replace',index=False)
+print('Tabela Pescad enviada')
+
+#-----------------------cad_apf resolve situação da categoria MAGISTERIO X TEC-ADMINISTRATIVO
+
+tbl_cad_apf = os.path.join(diretorio,'CadAPF.txt')
+tbl_cad_apf = pd.read_csv(tbl_cad_apf,sep=';',encoding='latin-1',dtype=str)
+tbl_cad_apf.to_sql('aux_cad_apf',engine,if_exists='replace',index=False)
+print('Tabela Pescad enviada')

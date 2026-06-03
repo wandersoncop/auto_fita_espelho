@@ -1,5 +1,4 @@
-# MAPEAMENTO NOS LAYOOUT E OREM DAS COLUNAS  
-LAYOUT_TIPO_1 = {
+LAYOUT_TIPO_1 = { #codigo que faz a tradução dos campos da fita espelho
     "UnidPag": (0, 9),
     "SIAPE": (9, 16),
     "SiapeDig": (16, 17),
@@ -35,111 +34,68 @@ LAYOUT_TIPO_1 = {
     "UfIdent": (360, 362),
     "TituloEleitor": (362, 375)
 }
-# ORDEM DAS COLUNAS (TIPO 1)
-HEADER_TIPO_1 = [
-    "mes_fita",
-    "UnidPag",
-    "InscUFMG",
-    "SIAPE",
-    "SiapeDig",
-    "TipoReg",
-    "Nome",
-    "CPF",
-    "PASEP",
-    "Mae",
-    "Sexo",
-    "DataNasc",
-    "CodEstadoCiv",
-    # "EstadoCiv", # CAMPO CRIADO POR TBL AUX
-    "CodEscolaridade",
-    "DenoEscol", # CAMPO CRIADO POR TBL AUX
-    "Escolaridade", # CAMPO CRIADO POR TBL AUX
-    "CodTitulacao",
-    "DenoTitulacao",# CAMPO CRIADO POR TBL AUX
-    "CodNaturalidade",
-    "Naturalidade",
-    "CodPais",
-    # "Pais",# CAMPO CRIADO POR TBL AUX
-    "AnoChegada",
-    "DepImpRenda",
-    "Sf",
-    "DataPrimEmprego",
-    "SiapeCad",
-    "Logradouro",
-    "Numero",
-    "Complemento",
-    "Bairro",
-    "Municipio",
-    "CEP",
-    "UF",
-    "Identidade",
-    "OrgaoExpedidor",
-    "DataExpedicao",
-    "UfIdent",
-    "TituloEleitor"
-]
 
 LAYOUT_TIPO_2 = {
-    'UPAG': (0, 9),
-    'SIAPE': (9, 16),
-    'SiapeDig': (16, 17),
-    'TipoReg': (17, 18),
-    'RegJuridico': (20, 23),
-    'CodSituacao': (23, 25),
-    'CtNum': (25, 31),
-    'CtSer': (31, 36),
-    'CtUf': (36, 38),
-    'BANCO': (38, 41),
-    'AGENCIA': (41, 47),
-    'CONTA': (47, 60),
-    'RTRAB': (90, 92),
-    'ANUE': (92, 94),
-    'DtCadastro': (94, 102),
-    'SupPag': (102, 103),
-    'DtSusp':(103,109),
-    'NUMAPOS': (109, 114),
-    'DENOAPOS': (114, 119),
-    'GRCARGO': (119, 122),# 701    
-    'CARGO': (122, 125),# 062 ok    
-    'CODCARGO': (119, 125),# CAMPO CRIADO  JUNÇÃO DE GRUPO E CARGO                
-    'CLASSE': (125, 126),# E  
-    'REF': (126, 129),           
-    'DtOcup': (129, 137),
-    'DtSaida': (137, 145),
-    'FUN': (145, 148),
-    'FunNiv': (148, 153),
-    'DtChefInic': (156, 164),
-    'DtChefFim': (164, 172),
-    'FuncEsc': (153, 155),
-    'FuncOpcao': (155, 156),
-    'FUNCUNORG': (172, 181),
+    'UPAG': (0, 9),#
+    'SIAPE': (9, 16),#
+    'SiapeDig': (16, 17),#
+    'TipoReg': (17, 18),#
+    'RegJuridico': (20, 23),#
+    'CodSituacao': (23, 25),#
+    'CarteiraTrabNum': (25, 31),
+    'CarteiraTrabSerie': (31, 36),
+    'CarteiraTrabUf': (36, 38),
+    'Banco': (38, 41),
+    'Agencia': (41, 47),
+    'Conta': (47, 60),
+    'RTRAB': (90, 92),#
+    'ANUE': (92, 94),#
+    'DataCadastro': (94, 102),#
+    'SuspPagamnto': (102, 103),#
+    'DataSusp':(103,109),#
+    'NumApos': (109, 114),#
+    'DenoApos': (114, 119),#
+    'GrCargo': (119, 122),# 701    
+    'Cargo': (122, 125),# 062 ok    
+    'CodCargo': (119, 125),# CAMPO CRIADO  JUNÇÃO DE GRUPO E CARGO                
+    'Classe': (125, 126),# E  
+    'REF': (126, 129),  #         
+    'DataOcup': (129, 137),#
+    'DataSaida': (137, 145),#
+    'Funcao': (145, 148),#
+    'FuncaoNivel': (148, 153),#
+    'DataChefInic': (156, 164),#
+    'DataChefFim': (164, 172),#
+    'FuncaoEsc': (153, 155),
+    'FuncaoOpcao': (155, 156),
+    'FUNCUNORG': (172, 181),#numero uorg exercicio
     'NOVFUNCSIGLA': (181, 184),
     'NOVFUNCNIV': (184, 189),
-    'NovaFunEsco': (189, 191),   
-    'NovaFunOpca': (191, 192),
+    'NovaFuncEsc': (189, 191),   
+    'NovaFuncOpcao': (191, 192),
     'NOVFUNCDTING': (192, 200),
     'NOVFUNCDTSAIDA': (200, 208),
     'NOVFUNCUNORG': (208, 217),
-    'AtivFunc': (217, 221),
+    'CodFuncao': (217, 221),
     'NrUorgLotacao': (221, 230),   # ERA LOTAC E TAMBEM PODE SER LOCAL
-    'DtLotacao': (230, 238),
+    'DataLotacao': (230, 238),#
     'LOCALIZ': (238, 243),
-    'SETOR': (243, 252),
-    'GrOcIngOrg': (252, 254),
-    'OcIngOrg': (254, 257),
-    'DtIngOrg': (257, 265),
+    'Setor': (243, 252),
+    'GrOcorrIngOrg': (252, 254),#
+    'OcorrIngOrg': (254, 257),#
+    'DataIngOrg': (257, 265),
     'DLINGRORG': (265, 267),
     'DLNUMINGRORG': (267, 276),
     'DLPUBLINGRORG': (276, 284),
-    'GrOcIngSp': (284, 286),
-    'OcIngSp': (286, 289),
-    'DtIngSp': (289, 297),
+    'GrOcorrIngSp': (284, 286),
+    'OcorrIngSp': (286, 289),
+    'DataIngSP': (289, 297),
     'DLINGRSP': (297, 299),
     'DLNUMINGRSP': (299, 308),
     'DLPUBLINGRSP': (308, 316),
-    'GREXC': (316, 318),
-    'OcorExc': (318, 321),
-    'DtEx': (321, 329),
+    'GrExclusao': (316, 318),
+    'OcorrExclusao': (318, 321),
+    'DataExclusao': (321, 329),
     'DLEXC': (329, 331),
     'DLNUMEXC': (331, 340),
     'DLPUBLEXC': (340, 348),
@@ -150,18 +106,18 @@ LAYOUT_TIPO_2 = {
     'DLAFAST': (369, 371),
     'DLNUMAFAST': (371, 380),
     'DLPUBLAFAST': (380, 388),
-    'GrOcoApos': (388, 390),
-    'OcorApos': (390, 393),
-    'DtApo': (393, 401),
+    'GrOcorrAposent': (388, 390),
+    'OcorrAposent': (390, 393),
+    'DataAposentadoria': (393, 401),
     'DLAPO': (401, 403),
     'DLNUMAPO': (403, 412),
     'DLPUBLAPO': (412, 420),
     'ApoNumProc': (420, 435),
-    'ApoAnoprev': (435, 439),
+    'ApoAnoprev': (435, 439),#
     'AposUorg': (440, 449),
-    'AP_OP_INTG': (439, 440),
-    'OrgDest': (486, 491),
-    'DtLiber': (491, 499),
+    'AposentOpInteg': (439, 440),
+    'OrgaoDestino': (486, 491),
+    'DataLiberacao': (491, 499),
     'OrgOrigem': (499, 504),
     'OrgAnt': (504, 509),
     'SIAPEAnt': (509, 516),
@@ -177,7 +133,7 @@ LAYOUT_TIPO_2 = {
     'ObitoLivro': (609, 617),
     'ObitoFolha': (617, 623),
     'ObitoReg': (623, 631),
-    'DtOb': (631, 639),
+    'DataObito': (631, 639),
     'DtExcInti': (640, 648),
     'IExcInsti': (639, 640),
     'VAlimTipo': (648, 649),
@@ -196,27 +152,27 @@ LAYOUT_TIPO_2 = {
     # 'REVERSAO_DIPLOMA_DATA_PUB': (722, 730), 
     # 'REVERSAO_DIPLOMA_CODIGO': (724, 726),
     # 'REVERSAO_DIPLOMA_NUMERO': (731, 749),    
-    'I_CARG': (749, 750), 
-    'I_FUNC': (750, 751),              # 1º S - Deu certo!
-    'I_SalFam': (751, 752),     # 2º S
-    'I_Anuenio': (752, 753), # 3º S
-    'I_FGTS': (753, 754),               # 4º S
-    'I_PSS': (754, 755),        # 5º S
-    'I_IR': (755, 756),               # 6º S
-    'I_MargCons': (756, 757), # 7º S
-    'I_Sindical': (757, 758),   # 8º S
-    'I_Adiant13': (758, 759),    # 9º S
-    'I_AbateTet': (759, 760),         # 10º S
-    'I_13Sal': (760, 761),         # 11º S
-    'I_PSS_6': (761, 762),     # 12º S
-    'I_Ferias': (762, 763),             # 13º S
-    'I_Pensao': (763, 764),             # 14º S
-    'I_Benefici': (764, 765),                # 15º S
-    'I_IPMF_CPMF': (765, 766),                 # 16º S
-    'I_RAIS': (766, 767),                      # 17º S
-    'I_DifUrv': (767, 768),                   # 18º S
-    'I_Adiantam': (768, 769),              # 19º S
-    'I_PASEP': (769, 770)                      # 20º S
+    'IndiceCargo': (749, 750), 
+    'IndiceFuncao': (750, 751),              # 1º S - Deu certo!
+    'IndiceSalarioFamilia': (751, 752),     # 2º S
+    'IndiceAnuenio': (752, 753), # 3º S
+    'IndiceFGTS': (753, 754),               # 4º S
+    'IndicePSS': (754, 755),        # 5º S
+    'IndiceIR': (755, 756),               # 6º S
+    'IndiceMargemConsig': (756, 757), # 7º S
+    'IndideSindical': (757, 758),   # 8º S
+    'IndiceAdiantamento13': (758, 759),    # 9º S
+    'IndiceAbateTeto': (759, 760),         # 10º S
+    'Indice13Salario': (760, 761),         # 11º S
+    'IndicePSS6': (761, 762),     # 12º S
+    'IndiceFerias': (762, 763),             # 13º S
+    'IndicePensao': (763, 764),             # 14º S
+    'IndiceBeneficio': (764, 765),                # 15º S
+    'IndiceIpmfCpm': (765, 766),                 # 16º S
+    'IndiceRais': (766, 767),                      # 17º S
+    'IndiceDifURV': (767, 768),                   # 18º S
+    'IndiceAdiantamento': (768, 769),              # 19º S
+    'IndicePasep': (769, 770)                      # 20º S
 #---------------------------------------------------------------------------------------------------
     # 'POSSE_GRUPO_CODIGO': (679, 681),
     # 'POSSE_OCORRENCIA': (681, 684),
@@ -229,7 +185,7 @@ LAYOUT_TIPO_2 = {
     # 'UF_UPAG': (18, 20),
     # 'FGTS_DATA_OPCAO': (60, 68),
     # 'FGTS_BANCO': (68, 71),
-    # 'FGTS_AGENCIA': (71, 77),
+    # 'FGTS_Agencia': (71, 77),
     # 'FGTS_CONTA': (77, 90),
 
 
@@ -243,9 +199,9 @@ HEADER_TIPO_2 = [
     'Nome',
     'RegJuridico',
     'CodSituacao',
-    'DENO_SIT', # CAMPO CRIADO 
+    'Situacao', # CAMPO CRIADO 
     'Categoria',  # CAMPO CRIADO 
-    'RT', # CAMPO CRIADO 
+    'RegimeTrab', # CAMPO CRIADO 
     'ANUE', 
     'NumApos',    
     'DenoApos',
@@ -255,10 +211,10 @@ HEADER_TIPO_2 = [
     'DenoCargo', #CAMPO CRIADO
     'Classe',
     'DenoClasse', #CAMPO CRIADO
-    'Referencia',
+    'REF',
     'Setor',    
     'NrUorgLotacao', # NUMERO UORG LOTAÇÃO 'LOTAC'
-    'UnidLotacao',
+    'UnidLotacao',#CAMPO CRIADO
     'DenoSetorLotacao',#CAMPO CRIADO
     'NrUorgExercicio', #CAMPO CRIADO
     'UnidExercicio',#CAMPO CRIADO
@@ -267,7 +223,7 @@ HEADER_TIPO_2 = [
     'EmailUORGExercicio',#CAMPO CRIADO
     'UorgPaiExercicio',
     'NomeUorgPaiExercicio',
-    'NrUorgLocalAP',
+    'NrUorgLocalAp',
     'DenoSetorLocalAp',   
     'GrExclusao',
     'DataIngOrg',
@@ -291,7 +247,7 @@ HEADER_TIPO_2 = [
     'DenoAtiv',# CAMPO CRIADO
     'GrOcorrAposent',
     'OcorrAposent',
-    'DenoAposent',
+    'DenoAposent',# CAMPO CRIADO aux ocorrencia
     'GrOcorrIngOrg',
     'OcorrIngOrg',
     'DenoIngOrgao',
@@ -300,24 +256,24 @@ HEADER_TIPO_2 = [
     'DenoIngSerPublico',    
     'OcorrExclusao', 
     'DenoExclusao',   
-    'SuspPag',  
-    'DtSusp',    
-    'DtLotacao',
-    'DtCadastro', 
-    'DtOcup',
-    'DtSaida', 
+    'SuspPagamnto',  
+    'DataSusp',    
+    'DataLotacao',
+    'DataCadastro', 
+    'DataOcup',
+    'DataSaida', 
     'ApoNumProc',
     'ApoAnoprev',
-    'CtNum',    
-    'CtSer',   
-    'CtUf',
-    'BANCO',
-    'AGENCIA',
-    'CONTA',
-    'AP_OP_INTG',
+    'CarteiraTrabNum',    
+    'CarteiraTrabSerie',   
+    'CarteiraTrabUf',
+    'Banco',
+    'Agencia',
+    'Conta',
+    'AposentOpInteg',
     'AposUorg',
-    'OrgDest',
-    'DtLiber',
+    'OrgaoDestino',
+    'DataLiberacao',
     'OrgOrigem',
     'DenoOrigem',
     'OrgAnt',
@@ -356,7 +312,7 @@ HEADER_TIPO_2 = [
     'IndicePSS',
     'IndiceIR',
     'IndiceMargemConsig',
-    'indideSindical',
+    'IndideSindical',
     'IndiceAdiantamento13',
     'IndiceAbateTeto',
     'Indice13Salario',
@@ -369,6 +325,8 @@ HEADER_TIPO_2 = [
     'IndiceDifURV',
     'IndiceAdiantamento',
     'IndicePasep'
+    
+    
     # 'DtRevers',
 
     
@@ -406,7 +364,6 @@ HEADER_TIPO_2 = [
 #---------------------------------------------------------------------    
     # 'TIPO_REGISTRO',
 ]
-
 LAYOUT_TIPO_3 = {
     "UnidPag": (0, 9),
     "SIAPE": (9, 16),
@@ -430,157 +387,24 @@ LAYOUT_TIPO_3 = {
     "PAConta": (116, 129),
     "PAAnoMesRub": (129, 135),
     "Lixo3": (135, 764),
-}                         
-HEADER_TIPO_3 = [
-    "UnidPag",
-    "SIAPE",
-    "SiapeDig",
-    "TipoReg",
-    # "UF_UPAG",
-    "RendDesc",
-    "CodRub",
-    "Seq",
-    "Valor",
-    "Prazo",
-    "Perc",
-    "Numer",
-    "Denom",
-    "AssCalc",
-    "Sist",
-    "NivSal",
-    "PANome",
-    "PABanco",
-    "PAAgen",
-    "PAConta",
-    "PAAnoMesRub",
-    
-]
+}        
 
-LAYOUT_TIPO_4 = {
-    "Lixo1": (0, 9),
-    "Matric": (9, 16),
-    "SiapeDig": (16, 17),
-    "TipoReg": (17, 18),
-    "Lixo2": (18, 20),
-    "TotBruto": (20, 32),
-    "TotDesc": (32, 44),
-    "Liquido": (44, 56),
-    "TotReg": (56, 59),
-    "Lixo3": (59, 764),
-}
-HEADER_TIPO_4 = [
-    "Lixo1",
-    "Matric",
-    "SiapeDig",
-    "TipoReg",
-    "Lixo2",
-    "TotBruto",
-    "TotDesc",
-    "Liquido",
-    "TotReg",
-    "Lixo3",
-]
-
-LAYOUT_TIPO_5 = {
-    "UnidPagadora": (0, 9),
-    "Siape": (9, 16),
-    "DigSiape": (16, 17),
-    "TipoReg": (17, 18),
-    "UfUpag": (18, 20),    
-    "CodAfast": (20,24),                             
-    "DenAfast" : (24,84),                             
-    "DtInicAfast":  (84,92),                          
-    "DtFimAfast": (92,100),                           
-    "DiplomAfast": (100,102),                            
-    "DtPublAfast":  (102,110),                         
-    "NumDiplomAfast": (110,129),                         
-    
-}
-HEADER_TIPO_5 =[
-    "UnidPagadora",
-    "Siape" ,
-    "DigSiape",
-    "TipoReg",
-    "UfUpag",    
-    "CodAfast",                             
-    "DenAfast" ,                             
-    "DtInicAfast",                          
-    "DtFimAfast",                           
-    "DiplomAfast",                            
-    "DtPublAfast",                         
-    "NumDiplomAfast",   
-
-]
-
-LAYOUT_TIPO_6 = {
-    # "UnidPagadora": (0, 9),
-    "Siape": (9, 16),
-    "DigSiape": (16, 17),
-    "TipoReg": (17, 18),
-    # "UfUpag": (18, 20),
-    "TotRegAfast": (20, 80),   
-}
-HEADER_TIPO_6 =[
-    # "UnidPagadora",
-    "Siape",
-    "DigSiape",
-    "TipoReg",
-    # "UfUpag",
-    "TotRegAfast",   
-
-]
-
-#------------------------------ INSIRA AQUI TODOS OS CAMPOS QUE SÃO DATA
-CAMPOS_DATA_TIPO_1 = [
-    'DataNasc', 
-    'DataPrimEmprego', 
-    'DataExpedicao'
-]
-CAMPOS_DATA_TIPO_2 = [
-    'DtExcInst',
-    'DtCadastro',
-    'VAlimDtIni',
-    'DtExcInti',
-    'MudUpagDtLb'
-    'DtCadastro',
-    'DtOcup',
-    'DtSaida',
-    'DtSusp',
-    'DtLotacao',
-    'DtIngOrg',
-    'DtIngSp',
-    'DtEx',
-    'DTAFASTINIC',
-    'DTAFASTFIM',
-    'DtLiber',
-    'DtOb',
-    'DATA_INGRESSO_FUNCAO_ANTERIOR',
-    'FUNCDTSAIDA',
-    'FUNCDTING',  
-    'DLPUBLAPO' 
-    'REVERSAO_DIPLOMA_DATA_PUB',
-    'DtRevers',
-    'POSSE_DIPLOMA_DATA',
-    'POSSE_DATA',
-    'INATIVIDADE_DATA',
-    'DATA_EXCLUSAO_INSTITUIDOR',
-    'DLPUBLINGRORG',
+CAMPOS_DATA = [
+    "DataNasc",
+    "DataPrimEmprego",
+    "DataExpedicao",
+    'DataIngOrg',
+    'DataIngSP',
+    'DataExclusao',
+    'DataAposentadoria',
+    'DataObito',
+    'DataLotacao',
+    'DataCadastro',
+    'DataOcup',
+    'DataSaida',
+    'DataLiberacao',
     'VAlimDtIni',
     'VAlimDtFim',
-    'DTREVERSAOATIV',
-    'DtApo',
-    'DtChefInic',
-    'DtChefFim',
-    'DLPUBLINGRORG',
-]
-CAMPOS_DATA_TIPO_3 = [
-  
-]
-CAMPOS_DATA_TIPO_4 = [
-  
-]
-CAMPOS_DATA_TIPO_5 = [
-    'DtInicAfast',                          
-    'DtFimAfast',             
-    'DtPublAfast',
+    'DtExcInti'
+
 ]
