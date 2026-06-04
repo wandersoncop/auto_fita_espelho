@@ -365,10 +365,10 @@ HEADER_TIPO_2 = [
     # 'TIPO_REGISTRO',
 ]
 LAYOUT_TIPO_3 = {
-    "UnidPag": (0, 9),
+    # "UnidPag": (0, 9),
     "SIAPE": (9, 16),
     "SiapeDig": (16, 17),
-    "TipoReg": (17, 18),
+    # "TipoReg": (17, 18),
     # "UF_UPAG": (18, 20),
     "RendDesc": (20, 21),
     "CodRub": (21, 26),
@@ -386,9 +386,79 @@ LAYOUT_TIPO_3 = {
     "PAAgen": (110, 116),
     "PAConta": (116, 129),
     "PAAnoMesRub": (129, 135),
-    "Lixo3": (135, 764),
+    # "Lixo3": (135, 764),
 }        
+LAYOUT_TIPO_4 = {
+    "Lixo1": (0, 9),
+    "Matric": (9, 16),
+    "SiapeDig": (16, 17),
+    "TipoReg": (17, 18),
+    "Lixo2": (18, 20),
+    "TotBruto": (20, 32),
+    "TotDesc": (32, 44),
+    "Liquido": (44, 56),
+    "TotReg": (56, 59),
+    "Lixo3": (59, 764),
+}
+HEADER_TIPO_4 = [
+    "Lixo1",
+    "Matric",
+    "SiapeDig",
+    "TipoReg",
+    "Lixo2",
+    "TotBruto",
+    "TotDesc",
+    "Liquido",
+    "TotReg",
+    "Lixo3",
+]
+LAYOUT_TIPO_5 = {
+    "UnidPagadora": (0, 9),
+    "Siape": (9, 16),
+    "DigSiape": (16, 17),
+    "TipoReg": (17, 18),
+    "UfUpag": (18, 20),    
+    "CodAfast": (20,24),                             
+    "DenAfast" : (24,84),                             
+    "DtInicAfast":  (84,92),                          
+    "DtFimAfast": (92,100),                           
+    "DiplomAfast": (100,102),                            
+    "DtPublAfast":  (102,110),                         
+    "NumDiplomAfast": (110,129),                         
+    
+}
+HEADER_TIPO_5 =[
+    "UnidPagadora",
+    "Siape" ,
+    "DigSiape",
+    "TipoReg",
+    "UfUpag",    
+    "CodAfast",                             
+    "DenAfast" ,                             
+    "DtInicAfast",                          
+    "DtFimAfast",                           
+    "DiplomAfast",                            
+    "DtPublAfast",                         
+    "NumDiplomAfast",   
 
+]
+LAYOUT_TIPO_6 = {
+    # "UnidPagadora": (0, 9),
+    "Siape": (9, 16),
+    "DigSiape": (16, 17),
+    "TipoReg": (17, 18),
+    # "UfUpag": (18, 20),
+    "TotRegAfast": (20, 80),   
+}
+HEADER_TIPO_6 =[
+    # "UnidPagadora",
+    "Siape",
+    "DigSiape",
+    "TipoReg",
+    # "UfUpag",
+    "TotRegAfast",   
+
+]
 CAMPOS_DATA = [
     "DataNasc",
     "DataPrimEmprego",

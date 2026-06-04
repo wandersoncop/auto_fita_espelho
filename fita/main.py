@@ -543,24 +543,7 @@ if os.path.exists(caminho_arquivo):
     )
 
 #-----------------------CRIA As REGRAS DE NEGOCIO Do CARGO QUE INFLUENCIA NA CATEGORIA MAGISTERIO
-   
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-   
-   
-   
+     
     df_funcional['GrCargo'] = df_funcional.apply(
     lambda linha:
         mapa_cad_apf_gr_cargo.get(str(linha['SIAPE']).zfill(7))

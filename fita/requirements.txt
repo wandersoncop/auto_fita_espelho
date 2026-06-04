@@ -1,3 +1,8 @@
 pandas
 sqlalchemy
 pymysql
+pyodbc
+openpyxl
+requests
+pytest
+requests-mock
