@@ -32,24 +32,27 @@ def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
         if nome_campo in mapas_auxiliares:
             nome_campo_novo = mapas_auxiliares[nome_campo]['nome_campo']
             mapa = mapas_auxiliares[nome_campo]['mapa']
-            #faz a verificação de novo campo
-# descomentar depois as linhas 33-36 e apagar as 37-39
+           
+            #FAZ A VERIFICAÇÃO DE CAMPO SEM TRADUÇÃO
+
             if valor not in mapa:
                 raise ValueError(
                     f'❌ Tradução não encontrada para {nome_campo}: "{valor}"'
                 )
-
-            # se tiver problema de tradução descomentar as linhas 39-42
-            # if valor not in mapa:
-            #     registro[nome_campo_novo] = ""
-            # else:
-            #     registro[nome_campo_novo] = mapa[valor]
-
-                
-#aqui cria o novo campo que vem das traduções da tabela auxuliar
-
-#descomentar depois
             registro[nome_campo_novo] = mapa[valor]
+            
+          #PARA VERIFICAR OS CAMPOS QUE FALTAM TRADUÇÃO COMENTAR APOS USO E NÃO APAGAR  
+            # if valor not in mapa:
+            #     print(f'❌ Tradução não encontrada para {nome_campo}: "{valor}"')
+            #     registro[nome_campo_novo] = ''
+            # else:
+            #         registro[nome_campo_novo] = mapa[valor]
+           #============================================================================ 
+
+
+
+
+         
 
     return registro
 
@@ -256,8 +259,36 @@ def criar_escolaridade(df_pessoal, df_titulacao_correcao, mapa_perqualif=None):
 
     return df_pessoal     
 
+def formatar_valores(valor):
+    """
+        converte a sequencia de numeros em valores
+        monetarios sem os zeros as esquerda e com duas
+        casas decimais
+    """
+    return round(
+        pd.to_numeric(valor,errors='coerce')/100,2
+    )
 
 
+def salvar_dataframe(df,nome_csv,nome_tabela,engine):
+    """
+        salva um dataframe em csv e envia para o banco de dados.
+    """        
+    df.to_csv(
+        nome_csv,
+        sep=';',
+        index=False,
+        encoding='utf-8-sig'
+    )
+    print(f"✅ CSV {nome_csv} exportado com sucesso!")
 
-        
+    df.to_sql(
+        nome_tabela,
+        engine,
+        if_exists='replace',
+        index=False
+    )
+    print(f"✅ {nome_tabela} salvo no banco!")
+
+
 

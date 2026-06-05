@@ -8,7 +8,9 @@ from sqlalchemy import text  # Biblioteca para trabalhar com banco de dados. O t
 from funcoes import (
     ler_fita_por_tipo,  # chama a função que Le o registros da fita e os separa por tipo
     extrair_tipo_0,  # serve somente para extrair o mes fita
-    criar_escolaridade #Cria o campo Escolaridade comparando escolaridade e titulação
+    criar_escolaridade, #Cria o campo Escolaridade comparando escolaridade e titulação
+    formatar_valores, # converte em valores
+    salvar_dataframe #cria e envia os df paa o banco de dados
 )
 
 # aqui fazemos os imports dos mapeamento dos campos  que vem la do mapeamento
@@ -16,6 +18,8 @@ from mapeamentos import (
     LAYOUT_TIPO_1,# são as posições na fita ex:'SIAPE': (9, 16),#
     LAYOUT_TIPO_2,# são as posições na fita ex:'SIAPE': (9, 16),#
     HEADER_TIPO_2,# é a sequencia que deseja do campos na tabela os nomes tem que ser iguais
+    LAYOUT_TIPO_4,
+    HEADER_TIPO_4,
     LAYOUT_TIPO_3,# são as posições na fita ex:'SIAPE': (9, 16),#
     CAMPOS_DATA # aqui é  lista de campos de data que serão formatados pela função formatar_data
 )
@@ -28,16 +32,12 @@ from conexao import engine  # Importa o objeto de conexão (engine) utilizado pa
 # =========================
 
 # ESTADO CIVIL-----------------------------------------------------------------------------------------------
-
-
 df_estado_civil = pd.read_sql(
     # função do Pandas que executa o camandao SQL e devolve um dataframe
-    #dataframe é uma tabela em memoria  
-    
+    #dataframe é uma tabela em memoria      
     "SELECT CodECiv, DenoECiv FROM aux_estado_civil", #comando sql
     engine # é a conexao com o bd Mysql
 )
-
 mapa_estado_civil = dict(
     zip(
         df_estado_civil['CodECiv'],
@@ -47,10 +47,14 @@ mapa_estado_civil = dict(
 
 # PAIS-------------------------------------------------------------------------------------------
 df_pais = pd.read_sql(
-    "SELECT CODPAIS, DENOPAIS FROM aux_pais",
+    """
+        SELECT 
+            CODPAIS, 
+            DENOPAIS 
+        FROM aux_pais
+    """,
     engine
 )
-
 mapa_pais = dict(
     zip(
         df_pais['CODPAIS'],
@@ -58,12 +62,14 @@ mapa_pais = dict(
     )
 )
 
-# DenoEscolaridade-----------------------------------------------------------------------------
+# DENO_ESCOLARIDADE-----------------------------------------------------------------------------
 df_escolaridade = pd.read_sql(
-    "SELECT CodEsco, DenoEscol FROM aux_escolaridade",
+    """SELECT 
+        CodEsco, 
+        DenoEscol 
+    FROM aux_escolaridade""",
     engine
 )
-
 mapa_escolaridade = dict(
     zip(
         df_escolaridade['CodEsco'],
@@ -71,12 +77,14 @@ mapa_escolaridade = dict(
     )
 )
 
-# DenoTitulacao----------------------------------------------------------------------------------
+# DENO_TITULACAO----------------------------------------------------------------------------------
 df_titulacao = pd.read_sql(
-    "SELECT CodTit, DenoTit FROM aux_titulacao",
+    """SELECT 
+        CodTit, 
+        DenoTit 
+    FROM aux_titulacao""",
     engine
 )
-
 mapa_titulacao = dict(
     zip(
         df_titulacao['CodTit'],
@@ -84,7 +92,7 @@ mapa_titulacao = dict(
     )
 )
 
-# Titulacao correcao---------------------------------------------------------------------------
+# TITULACAO CORRECAO---------------------------------------------------------------------------
 df_titulacao_correcao = pd.read_sql(
     """
     SELECT 
@@ -97,8 +105,8 @@ df_titulacao_correcao = pd.read_sql(
     engine
 )
 
-# pescad matricula ufmg------------------------------------------------------------------------
-#cria o campo In
+# PESCAD MATRICULA UFMG------------------------------------------------------------------------
+
 df_pescad_matricula_ufmg = pd.read_sql(
     """
     SELECT
@@ -116,7 +124,7 @@ mapa_insc_ufmg = dict(
         df_pescad_matricula_ufmg['Inscr']
     )
 )
-# situação------------------------------------------------------------------------
+# SITUACAO------------------------------------------------------------------------
 df_situacao = pd.read_sql(
     """
     SELECT 
@@ -134,7 +142,7 @@ mapa_situacao = dict(
 
     )
 )
-# deno cargo------------------------------------------------------------------------
+# DENO CARGO------------------------------------------------------------------------
 df_deno_cargo = pd.read_sql(
     """
     SELECT
@@ -161,7 +169,7 @@ mapa_deno_cargo = dict(
     )
 )
 
-
+#CLASSE-------------------------------------------------
 df_classe = pd.read_sql(
     """
     SELECT
@@ -177,7 +185,7 @@ mapa_classe = dict(
         df_classe['DenoClasse'],
     )
 )
-# unid lotação------------------------------------------------------------------------
+# UNID LOTACAO------------------------------------------------------------------------
 
 df_unidade = pd.read_sql(
     """
@@ -200,7 +208,8 @@ mapa_unidade = (
     [['Unid','DenoSetor','UorgPai','NomeUorgPai']]
     .to_dict('index')
 )
-# email------------------------------------------------------------------------
+
+# EMAIL------------------------------------------------------------------------
 df_email_uorg = pd.read_sql(
     """
     SELECT
@@ -219,7 +228,7 @@ mapa_email_uorg = (
     [['ED-EMAIL-UORG', 'ED-MUNICIPIO-ENDERECO-UORG', 'SG-UF-END-UORG']]
     .to_dict('index')
 )
-# municipio------------------------------------------------------------------------
+# MUNICIPIO------------------------------------------------------------------------
 df_municipio = pd.read_sql(
     """
     SELECT
@@ -229,13 +238,13 @@ df_municipio = pd.read_sql(
     """,
     engine
 )
-
 mapa_municipio = dict(
     zip(
         df_municipio['CODMUNICIP'],
         df_municipio['DENOMUNIC']
     )
 )
+#LOCAL APOSENTADORIA---------------------------------------------------------------------
 df_local_ap = pd.read_sql(
     """
     SELECT
@@ -255,7 +264,7 @@ mapa_local_ap = (
    .to_dict('index')
 
 )
-
+#ATIVIDADE---------------------------------------------------------------------------------
 df_atividade = pd.read_sql(
     """
     SELECT
@@ -271,7 +280,7 @@ mapa_atividade = dict(
         df_atividade['DENOATIV']
     )
 )
-#mapa ocorrencia --------------------------------------------------------------
+#MAPA OCORRENCIA--------------------------------------------------------------
 df_ocorrencia = pd.read_sql(#faz o select na tabela aux
     """
     SELECT
@@ -290,8 +299,8 @@ mapa_ocorrencia = dict(
 
       df_ocorrencia['DESC_OCORR']
   )
-
 )
+# ORGAOS-----------------------------------------------------------------------------------
 df_orgaos = pd.read_sql(
    """ 
     SELECT
@@ -307,7 +316,7 @@ mapa_orgaos = dict(
         df_orgaos['NOME_ORGAO']
     )
 )
-
+# CAD APF-----------------------------------------------------------------------------------
 df_cad_apf = pd.read_sql(
     """
    SELECT
@@ -319,14 +328,12 @@ df_cad_apf = pd.read_sql(
     """,
     engine
 )
-
 mapa_cad_apf_cargo = dict(
     zip(
         df_cad_apf['Mat'].astype(str).str.replace('.0', '', regex=False).str.zfill(7),
         df_cad_apf['A0300_carcod'].astype(str).str.replace('.0', '', regex=False).str.zfill(3)
     )
 )
-
 mapa_cad_apf_gr_cargo = dict(
     zip(
         df_cad_apf['Mat'].astype(str).str.replace('.0', '', regex=False).str.zfill(7),
@@ -340,8 +347,23 @@ mapa_cad_apf_clas = dict(
     )
 )
 
-
-
+# RUBRICA-----------------------------------------------------------------------
+df_rubrica = pd.read_sql(#faz o select na tabela aux
+    """
+    SELECT
+        Rubrica,
+        DescRubri     
+        
+    FROM aux_rubrica
+    """,
+    engine
+)
+mapa_rubrica = dict(
+  zip(
+      df_rubrica['Rubrica'].astype(str).str.zfill(5),
+      df_rubrica['DescRubri'].astype(str)     
+    )
+)
 
 
 # =========================
@@ -392,13 +414,15 @@ if os.path.exists(caminho_arquivo):
         'CodSituacao':{#nome do campo referencia no header
             'nome_campo':'Situacao',
             'mapa':mapa_situacao
-        },
-       
+        },       
         'ChaveClass': {
             'nome_campo': 'DenoClasse',
             'mapa': mapa_classe
         },
-       
+        'CodRub': { #campo que será traduzido, campo que existe na fita 'LAYOUT_TIPO'
+            'nome_campo': 'DenoRubrica',# no dado ao campo que será criado apos a traducao
+            'mapa': mapa_rubrica # mapa que será utilizado
+        }   
 
     }
 
@@ -660,34 +684,19 @@ if os.path.exists(caminho_arquivo):
 
     df_funcional = df_funcional[HEADER_TIPO_2]
 
-    df_funcional.to_csv(#cria o csv
-        'tipo_2_funcional.csv',
-        sep=';',
-        index=False,
-        encoding='utf-8-sig'
-
-    )
-    # aqui envia para o banco com o .to_sql
-    df_funcional.to_sql(
-        'tbl_funcional',
-        engine,
-        if_exists='replace',
-        index=False
-    )
-
-    print("✅ tipo_2_funcional salvo no banco!")
+   
 
 
-    # =========================
+    # =================================================================
     # TIPO 3 - PAGAMENTO
-    # =========================
+    # ==================================================================
 
     registros_tipo_3 = ler_fita_por_tipo(
         caminho_arquivo,
         LAYOUT_TIPO_3,
         '3',
         CAMPOS_DATA,
-        mapas_auxiliares=None
+        mapas_auxiliares
     )
 
     print(f'Tipo_3_registro_pagamento finalizado: {len(registros_tipo_3)} registros')
@@ -699,25 +708,117 @@ if os.path.exists(caminho_arquivo):
         'mes_fita',  # nome da coluna
         mes_fita  # valor
     )
+  #-----------------------TRATA O CAMPO VALOR RETIRANDO OS ZEROS A ESQUERDA E DEIXANDO CO 2 CASAS DECIMAIS
+    df_pagamento['Valor'] = df_pagamento['Valor'].apply(formatar_valores)
 
-    df_pagamento.to_csv(
-        'tipo_3_registro_pagamento.csv',
-        sep=';',
-        index=False,
-        encoding='utf-8-sig'
+
+
+
+
+
+
+
+
+# =================================================================
+    # TIPO 4 - PAGAMENTO TOTAIS
+    # ==================================================================
+
+    registros_tipo_4 = ler_fita_por_tipo(
+        caminho_arquivo,
+        LAYOUT_TIPO_4,
+        '4',
+        CAMPOS_DATA,
+        mapas_auxiliares
     )
 
-    print("✅ CSV tipo_3_registro_pagamento.csv exportado com sucesso!")
+    
 
-    # aqui envia para o banco com o .to_sql
-    df_pagamento.to_sql(
+
+
+
+ 
+    
+
+   
+
+    print(f'Tipo_4_registro_pagamento_totais finalizado: {len(registros_tipo_4)} registros')
+
+    df_pagamento_totais = pd.DataFrame(registros_tipo_4)
+
+    df_pagamento_totais['TotBruto'] = df_pagamento_totais['TotBruto'].apply(formatar_valores)
+    df_pagamento_totais['TotDesc'] = df_pagamento_totais['TotDesc'].apply(formatar_valores)
+    df_pagamento_totais['Liquido'] = df_pagamento_totais['Liquido'].apply(formatar_valores)
+    
+    df_pagamento_totais.insert(
+        0,  # primeira coluna
+        'mes_fita',  # nome da coluna
+        mes_fita  # valor
+    )
+   
+    
+    df_pagamento_totais = df_pagamento_totais.merge(
+        df_funcional[           
+            [
+                'SIAPE',
+                'Nome',
+                'CodSituacao',
+                'Situacao',
+                'Categoria'
+            ]
+        ],
+        left_on='Matric',
+        right_on='SIAPE',
+        how='left'
+    )
+    df_pagamento_totais = df_pagamento_totais[HEADER_TIPO_4]
+   
+  
+#==========================SALVA OS DF EM CSV NO DIRETORIO E ENVIA PARA O BD
+ 
+      
+    salvar_dataframe(
+        df_pagamento,
+        'pessoal.csv',
+        'tbl_pessoal',
+        engine
+    )       
+    salvar_dataframe(
+        df_funcional,
+        'funcional.csv',
+        'tbl_funcional',
+        engine
+    )   
+    salvar_dataframe(
+        df_pagamento,
+        'registro_pagamento.csv',
         'tbl_registro_pagamento',
-        engine,
-        if_exists='replace',
-        index=False
+        engine
     )
+    salvar_dataframe(
+        df_pagamento,
+        'registro_pagamento_totais.csv',
+        'tbl_registro_pagamento_totais',
+        engine
+    ) 
+   
 
-    print("✅ tipo_3_registro_pagamento salvo no banco!")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # =========================
     # CRIAÇÃO DE TABELA tbl_pgto_incentivo_qualificacao
@@ -779,8 +880,7 @@ if os.path.exists(caminho_arquivo):
         mapa_perqualif
     )
 
-    print("✅ Campo Escolaridade criado com sucesso!")
-
+   
     # =========================
     # SALVA TIPO 1
     # =========================
