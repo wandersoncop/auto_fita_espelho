@@ -1,6 +1,5 @@
-
-
 import pandas as pd
+
 def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
     """Traduz uma linha da fita espelho usando as posições do layout."""
 
@@ -56,8 +55,6 @@ def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
 
     return registro
 
-
-
 def extrair_tipo_0(caminho_arquivo):
     """Extrai o mês da fita."""
 
@@ -73,6 +70,7 @@ def extrair_tipo_0(caminho_arquivo):
                 return f"{ano}_{mes}"
 
     return "0000_00"
+
 def ler_fita_por_tipo(
     caminho_arquivo,
     layout,
@@ -155,7 +153,6 @@ def formatar_data(valor):
         return f'{valor[0:2]}/{valor[2:4]}/{valor[4:8]}'
 
     return valor
-
 
 def formatar_sexo(valor):
     """ trnaforma os valores de M F para Masculino e Feminino"""
@@ -268,7 +265,6 @@ def formatar_valores(valor):
     return round(
         pd.to_numeric(valor,errors='coerce')/100,2
     )
-
 
 def salvar_dataframe(df,nome_csv,nome_tabela,engine):
     """

@@ -147,7 +147,8 @@ tbl_cad_apf = os.path.join(diretorio,'CadAPF.txt')
 tbl_cad_apf = pd.read_csv(tbl_cad_apf,sep=';',encoding='utf-8-sig',dtype=str)
 tbl_cad_apf.to_sql('aux_cad_apf',engine,if_exists='replace',index=False)
 print('Tabela CadAPF enviada')
-#-----------------------cad_apf resolve situação da categoria MAGISTERIO X TEC-ADMINISTRATIVO
+
+#-----------------------rubrica
 
 tbl_rubrica = os.path.join(diretorio,'Tabela Rubrica.txt')
 tbl_rubrica = pd.read_csv(tbl_rubrica,sep=';',encoding='utf-8-sig',dtype=str)

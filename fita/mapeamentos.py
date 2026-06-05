@@ -2,7 +2,7 @@ LAYOUT_TIPO_1 = { #codigo que faz a tradução dos campos da fita espelho
     "UnidPag": (0, 9),
     "SIAPE": (9, 16),
     "SiapeDig": (16, 17),
-    "TipoReg": (17, 18),
+    # "TipoReg": (17, 18),
     # "UF_UPAG": (18, 20),
     "Nome": (20, 80),
     "CPF": (80, 91),
@@ -34,12 +34,11 @@ LAYOUT_TIPO_1 = { #codigo que faz a tradução dos campos da fita espelho
     "UfIdent": (360, 362),
     "TituloEleitor": (362, 375)
 }
-
 LAYOUT_TIPO_2 = {
     'UPAG': (0, 9),#
     'SIAPE': (9, 16),#
     'SiapeDig': (16, 17),#
-    'TipoReg': (17, 18),#
+    # 'TipoReg': (17, 18),#
     'RegJuridico': (20, 23),#
     'CodSituacao': (23, 25),#
     'CarteiraTrabNum': (25, 31),
@@ -186,10 +185,7 @@ LAYOUT_TIPO_2 = {
     # 'FGTS_DATA_OPCAO': (60, 68),
     # 'FGTS_BANCO': (68, 71),
     # 'FGTS_Agencia': (71, 77),
-    # 'FGTS_CONTA': (77, 90),
-
-
-    
+    # 'FGTS_CONTA': (77, 90),    
 }
 HEADER_TIPO_2 = [
     'mes_fita',
@@ -392,7 +388,7 @@ HEADER_TIPO_3 = [
     
     "SIAPE",
     "SiapeDig",
-    "TipoReg",
+    # "TipoReg",
     "RendDesc",
     "CodRub",
     "denoRub",
@@ -416,7 +412,7 @@ LAYOUT_TIPO_4 = {
     # "UnidPag": (0, 9),
     "Matric": (9, 16),
     "SiapeDig": (16, 17),
-    "TipoReg": (17, 18),
+    # "TipoReg": (17, 18),
     # "Lixo2": (18, 20),
     "TotBruto": (20, 32),
     "TotDesc": (32, 44),
@@ -426,10 +422,10 @@ LAYOUT_TIPO_4 = {
 }
 HEADER_TIPO_4 = [
     # "UnidPag",
-     "mes_fita",
+    "mes_fita",
     "Matric",
     "SiapeDig",
-    "TipoReg",
+    # "TipoReg",
     'Nome',
     'CodSituacao',
     'Situacao',
@@ -442,11 +438,12 @@ HEADER_TIPO_4 = [
     # "Lixo3",
 ]
 LAYOUT_TIPO_5 = {
-    "UnidPagadora": (0, 9),
-    "Siape": (9, 16),
-    "DigSiape": (16, 17),
-    "TipoReg": (17, 18),
-    "UfUpag": (18, 20),    
+
+    # "UnidPagadora": (0, 9),
+    "SIAPE": (9, 16),
+    # "DigSiape": (16, 17),
+    # "TipoReg": (17, 18),
+    # "UfUpag": (18, 20),    
     "CodAfast": (20,24),                             
     "DenAfast" : (24,84),                             
     "DtInicAfast":  (84,92),                          
@@ -457,11 +454,15 @@ LAYOUT_TIPO_5 = {
     
 }
 HEADER_TIPO_5 =[
-    "UnidPagadora",
-    "Siape" ,
-    "DigSiape",
-    "TipoReg",
-    "UfUpag",    
+    "mes_fita",
+    # "UnidPagadora",
+    "SIAPE" ,
+    "Nome",
+    # "DigSiape",
+    # "TipoReg",
+    'CodSituacao',
+    'Situacao',
+    # "UfUpag",    
     "CodAfast",                             
     "DenAfast" ,                             
     "DtInicAfast",                          
@@ -473,17 +474,21 @@ HEADER_TIPO_5 =[
 ]
 LAYOUT_TIPO_6 = {
     # "UnidPagadora": (0, 9),
-    "Siape": (9, 16),
+    "SIAPE": (9, 16),
     "DigSiape": (16, 17),
-    "TipoReg": (17, 18),
+    # "TipoReg": (17, 18),
     # "UfUpag": (18, 20),
     "TotRegAfast": (20, 80),   
 }
 HEADER_TIPO_6 =[
     # "UnidPagadora",
-    "Siape",
+    "mes_fita",
+    "SIAPE",
     "DigSiape",
-    "TipoReg",
+    # "TipoReg",
+    "Nome",
+    'CodSituacao',
+    'Situacao',
     # "UfUpag",
     "TotRegAfast",   
 
@@ -504,6 +509,9 @@ CAMPOS_DATA = [
     'DataLiberacao',
     'VAlimDtIni',
     'VAlimDtFim',
-    'DtExcInti'
+    'DtExcInti',
+    "DtInicAfast",                          
+    "DtFimAfast", 
+    "DtPublAfast",  
 
 ]
