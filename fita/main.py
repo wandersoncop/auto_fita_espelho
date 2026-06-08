@@ -38,12 +38,43 @@ from conexao import engine  # Importa o objeto de conexão (engine) utilizado pa
 diretorio = os.path.join(
     os.path.expanduser("~"),
     "Desktop",
-    "auto_fita_espelho"
+    "auto_fita_espelho",
+    "arquivos_fita"
 )  # retorna a pasta do usuario logado
 
-ARQUIVO = 'fita_espelho.txt'  # arquivo que será traduzido
 
-caminho_arquivo = os.path.join(diretorio, ARQUIVO)
+
+# ARQUIVO = 'fita_espelho.txt'  # arquivo que será traduzido
+
+# caminho_arquivo = os.path.join(diretorio, ARQUIVO)
+
+# =========================
+# LOCALIZA O ARQUIVO
+# =========================
+
+arquivo_encontrado = None
+
+for arquivo in os.listdir(diretorio):
+
+    if (
+        arquivo.lower().startswith('fita_servidor_')
+        and arquivo.lower().endswith('.txt')
+    ):
+        arquivo_encontrado = arquivo
+        break
+
+if arquivo_encontrado:
+    caminho_arquivo = os.path.join(
+        diretorio,
+        arquivo_encontrado
+    )
+else:
+    caminho_arquivo = None
+
+if caminho_arquivo and os.path.exists(caminho_arquivo):
+    print(f"✅ Arquivo encontrado: {arquivo_encontrado}")
+
+
 
 # =========================
 #  REGRA DE CRIAÇÃO DOS CAMPOS COM BASE NAS TABELAS AUXILIARES
@@ -378,9 +409,10 @@ mapa_rubrica = dict(
 # PROCESSAMENTO
 # =========================
 
-if os.path.exists(caminho_arquivo):
+if caminho_arquivo and os.path.exists(caminho_arquivo):
+    
 
-    print("✅ Arquivo encontrado:")
+    print(f"✅ Arquivo encontrado:{arquivo_encontrado}")
 
     # aqui é cria  todos os campos com base nas regras que vem dos mapas tbl auxiliares 
     mapas_auxiliares = {
@@ -902,8 +934,12 @@ if os.path.exists(caminho_arquivo):
         df_titulacao_correcao,
         mapa_perqualif
     )
+
+
+
+
 else:
-    print("❌ ERRO: Arquivo fita_espelho.txt não encontrado.")
+    print("❌ ERRO: Arquivo fita não encontrado.")
     print("📁 Caminho esperado:")
     print(caminho_arquivo)
     print("Verifique se o arquivo foi copiado para a pasta auto_fita_espelho.")

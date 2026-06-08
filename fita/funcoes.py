@@ -34,18 +34,22 @@ def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
            
             #FAZ A VERIFICAÇÃO DE CAMPO SEM TRADUÇÃO
 
-            if valor not in mapa:
-                raise ValueError(
-                    f'❌ Tradução não encontrada para {nome_campo}: "{valor}"'
-                )
-            registro[nome_campo_novo] = mapa[valor]
+            # if valor not in mapa:
+            #     if nome_campo == 'SIAPE':
+            #         registro [nome_campo_novo] = ''
+            #     else:
+            #         raise ValueError(
+            #             f'❌ Tradução não encontrada para {nome_campo}: "{valor}"'
+            #     )
+            # else:    
+            #     registro[nome_campo_novo] = mapa[valor]
             
           #PARA VERIFICAR OS CAMPOS QUE FALTAM TRADUÇÃO COMENTAR APOS USO E NÃO APAGAR  
-            # if valor not in mapa:
-            #     print(f'❌ Tradução não encontrada para {nome_campo}: "{valor}"')
-            #     registro[nome_campo_novo] = ''
-            # else:
-            #         registro[nome_campo_novo] = mapa[valor]
+            if valor not in mapa:
+                print(f'❌ Tradução não encontrada para {nome_campo}: "{valor}"')
+                registro[nome_campo_novo] = ''
+            else:
+                    registro[nome_campo_novo] = mapa[valor]
            #============================================================================ 
 
 
@@ -149,13 +153,16 @@ def ler_fita_por_tipo(
 def formatar_data(valor):
     """Formata os campos de data da fita espelho."""
 
+    if valor == '00000000':
+        return ''
+
     if valor and len(valor) == 8 and valor.isdigit():
         return f'{valor[0:2]}/{valor[2:4]}/{valor[4:8]}'
 
     return valor
 
 def formatar_sexo(valor):
-    """ trnaforma os valores de M F para Masculino e Feminino"""
+    """ trasforma os valores de M F para Masculino e Feminino"""
     if valor == 'M':
         return 'Masculino'
     if valor =='F':
