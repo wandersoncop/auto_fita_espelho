@@ -32,7 +32,7 @@ from mapeamentos import (
 from conexao import engine  # Importa o objeto de conexão (engine) utilizado para acessar o banco de dados MySQL.
 
 # =========================
-# CAMINHOS
+# CAMINHOS LOCALIZA O ARQUIVO
 # =========================
 
 diretorio = os.path.join(
@@ -503,11 +503,11 @@ if os.path.exists(caminho_arquivo):
     )
     df_funcional['CodMunicipioUORGExercicio'] = df_funcional['NrUorgExercicio'].apply(
     lambda codigo: mapa_email_uorg.get(codigo, {}).get('ED-MUNICIPIO-ENDERECO-UORG', '')
-)
+    )
 
     df_funcional['MunicipioUORGExercicio'] = df_funcional['CodMunicipioUORGExercicio'].apply(
     lambda codigo: mapa_municipio.get(codigo, '')
-)
+    )
     df_funcional['NrUorgLocalAp'] = df_funcional['SIAPE'].apply(
     lambda siape: mapa_local_ap.get(str(siape).zfill(7), {}).get('NrUorgLocalAp', '')
     )
@@ -645,7 +645,7 @@ if os.path.exists(caminho_arquivo):
     )
     else 'N',
     axis=1 #faz a leitura por linha
-)
+    )
 
     df_funcional = df_funcional.merge( # e como o join em sql entre a funciona e pessoal
         df_pessoal[['SIAPE','Nome']], #join entre SIAPE e Nome 
@@ -902,3 +902,8 @@ if os.path.exists(caminho_arquivo):
         df_titulacao_correcao,
         mapa_perqualif
     )
+else:
+    print("❌ ERRO: Arquivo fita_espelho.txt não encontrado.")
+    print("📁 Caminho esperado:")
+    print(caminho_arquivo)
+    print("Verifique se o arquivo foi copiado para a pasta auto_fita_espelho.")
