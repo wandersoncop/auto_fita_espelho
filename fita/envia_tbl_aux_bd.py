@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from conexao import engine
-from envia_access import enviar_dataframe_para_access
+# from envia_access import enviar_dataframe_para_access
 
 
 #---------------------------CAMINHO PARA A PASTA DE TABELAS AUXILIARES
@@ -25,7 +25,7 @@ tbl_estado_civil = os.path.join(diretorio, 'Tabela Estado Civil.txt')
 df_estado_civil= pd.read_csv(tbl_estado_civil, sep=';',encoding='latin-1',dtype=str)
 df_estado_civil.to_sql( 'aux_estado_civil',engine,if_exists='replace',index=False)
 # a proxima linha envia o df para o access
-enviar_dataframe_para_access(df_estado_civil,'aux_estado_civil')
+# enviar_dataframe_para_access(df_estado_civil,'aux_estado_civil')
 print ('Tabela estado civil enviada')
 
 #-----------------------PAIS

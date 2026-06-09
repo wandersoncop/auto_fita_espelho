@@ -1,7 +1,15 @@
+import os
 import pyodbc
 
 
-caminho_banco_access = r"C:\Users\Wanderson\Documents\auto_fita.accdb"
+
+# caminho_banco_access = r"C:\Users\Wandersoncop\Documents\auto_fita.accdb"
+
+caminho_banco_access = os.path.join(
+    os.path.expanduser('~'),
+    'Documents',
+    'auto_fita.accdb'
+)
 
 
 def conectar_access():
@@ -36,4 +44,11 @@ def consultar_sql(sql):
 
     return resultados
 
+if __name__ == "__main__":
+    print(caminho_banco_access)
 
+    conexao = conectar_access()
+
+    print(conexao)
+
+    conexao.close()

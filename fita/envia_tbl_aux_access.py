@@ -1,4 +1,3 @@
-
 import os
 import pandas as pd
 from conexao_access import conectar_access
@@ -12,13 +11,10 @@ diretorio = os.path.join(
 )
 
 
-def enviar_dataframe_para_access(dataframe, nome_tabela):
-    conexao = conectar_access()
-    cursor = conexao.cursor()
-
+def enviar_dataframe_para_access(dataframe, nome_tabela,cursor):
+    
     try:
         cursor.execute(f"DROP TABLE [{nome_tabela}]")
-        conexao.commit()
     except:
         pass
 
@@ -52,14 +48,12 @@ def enviar_dataframe_para_access(dataframe, nome_tabela):
 
     cursor.executemany(sql_insert, dados)
 
-    conexao.commit()
-    cursor.close()
-    conexao.close()
+    
 
     print(f"✅ Tabela {nome_tabela} enviada para o Access")
 
 
-def carregar_e_enviar(nome_arquivo, nome_tabela, encoding="latin-1"):
+def carregar_e_enviar(nome_arquivo, nome_tabela, encoding,cursor):
     caminho_arquivo = os.path.join(diretorio, nome_arquivo)
 
     dataframe = pd.read_csv(
@@ -69,7 +63,7 @@ def carregar_e_enviar(nome_arquivo, nome_tabela, encoding="latin-1"):
         dtype=str
     )
 
-    enviar_dataframe_para_access(dataframe, nome_tabela)
+    enviar_dataframe_para_access(dataframe, nome_tabela,cursor)
 
 
 tabelas = [
@@ -95,8 +89,25 @@ tabelas = [
 ]
 
 
-for nome_arquivo, nome_tabela, encoding in tabelas:
-    carregar_e_enviar(nome_arquivo, nome_tabela, encoding)
+conexao = conectar_access()
 
-print("✅ Todas as tabelas auxiliares foram enviadas para o Access!")
+cursor = conexao.cursor()
+
+for nome_arquivo, nome_tabela, encoding in tabelas:
+
+    carregar_e_enviar(
+        nome_arquivo,
+        nome_tabela,
+        encoding,
+        cursor
+    )
+
+conexao.commit()
+
+cursor.close()
+conexao.close()
+
+print(
+    "✅ Todas as tabelas auxiliares foram enviadas para o Access!"
+)
   

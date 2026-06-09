@@ -34,22 +34,22 @@ def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
            
             #FAZ A VERIFICAÇÃO DE CAMPO SEM TRADUÇÃO
 
-            # if valor not in mapa:
-            #     if nome_campo == 'SIAPE':
-            #         registro [nome_campo_novo] = ''
-            #     else:
-            #         raise ValueError(
-            #             f'❌ Tradução não encontrada para {nome_campo}: "{valor}"'
-            #     )
-            # else:    
-            #     registro[nome_campo_novo] = mapa[valor]
+            if valor not in mapa:
+                if nome_campo == 'SIAPE':
+                    registro [nome_campo_novo] = ''
+                else:
+                    raise ValueError(
+                        f'❌ Tradução não encontrada para {nome_campo}: "{valor}"'
+                )
+            else:    
+                registro[nome_campo_novo] = mapa[valor]
             
           #PARA VERIFICAR OS CAMPOS QUE FALTAM TRADUÇÃO COMENTAR APOS USO E NÃO APAGAR  
-            if valor not in mapa:
-                print(f'❌ Tradução não encontrada para {nome_campo}: "{valor}"')
-                registro[nome_campo_novo] = ''
-            else:
-                    registro[nome_campo_novo] = mapa[valor]
+            # if valor not in mapa:
+            #     print(f'❌ Tradução não encontrada para {nome_campo}: "{valor}"')
+            #     registro[nome_campo_novo] = ''
+            # else:
+            #         registro[nome_campo_novo] = mapa[valor]
            #============================================================================ 
 
 
