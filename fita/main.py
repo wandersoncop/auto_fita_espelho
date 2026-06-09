@@ -904,6 +904,12 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
 
     print("✅ tbl_pgto_incentivo_qualificacao criada com sucesso!")
 
+
+
+
+
+
+
     # =========================
     # MAPA PERQUALIF
     # =========================
