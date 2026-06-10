@@ -145,7 +145,7 @@ LAYOUT_TIPO_2 = {
     'RxPerc': (680, 685),
     'GOcorreVat': (717, 719),
     'OcreverAti': (719, 722),
-    # 'DTREVERSAOATIV': (722, 730),
+     'DTREVERSAOATIV': (722, 730),
     # 'REVERSAO_CODIGO': (714, 722),
     'DtRevers': (700, 708),
     # 'REVERSAO_DIPLOMA_DATA_PUB': (722, 730), 
@@ -300,6 +300,7 @@ HEADER_TIPO_2 = [
     'RxPerc',
     'GOcorreVat',
     'OcreverAti',
+    'DTREVERSAOATIV'
     'IndiceCargo',
     'IndiceFuncao',
     'IndiceSalarioFamilia',

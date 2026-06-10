@@ -3,6 +3,8 @@
 import os  # biblioteca padrão do py serve para interagir com o sistema operacional(caminhos,pasta...)
 import pandas as pd  # blibioteca para manipulaçao de dados, como se fosse um excel dentro do py
 
+# from conexao_access import conectar_access
+# from envia_access import enviar_dataframe_para_access
 from sqlalchemy import text  # Biblioteca para trabalhar com banco de dados. O text() faz o SQLAlchemy reconhecer o texto como um comando SQL.
 
 from funcoes import (
@@ -12,6 +14,7 @@ from funcoes import (
     formatar_valores, # converte em valores
     salvar_dataframe #cria e envia os df paa o banco de dados
 )
+# from envia_access import enviar_dataframe_para_access
 
 from mapeamentos import ( 
     # LAYOUT_TIPO_ são as posições na fita ex:'SIAPE': (9, 16),
@@ -30,7 +33,8 @@ from mapeamentos import (
     CAMPOS_DATA 
 )
 from conexao import engine  # Importa o objeto de conexão (engine) utilizado para acessar o banco de dados MySQL.
-
+# conexao_access = conectar_access()
+# cursor_access = conexao_access.cursor()
 # =========================
 # CAMINHOS LOCALIZA O ARQUIVO
 # =========================
@@ -837,44 +841,85 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
     )
     df_afastamento_total = df_afastamento_total[HEADER_TIPO_6]
 
-#==========================SALVA OS DF EM CSV NO DIRETORIO E ENVIA PARA O BD
+#==========================SALVA OS DF EM CSV NO DIRETORIO E ENVIA PARA O BD MYSQL E ACCESS
        
     salvar_dataframe(
         df_pessoal,
         'pessoal.csv',
         'tbl_pessoal',
         engine
-    )       
+    )   
+    # enviar_dataframe_para_access(
+    #     df_pessoal,
+    #     'tbl_pessoal',
+    #     cursor_access
+    # ) 
+#==============================================       
     salvar_dataframe(
         df_funcional,
         'funcional.csv',
         'tbl_funcional',
         engine
-    )   
+    )  
+    # enviar_dataframe_para_access(
+    #     df_funcional,
+    #     'tbl_funcional',
+    #     cursor_access
+    # ) 
+#==============================================      
     salvar_dataframe(
         df_pagamento,
         'registro_pagamento.csv',
         'tbl_registro_pagamento',
         engine
     )
+    # enviar_dataframe_para_access(
+    #     df_pagamento,
+    #     'tbl_registro_pagamento',
+    #     cursor_access
+    # )
+#==============================================     
     salvar_dataframe(
         df_pagamento_totais,
         'registro_pagamento_totais.csv',
         'tbl_registro_pagamento_totais',
         engine
     ) 
+    # enviar_dataframe_para_access(
+    #     df_pagamento_totais,
+    #     'tbl_registro_pagamento_totais',
+    #     cursor_access
+    # ) 
+#==============================================     
     salvar_dataframe(
         df_afastamento,
         'afastamento.csv',
         'tbl_afastamento',
         engine
     )
+    # enviar_dataframe_para_access(
+    #      df_afastamento,
+    #     'tbl_afastamento',
+    #     cursor_access
+    # ) 
+#==============================================     
     salvar_dataframe(
         df_afastamento_total,
        'afastamento_total.csv',
        'tbl_afastamento_total',
        engine
     )
+    # enviar_dataframe_para_access(
+    #     df_afastamento_total,
+    #    'tbl_afastamento_total',
+    #     cursor_access
+    # ) 
+    # conexao_access.commit()
+
+    # cursor_access.close()
+    # conexao_access.close()
+
+    # print('✅ Tabelas principais enviadas para o Access!')
   
     # =========================
     # CRIAÇÃO DE TABELA tbl_pgto_incentivo_qualificacao
