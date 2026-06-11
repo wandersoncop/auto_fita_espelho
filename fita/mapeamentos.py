@@ -300,7 +300,7 @@ HEADER_TIPO_2 = [
     'RxPerc',
     'GOcorreVat',
     'OcreverAti',
-    'DTREVERSAOATIV'
+    'DTREVERSAOATIV',
     'IndiceCargo',
     'IndiceFuncao',
     'IndiceSalarioFamilia',
@@ -514,5 +514,7 @@ CAMPOS_DATA = [
     "DtInicAfast",                          
     "DtFimAfast", 
     "DtPublAfast",  
+    "DataChefInic",
+    "DataChefFim",
 
 ]

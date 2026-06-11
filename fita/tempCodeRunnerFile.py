@@ -510,27 +510,81 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
     df_funcional['NomeUorgPaiExercicio'] = df_funcional['NrUorgLotacao'].apply(
         lambda codigo: mapa_unidade.get(codigo,{}).get('NomeUorgPai','')
     )
-    df_funcional['FuncSetor'] = df_funcional.apply(
-        lambda linha: linha['NOVFUNCUNORG']
-        if linha['NOVFUNCSIGLA'] != '' and linha['NOVFUNCUNORG'] != '000000000'
-        else linha['FUNCUNORG'],
-        axis=1 #faz a leitura por linha 
-    )
-    df_funcional['NrUorgExercicio'] = df_funcional.apply(
+    df_funcional['Fun'] = df_funcional.apply(
+    lambda linha:
+        linha['NOVFUNCSIGLA']
+        if str(linha.get('NOVFUNCSIGLA', '')).strip() != ''
+        else linha['Funcao'],
+    axis=1
+)
+
+    df_funcional['FuncDtFim'] = df_funcional.apply(
         lambda linha:
-            linha['FuncSetor']
-            if str(linha['FuncSetor']).strip() not in ('', '000000000')
-            else (
-                linha['NrUorgLotacao']
-                if str(linha['NrUorgLotacao']).strip() not in ('', '000000000')
-                else linha['Setor']
-            ),
+            linha['NOVFUNCDTSAIDA']
+            if str(linha.get('NOVFUNCSIGLA', '')).strip() != ''
+            else linha['DataChefFim'],
         axis=1
     )
+
+    df_funcional['FuncSetor'] = df_funcional.apply(
+        lambda linha:
+            linha['NOVFUNCUNORG']
+            if str(linha.get('NOVFUNCSIGLA', '')).strip() != ''
+            else linha['FUNCUNORG'],
+        axis=1
+    )
+
+    df_funcional['TemFuncao'] = df_funcional.apply(
+        lambda linha: 'S'
+        if (
+            str(linha.get('GrExclusao', '')).strip() in ('00', '0')
+            and str(linha.get('CodSituacao', '')).strip() != '02'
+            and str(linha.get('Fun', '')).strip() != ''
+            and str(linha.get('Fun', '')).strip() != 'ETG'
+            and str(linha.get('FuncDtFim', '')).strip() == '00000000'
+        )
+        else 'N',
+        axis=1
+    )
+   
+
     
+    
+    
+    
+    df_funcional['NrUorgExercicio'] = df_funcional.apply(
+    lambda linha:
+        linha['Setor']
+        if str(linha.get('RegJuridico', '')).strip() in ('MRD', 'RMP')
+        else (
+            linha['FuncSetor']
+            if str(linha.get('TemFuncao', '')).strip() == 'S'
+            else (
+                linha['Setor']
+                if str(linha.get('NrUorgLotacao', '')).strip() == '000000000'
+                else linha['NrUorgLotacao']
+            )
+        ),
+    axis=1
+)
+   
+    
+
     df_funcional['UnidExercicio'] = df_funcional['NrUorgExercicio'].apply(
         lambda codigo:mapa_unidade.get(codigo,{}).get('Unid','')
     )
+
+
+
+
+
+
+
+
+
+
+
+
     df_funcional['DenoSetorExercicio'] = df_funcional['NrUorgExercicio'].apply(
         lambda codigo:mapa_unidade.get(codigo,{}).get('DenoSetor','')
     )
@@ -670,18 +724,7 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
 
 
 #-----------------------CRIA A COLUNA E ESTABELECE REGRAS DE NEGOCIO DO TEM FUNCAO   
-    df_funcional['TemFuncao'] = df_funcional.apply(
-    lambda linha: 'S'
-    if (
-        str(linha.get('GrExclusao', '')).strip() in ('00', '0')
-        and str(linha.get('CodSituacao', '')).strip() != '02'
-        and str(linha.get('Funcao', '')).strip() != ''
-        and str(linha.get('Funcao', '')).strip() != 'ETG'
-        and str(linha.get('DataChefFim', '')).strip() in ('00000000', '00/00/0000', '')
-    )
-    else 'N',
-    axis=1 #faz a leitura por linha
-    )
+    
 
     df_funcional = df_funcional.merge( # e como o join em sql entre a funciona e pessoal
         df_pessoal[['SIAPE','Nome']], #join entre SIAPE e Nome 
