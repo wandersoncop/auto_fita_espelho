@@ -1,11 +1,18 @@
-""" Processa os arquivos da fita espelho e envia os dados para o banco"""
+"""
+    Processa os arquivos da fita espelho e envia os 
+    dados para o banco
+"""
 
-import os  # biblioteca padrão do py serve para interagir com o sistema operacional(caminhos,pasta...)
+import os
+# biblioteca padrão do py serve para interagir com 
+# o sistema operacional(caminhos,pasta...)
 import pandas as pd  # blibioteca para manipulaçao de dados, como se fosse um excel dentro do py
 
 # from conexao_access import conectar_access
 # from envia_access import enviar_dataframe_para_access
-from sqlalchemy import text  # Biblioteca para trabalhar com banco de dados. O text() faz o SQLAlchemy reconhecer o texto como um comando SQL.
+from sqlalchemy import text  
+# Biblioteca para trabalhar com banco de dados.
+# O text() faz o SQLAlchemy reconhecer o texto como um comando SQL.
 
 from funcoes import (
     ler_fita_por_tipo,  # chama a função que Le o registros da fita e os separa por tipo
@@ -16,9 +23,9 @@ from funcoes import (
 )
 # from envia_access import enviar_dataframe_para_access
 
-from mapeamentos import ( 
+from mapeamentos import (
     # LAYOUT_TIPO_ são as posições na fita ex:'SIAPE': (9, 16),
-    # HEADER_TIPO_ faz a seguecia desejada
+    # HEADER_TIPO_ faz a sequecia desejada
     # CAMPOS_DATA aqui é  lista de campos de data que serão formatados pela função formatar_data
     LAYOUT_TIPO_1,
     LAYOUT_TIPO_2,
@@ -32,11 +39,13 @@ from mapeamentos import (
     HEADER_TIPO_6,
     CAMPOS_DATA 
 )
-from conexao import engine  # Importa o objeto de conexão (engine) utilizado para acessar o banco de dados MySQL.
+from conexao import engine
+# Importa o objeto de conexão (engine) utilizado para acessar o banco de dados MySQL.
 # conexao_access = conectar_access()
 # cursor_access = conexao_access.cursor()
+
 # =========================
-# CAMINHOS LOCALIZA O ARQUIVO
+# CAMINHOS PARA LOCALIZAÇÃO DE ARQUIVOS
 # =========================
 
 diretorio = os.path.join(
@@ -88,12 +97,13 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
 df_estado_civil = pd.read_sql(
     # função do Pandas que executa o camandao SQL e devolve um dataframe
     #dataframe é uma tabela em memoria      
+    #comando sql
     """
         SELECT 
             CodECiv, 
             DenoECiv 
         FROM aux_estado_civil
-    """, #comando sql
+    """, 
     engine # é a conexao com o bd Mysql
 )
 mapa_estado_civil = dict(
@@ -247,6 +257,7 @@ df_unidade = pd.read_sql(
     """,
     engine
 )
+# caso o CodUnid esteja duplicado traz somente a 1 registro
 df_unidade = df_unidade.drop_duplicates(
     subset=['CodUnid'],
     keep='first'
@@ -497,7 +508,8 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
 
     df_funcional = pd.DataFrame(registros_tipo_2)# cria como se fosse um excel na memoria
 
-    #--------------------------------- CRIA A COLUNA 
+    #--------------------------------- CRIA O CAMPO
+    # cria o campo UnidLotacao usando o valor que esta em NrUorgLotacao
     df_funcional['UnidLotacao']= df_funcional['NrUorgLotacao'].apply(
         lambda codigo: mapa_unidade.get(codigo,{}).get('Unid','')
     )
@@ -510,22 +522,6 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
     df_funcional['NomeUorgPaiExercicio'] = df_funcional['NrUorgLotacao'].apply(
         lambda codigo: mapa_unidade.get(codigo,{}).get('NomeUorgPai','')
     )
-    df_funcional['Fun'] = df_funcional.apply(
-    lambda linha:
-        linha['NOVFUNCSIGLA']
-        if str(linha.get('NOVFUNCSIGLA', '')).strip() != ''
-        else linha['Funcao'],
-    axis=1
-)
-
-    df_funcional['FuncDtFim'] = df_funcional.apply(
-        lambda linha:
-            linha['NOVFUNCDTSAIDA']
-            if str(linha.get('NOVFUNCSIGLA', '')).strip() != ''
-            else linha['DataChefFim'],
-        axis=1
-    )
-
     df_funcional['FuncSetor'] = df_funcional.apply(
         lambda linha:
             linha['NOVFUNCUNORG']
@@ -539,34 +535,37 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
         if (
             str(linha.get('GrExclusao', '')).strip() in ('00', '0')
             and str(linha.get('CodSituacao', '')).strip() != '02'
-            and str(linha.get('Fun', '')).strip() != ''
-            and str(linha.get('Fun', '')).strip() != 'ETG'
-            and str(linha.get('FuncDtFim', '')).strip() == '00000000'
+            and str(linha.get('Funcao', '')).strip() != ''
+            and str(linha.get('Funcao', '')).strip() != 'ETG'
+            and str(linha.get('DataChefFim', '')).strip() in ('', '00000000')
         )
         else 'N',
         axis=1
     )
-   
 
-    
-    
-    
-    
     df_funcional['NrUorgExercicio'] = df_funcional.apply(
-    lambda linha:
-        linha['Setor']
-        if str(linha.get('RegJuridico', '')).strip() in ('MRD', 'RMP')
-        else (
-            linha['FuncSetor']
-            if str(linha.get('TemFuncao', '')).strip() == 'S'
+        lambda linha:
+            linha['Setor']
+            if str(linha.get('RegJuridico', '')).strip() in ('MRD', 'RMP')
             else (
-                linha['Setor']
-                if str(linha.get('NrUorgLotacao', '')).strip() == '000000000'
-                else linha['NrUorgLotacao']
-            )
-        ),
-    axis=1
-)
+                linha['FuncSetor']
+                if (
+                    str(linha.get('TemFuncao', '')).strip() == 'S'
+                    or (
+                        str(linha.get('Funcao', '')).strip() != ''
+                        and str(linha.get('NOVFUNCSIGLA', '')).strip() != ''
+                        and str(linha.get('NOVFUNCDTSAIDA', '')).strip() == '00000000'
+                        and str(linha.get('Setor', '')).strip() == '000000000'
+                    )
+                )
+                else (
+                    linha['Setor']
+                    if str(linha.get('NrUorgLotacao', '')).strip() == '000000000'
+                    else linha['NrUorgLotacao']
+                )
+            ),
+        axis=1
+    )
    
     
 
