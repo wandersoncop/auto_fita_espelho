@@ -1,5 +1,5 @@
 LAYOUT_TIPO_1 = { #codigo que faz a tradução dos campos da fita espelho
-    "UnidPag": (0, 9),
+    # "UnidPag": (0, 9),
     "SIAPE": (9, 16),
     "SiapeDig": (16, 17),
     # "TipoReg": (17, 18),
@@ -34,6 +34,47 @@ LAYOUT_TIPO_1 = { #codigo que faz a tradução dos campos da fita espelho
     "UfIdent": (360, 362),
     "TituloEleitor": (362, 375)
 }
+HEADER_TIPO_1 = [
+    'mes_fita',
+    # 'UnidPag',
+    'InscUFMG',
+    'SIAPE',
+    'SiapeDig',
+    'Nome',
+    'CPF',
+    'PASEP',
+    'Mae',
+    'Sexo',
+    'DataNasc',
+    'CodEstadoCiv',
+    'EstadoCiv',
+    'CodEscolaridade',
+    'DenoEscolaridade',
+    'Escolaridade',
+    'CodTitulacao',
+    'DenoTitulacao',
+    'CodNaturalidade',
+    'Naturalidade',
+    'CodPais',
+    'Pais',
+    'AnoChegada',
+    'DepImpRenda',
+    'Sf',
+    'DataPrimEmprego',
+    'SiapeCad',
+    'Logradouro',
+    'Numero',
+    'Complemento',
+    'Bairro',
+    'Municipio',
+    'CEP',
+    'UF',
+    'Identidade',
+    'OrgaoExpedidor',
+    'DataExpedicao',
+    'UfIdent',
+    'TituloEleitor'
+]
 LAYOUT_TIPO_2 = {
     'UPAG': (0, 9),#
     'SIAPE': (9, 16),#

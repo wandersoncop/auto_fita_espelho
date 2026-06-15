@@ -28,6 +28,7 @@ from mapeamentos import (
     # HEADER_TIPO_ faz a sequecia desejada
     # CAMPOS_DATA aqui é  lista de campos de data que serão formatados pela função formatar_data
     LAYOUT_TIPO_1,
+    HEADER_TIPO_1,
     LAYOUT_TIPO_2,
     HEADER_TIPO_2,
     LAYOUT_TIPO_3,
@@ -54,7 +55,6 @@ diretorio = os.path.join(
     "auto_fita_espelho",
     "arquivos_fita"
 )  # retorna a pasta do usuario logado
-
 
 
 # ARQUIVO = 'fita_espelho.txt'  # arquivo que será traduzido
@@ -418,20 +418,17 @@ mapa_rubrica = dict(
     )
 )
 
-
-
-# =========================
+# ==============================================================
 # PROCESSAMENTO
-# =========================
+# ==============================================================
 
-if caminho_arquivo and os.path.exists(caminho_arquivo):
-    
+if caminho_arquivo and os.path.exists(caminho_arquivo):    
 
     print(f"✅ Arquivo encontrado:{arquivo_encontrado}")
 
     # aqui é cria  todos os campos com base nas regras que vem dos mapas tbl auxiliares 
     mapas_auxiliares = {
-        
+
         'CodEstadoCiv': {              #campo original da fita
             'nome_campo': 'EstadoCiv', # campo novo que será criado após a tradução
             'mapa': mapa_estado_civil  #tabela de conversão usada na tradução
@@ -465,16 +462,16 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
             'mapa': mapa_rubrica # mapa que será utilizado
         }   
     }
-    # =========================
+    # ====================================================================
     # TIPO 0 - mes_fita
-    # =========================
+    # ====================================================================
     # AQUI FAREMOS SOMENTE A EXTRACAO DO MES FITA
     mes_fita = extrair_tipo_0(caminho_arquivo)
     print(f'📅 Mês da fita: {mes_fita}')
 
-    # =========================
+    # ====================================================================
     # TIPO 1 - PESSOAL
-    # =========================
+    # ====================================================================
     #extração e estruturação dos dados
     registros_tipo_1 = ler_fita_por_tipo(
         caminho_arquivo,# onde esta o arquivo
@@ -483,7 +480,6 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
         CAMPOS_DATA,#lista de campos que são data
         mapas_auxiliares, # e o dicionario para configuracao dos novos campos
     )
-
     print(f'Tipo_1_pessoal finalizado: {len(registros_tipo_1)} registros') #exibe mensagem com quantidade de registros encontrados
 
     df_pessoal = pd.DataFrame(registros_tipo_1)
@@ -494,9 +490,10 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
         'mes_fita',
         mes_fita
     )
-    # =========================
+
+    # ====================================================================
     # TIPO 2 - FUNCIONAL
-    # =========================
+    # ====================================================================
     registros_tipo_2 = ler_fita_por_tipo(
         caminho_arquivo, #onde esta o arquivo
         LAYOUT_TIPO_2, #chama o mapeamento da fita
@@ -529,7 +526,6 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
             else linha['FUNCUNORG'],
         axis=1
     )
-
     df_funcional['TemFuncao'] = df_funcional.apply(
         lambda linha: 'S'
         if (
@@ -542,7 +538,6 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
         else 'N',
         axis=1
     )
-
     df_funcional['NrUorgExercicio'] = df_funcional.apply(
         lambda linha:
             linha['Setor']
@@ -566,51 +561,35 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
             ),
         axis=1
     )
-   
-    
-
     df_funcional['UnidExercicio'] = df_funcional['NrUorgExercicio'].apply(
         lambda codigo:mapa_unidade.get(codigo,{}).get('Unid','')
     )
-
-
-
-
-
-
-
-
-
-
-
-
     df_funcional['DenoSetorExercicio'] = df_funcional['NrUorgExercicio'].apply(
         lambda codigo:mapa_unidade.get(codigo,{}).get('DenoSetor','')
     )
     df_funcional['EmailUORGExercicio'] = df_funcional['NrUorgExercicio'].apply(
-    lambda codigo: mapa_email_uorg.get(codigo, {}).get('ED-EMAIL-UORG', '')
+        lambda codigo: mapa_email_uorg.get(codigo, {}).get('ED-EMAIL-UORG', '')
     )
     df_funcional['CodMunicipioUORGExercicio'] = df_funcional['NrUorgExercicio'].apply(
-    lambda codigo: mapa_email_uorg.get(codigo, {}).get('ED-MUNICIPIO-ENDERECO-UORG', '')
+        lambda codigo: mapa_email_uorg.get(codigo, {}).get('ED-MUNICIPIO-ENDERECO-UORG', '')
     )
-
     df_funcional['MunicipioUORGExercicio'] = df_funcional['CodMunicipioUORGExercicio'].apply(
-    lambda codigo: mapa_municipio.get(codigo, '')
+        lambda codigo: mapa_municipio.get(codigo, '')
     )
     df_funcional['NrUorgLocalAp'] = df_funcional['SIAPE'].apply(
-    lambda siape: mapa_local_ap.get(str(siape).zfill(7), {}).get('NrUorgLocalAp', '')
+        lambda siape: mapa_local_ap.get(str(siape).zfill(7), {}).get('NrUorgLocalAp', '')
     )
     df_funcional['DenoSetorLocalAp'] = df_funcional['SIAPE'].apply(
         lambda siape: mapa_local_ap.get(str(siape).zfill(7), {}).get('DenoSetorLocalAp', '')
     )
     df_funcional['UnidFuncao'] = df_funcional['FUNCUNORG'].apply(
-    lambda codigo: mapa_unidade.get(codigo, {}).get('Unid', '')
+        lambda codigo: mapa_unidade.get(codigo, {}).get('Unid', '')
     )
     df_funcional['DenoSetorFunc'] = df_funcional['FUNCUNORG'].apply(
-    lambda codigo: mapa_unidade.get(codigo, {}).get('DenoSetor', '')
+        lambda codigo: mapa_unidade.get(codigo, {}).get('DenoSetor', '')
     )
     df_funcional['DenoAtiv'] = df_funcional['CodFuncao'].apply(
-    lambda codigo: mapa_atividade.get(codigo, '')
+        lambda codigo: mapa_atividade.get(codigo, '')
     )
     df_funcional['DenoAposent'] = (# nomes iguai ao do mapeamento que vai ser exibido na tabela
         df_funcional['GrOcorrAposent'].astype(str).str.zfill(2)
@@ -633,8 +612,9 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
     df_funcional['DenoExclusao'] = (        
         df_funcional['GrExclusao'].astype(str).str.zfill(2)
         +df_funcional['OcorrExclusao'].astype(str).str.zfill(3)
-    ).apply(lambda codigo:mapa_ocorrencia.get(codigo,''))
-    
+    ).apply(
+        lambda codigo:mapa_ocorrencia.get(codigo,'')
+    )    
     df_funcional['DenoOrigem'] = df_funcional['OrgOrigem'].apply(
         lambda codigo:mapa_orgaos.get(codigo,'')
     )
@@ -655,7 +635,6 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
         else str(linha['GrCargo']).replace('.0', '').zfill(3),
     axis=1
     )
-
     df_funcional['Cargo'] = df_funcional.apply(
         lambda linha:
             mapa_cad_apf_cargo.get(str(linha['SIAPE']).zfill(7))
@@ -664,15 +643,11 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
             else str(linha['CodCargo']).replace('.0', '')[-3:].zfill(3),
         axis=1
     )
-
     df_funcional['CodCargo'] = df_funcional['GrCargo'] + df_funcional['Cargo']
 
     df_funcional['DenoCargo'] = df_funcional['CodCargo'].apply(
         lambda codigo: mapa_deno_cargo.get(codigo, '')
     )
-
-
-
 #-----------------------CRIA A REGRA DE NEGOCIO DA CLASSE CONFORME ACCESS
     df_funcional['Classe'] = df_funcional.apply(
         lambda linha:
@@ -682,23 +657,19 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
             else str(linha['Classe']).replace('.0', '').strip(),
         axis=1
     )
-
 #-----------------------CRIA A COLUNA E ESTABELECE REGRAS DE NEGOCIO DE CATEGORIA
     df_funcional['Categoria'] = df_funcional['GrCargo'].apply(
         lambda gr_cargo: 'Docente'
         if str(gr_cargo).strip().zfill(3) in ('060', '702', '705', '706', '707')
         else 'Tec-Administrativo'
     )
-
-
 #-----------------------CRIA A CHAVE DA CLASSE CONFORME REGRA DO ACCESS
     def codigo_categoria_classe(gr_cargo):
         return (
             'M'
             if str(gr_cargo).strip().zfill(3) in ('060', '702', '705', '706', '707')
             else 'T'
-        )
-
+    )
     df_funcional['ChaveClass'] = df_funcional.apply(
         lambda linha:
             codigo_categoria_classe(linha['GrCargo'])
@@ -715,22 +686,15 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
             + str(linha['Classe']).strip(),
         axis=1
     )
-
     df_funcional['DenoClasse'] = df_funcional['ChaveClass'].apply(
         lambda codigo: mapa_classe.get(codigo, '')
     )
-
-
-
 #-----------------------CRIA A COLUNA E ESTABELECE REGRAS DE NEGOCIO DO TEM FUNCAO   
-    
-
     df_funcional = df_funcional.merge( # e como o join em sql entre a funciona e pessoal
         df_pessoal[['SIAPE','Nome']], #join entre SIAPE e Nome 
         on= 'SIAPE', # achave é o SIAPE
         how='left' # e o join e´um left-join
-    )
-    
+    )    
     nome_coluna = df_funcional.pop('Nome')# remove a coluna da ultima posicao para reinserir na posição indicada
 
     posicao = df_funcional.columns.get_loc('SiapeDig') + 1 #aqui indica onde colocar o campo apos SiapeDig
@@ -740,7 +704,6 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
         'Nome',
         nome_coluna
     )
-
     df_funcional.insert(# faz a inserção do campo mes_fita na tbl funcional
         0,#posição 1 coluna
         'mes_fita', #nome da coluna
@@ -748,9 +711,9 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
     )
     df_funcional = df_funcional[HEADER_TIPO_2]
 
-    # =================================================================
-    # TIPO 3 - PAGAMENTO
-    # ==================================================================
+   # ====================================================================
+   # TIPO 3 - PAGAMENTO
+   # ====================================================================
 
     registros_tipo_3 = ler_fita_por_tipo(
         caminho_arquivo,
@@ -883,20 +846,10 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
     )
     df_afastamento_total = df_afastamento_total[HEADER_TIPO_6]
 
-#==========================SALVA OS DF EM CSV NO DIRETORIO E ENVIA PARA O BD MYSQL E ACCESS
+# ====================================================================SALVA OS DF EM CSV NO DIRETORIO E ENVIA PARA O BD MYSQL E ACCESS
        
-    salvar_dataframe(
-        df_pessoal,
-        'pessoal.csv',
-        'tbl_pessoal',
-        engine
-    )   
-    # enviar_dataframe_para_access(
-    #     df_pessoal,
-    #     'tbl_pessoal',
-    #     cursor_access
-    # ) 
-#==============================================       
+ 
+# ====================================================================
     salvar_dataframe(
         df_funcional,
         'funcional.csv',
@@ -908,7 +861,7 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
     #     'tbl_funcional',
     #     cursor_access
     # ) 
-#==============================================      
+# ====================================================================     
     salvar_dataframe(
         df_pagamento,
         'registro_pagamento.csv',
@@ -920,7 +873,7 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
     #     'tbl_registro_pagamento',
     #     cursor_access
     # )
-#==============================================     
+# ====================================================================
     salvar_dataframe(
         df_pagamento_totais,
         'registro_pagamento_totais.csv',
@@ -932,7 +885,7 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
     #     'tbl_registro_pagamento_totais',
     #     cursor_access
     # ) 
-#==============================================     
+# ==================================================================== 
     salvar_dataframe(
         df_afastamento,
         'afastamento.csv',
@@ -944,7 +897,7 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
     #     'tbl_afastamento',
     #     cursor_access
     # ) 
-#==============================================     
+# ====================================================================  
     salvar_dataframe(
         df_afastamento_total,
        'afastamento_total.csv',
@@ -963,14 +916,13 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
 
     # print('✅ Tabelas principais enviadas para o Access!')
   
-    # =========================
+   # ====================================================================
     # CRIAÇÃO DE TABELA tbl_pgto_incentivo_qualificacao
-    # =========================
+   # ====================================================================
 
     query_drop = """
     DROP TABLE IF EXISTS tbl_pgto_incentivo_qualificacao;
     """
-
     query_create = """
     CREATE TABLE tbl_pgto_incentivo_qualificacao AS
         SELECT
@@ -991,15 +943,9 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
 
     print("✅ tbl_pgto_incentivo_qualificacao criada com sucesso!")
 
-
-
-
-
-
-
-    # =========================
+    # ====================================================================
     # MAPA PERQUALIF
-    # =========================
+    # ====================================================================
 
     df_perqualif = pd.read_sql(
         """
@@ -1018,19 +964,28 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
         )
     )
 
-    # =========================
+    # ====================================================================
     # ESCOLARIDADE FINAL
-    # =========================
+    # ====================================================================
 
     df_pessoal = criar_escolaridade(
         df_pessoal,
         df_titulacao_correcao,
         mapa_perqualif
     )
+    df_pessoal = df_pessoal[HEADER_TIPO_1]
 
-
-
-
+    salvar_dataframe(
+        df_pessoal,
+        'pessoal.csv',
+        'tbl_pessoal',
+        engine
+    ) 
+    # enviar_dataframe_para_access(
+    #     df_pessoal,
+    #     'tbl_pessoal',
+    #     cursor_access
+    # ) 
 else:
     print("❌ ERRO: Arquivo fita não encontrado.")
     print("📁 Caminho esperado:")

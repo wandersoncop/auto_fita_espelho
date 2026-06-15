@@ -280,6 +280,7 @@ def salvar_dataframe(df,nome_csv,nome_tabela,engine):
     df.to_csv(
         nome_csv,
         sep=';',
+        decimal=',',
         index=False,
         encoding='utf-8-sig'
     )
