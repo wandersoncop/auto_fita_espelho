@@ -57,6 +57,8 @@ diretorio = os.path.join(
 )  # retorna a pasta do usuario logado
 
 
+
+
 # ARQUIVO = 'fita_espelho.txt'  # arquivo que será traduzido
 
 # caminho_arquivo = os.path.join(diretorio, ARQUIVO)
@@ -421,6 +423,8 @@ mapa_rubrica = dict(
 # ==============================================================
 # PROCESSAMENTO
 # ==============================================================
+
+print(diretorio)
 
 if caminho_arquivo and os.path.exists(caminho_arquivo):    
 
