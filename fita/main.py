@@ -55,6 +55,7 @@ diretorio = os.path.join(
     "auto_fita_espelho",
     "arquivos_fita"
 )  # retorna a pasta do usuario logado
+print(diretorio)
 
 
 
@@ -63,14 +64,20 @@ diretorio = os.path.join(
 
 # caminho_arquivo = os.path.join(diretorio, ARQUIVO)
 
-# =========================
+# ==============================================
 # LOCALIZA O ARQUIVO
-# =========================
+# ==============================================
 
 arquivo_encontrado = None
 
+# procura dentro do diretorio um arquivo
+# com o nome começando com fita_servidor_
+# e com extenção .txt
 for arquivo in os.listdir(diretorio):
-
+# lower() coloca tudo em minusculo
+# .startswith('começa com')
+# .endswith('termina com')
+# break para de procurar assim que encontra
     if (
         arquivo.lower().startswith('fita_servidor_')
         and arquivo.lower().endswith('.txt')
@@ -83,6 +90,7 @@ if arquivo_encontrado:
         diretorio,
         arquivo_encontrado
     )
+# aqui retorna o arquivo encontrado    # 
 else:
     caminho_arquivo = None
 
@@ -467,11 +475,11 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
         }   
     }
     # ====================================================================
-    # TIPO 0 - mes_fita
+    # TIPO 0 - MesFita
     # ====================================================================
     # AQUI FAREMOS SOMENTE A EXTRACAO DO MES FITA
-    mes_fita = extrair_tipo_0(caminho_arquivo)
-    print(f'📅 Mês da fita: {mes_fita}')
+    MesFita = extrair_tipo_0(caminho_arquivo)
+    print(f'📅 Mês da fita: {MesFita}')
 
     # ====================================================================
     # TIPO 1 - PESSOAL
@@ -491,8 +499,8 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
     # insere o mes fita na tbl
     df_pessoal.insert(
         0,
-        'mes_fita',
-        mes_fita
+        'MesFita',
+        MesFita
     )
 
     # ====================================================================
@@ -537,7 +545,7 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
             and str(linha.get('CodSituacao', '')).strip() != '02'
             and str(linha.get('Funcao', '')).strip() != ''
             and str(linha.get('Funcao', '')).strip() != 'ETG'
-            and str(linha.get('DataChefFim', '')).strip() in ('', '00000000')
+            and str(linha.get('DataFuncFim', '')).strip() in ('', '00000000')
         )
         else 'N',
         axis=1
@@ -571,13 +579,13 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
     df_funcional['DenoSetorExercicio'] = df_funcional['NrUorgExercicio'].apply(
         lambda codigo:mapa_unidade.get(codigo,{}).get('DenoSetor','')
     )
-    df_funcional['EmailUORGExercicio'] = df_funcional['NrUorgExercicio'].apply(
+    df_funcional['EmailUorgExercicio'] = df_funcional['NrUorgExercicio'].apply(
         lambda codigo: mapa_email_uorg.get(codigo, {}).get('ED-EMAIL-UORG', '')
     )
     df_funcional['CodMunicipioUORGExercicio'] = df_funcional['NrUorgExercicio'].apply(
         lambda codigo: mapa_email_uorg.get(codigo, {}).get('ED-MUNICIPIO-ENDERECO-UORG', '')
     )
-    df_funcional['MunicipioUORGExercicio'] = df_funcional['CodMunicipioUORGExercicio'].apply(
+    df_funcional['MunicipioUorgExercicio'] = df_funcional['CodMunicipioUORGExercicio'].apply(
         lambda codigo: mapa_municipio.get(codigo, '')
     )
     df_funcional['NrUorgLocalAp'] = df_funcional['SIAPE'].apply(
@@ -708,10 +716,10 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
         'Nome',
         nome_coluna
     )
-    df_funcional.insert(# faz a inserção do campo mes_fita na tbl funcional
+    df_funcional.insert(# faz a inserção do campo MesFita na tbl funcional
         0,#posição 1 coluna
-        'mes_fita', #nome da coluna
-         mes_fita #valor da coluna
+        'MesFita', #nome da coluna
+         MesFita #valor da coluna
     )
     df_funcional = df_funcional[HEADER_TIPO_2]
 
@@ -732,8 +740,8 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
 
     df_pagamento.insert(
         0,  # primeira coluna
-        'mes_fita',  # nome da coluna
-        mes_fita  # valor
+        'MesFita',  # nome da coluna
+        MesFita  # valor
     )
   #-----------------------TRATA O CAMPO VALOR RETIRANDO OS ZEROS A ESQUERDA E DEIXANDO CO 2 CASAS DECIMAIS
     df_pagamento['Valor'] = df_pagamento['Valor'].apply(formatar_valores)
@@ -758,8 +766,8 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
     
     df_pagamento_totais.insert( #INSERE O MES FITA NA PRIMEIRA COLUNA DE PAGAMENTOS TOTAIS
         0,  # primeira coluna
-        'mes_fita',  # nome da coluna
-        mes_fita  # valor
+        'MesFita',  # nome da coluna
+        MesFita  # valor
     )    
     df_pagamento_totais = df_pagamento_totais.merge(
         df_funcional[           
@@ -794,8 +802,8 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
     
     df_afastamento.insert( #INSERE O MES FITA NA PRIMEIRA COLUNA DE AFASTAMENTO
         0,  # primeira coluna
-        'mes_fita',  # nome da coluna
-        mes_fita  # valor
+        'MesFita',  # nome da coluna
+        MesFita  # valor
     )     
     df_afastamento = df_afastamento.merge(
         df_funcional[           
@@ -831,8 +839,8 @@ if caminho_arquivo and os.path.exists(caminho_arquivo):
     
     df_afastamento_total.insert( #INSERE O MES FITA NA PRIMEIRA COLUNA DE AFASTAMENTO
         0,  # primeira coluna
-        'mes_fita',  # nome da coluna
-        mes_fita  # valor
+        'MesFita',  # nome da coluna
+        MesFita  # valor
     )  
     
     df_afastamento_total = df_afastamento_total.merge(

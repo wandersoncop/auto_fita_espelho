@@ -35,7 +35,7 @@ LAYOUT_TIPO_1 = { #codigo que faz a tradução dos campos da fita espelho
     "TituloEleitor": (362, 375)
 }
 HEADER_TIPO_1 = [
-    'mes_fita',
+    'MesFita',
     # 'UnidPag',
     'InscUFMG',
     'SIAPE',
@@ -89,7 +89,7 @@ LAYOUT_TIPO_2 = {
     'Agencia': (41, 47),
     'Conta': (47, 60),
     'RTRAB': (90, 92),#
-    'ANUE': (92, 94),#
+    'Anuenio': (92, 94),#
     'DataCadastro': (94, 102),#
     'SuspPagamnto': (102, 103),#
     'DataSusp':(103,109),#
@@ -100,12 +100,12 @@ LAYOUT_TIPO_2 = {
     'CodCargo': (119, 125),# CAMPO CRIADO  JUNÇÃO DE GRUPO E CARGO                
     'Classe': (125, 126),# E  
     'REF': (126, 129),  #         
-    'DataOcup': (129, 137),#
+    'DataOcupacao': (129, 137),#
     'DataSaida': (137, 145),#
     'Funcao': (145, 148),#
     'FuncaoNivel': (148, 153),#
-    'DataChefInic': (156, 164),#
-    'DataChefFim': (164, 172),#
+    'DataFuncInicio': (156, 164),#
+    'DataFuncFim': (164, 172),#
     'FuncaoEsc': (153, 155),
     'FuncaoOpcao': (155, 156),
     'FUNCUNORG': (172, 181),#numero uorg exercicio
@@ -176,9 +176,9 @@ LAYOUT_TIPO_2 = {
     'DataObito': (631, 639),
     'DtExcInti': (640, 648),
     'IExcInsti': (639, 640),
-    'VAlimTipo': (648, 649),
-    'VAlimDtIni': (649, 657),
-    'VAlimDtFim': (657, 665),
+    'ValeAlimTipo': (648, 649),
+    'ValeAlimDataInic': (649, 657),
+    'ValeAlimDataFim': (657, 665),
     'RX': (665, 666),
     'OrgReq': (666, 671),
     'CodVaga': (671, 678),
@@ -186,7 +186,7 @@ LAYOUT_TIPO_2 = {
     'RxPerc': (680, 685),
     'GOcorreVat': (717, 719),
     'OcreverAti': (719, 722),
-     'DTREVERSAOATIV': (722, 730),
+     'DataReversaoAtiv': (722, 730),
     # 'REVERSAO_CODIGO': (714, 722),
     'DtRevers': (700, 708),
     # 'REVERSAO_DIPLOMA_DATA_PUB': (722, 730), 
@@ -229,7 +229,7 @@ LAYOUT_TIPO_2 = {
     # 'FGTS_CONTA': (77, 90),    
 }
 HEADER_TIPO_2 = [
-    'mes_fita',
+    'MesFita',
     'InscUFMG',
     'SIAPE',
     'SiapeDig',
@@ -239,7 +239,7 @@ HEADER_TIPO_2 = [
     'Situacao', # CAMPO CRIADO 
     'Categoria',  # CAMPO CRIADO 
     'RegimeTrab', # CAMPO CRIADO 
-    'ANUE', 
+    'Anuenio', 
     'NumApos',    
     'DenoApos',
     'GrCargo',
@@ -256,8 +256,8 @@ HEADER_TIPO_2 = [
     'NrUorgExercicio', #CAMPO CRIADO
     'UnidExercicio',#CAMPO CRIADO
     'DenoSetorExercicio',#CAMPO CRIADO
-    'MunicipioUORGExercicio',#CAMPO CRIADO
-    'EmailUORGExercicio',#CAMPO CRIADO
+    'MunicipioUorgExercicio',#CAMPO CRIADO
+    'EmailUorgExercicio',#CAMPO CRIADO
     'UorgPaiExercicio',
     'NomeUorgPaiExercicio',
     'NrUorgLocalAp',
@@ -270,8 +270,8 @@ HEADER_TIPO_2 = [
     'DataObito',   
     'Funcao',
     'FuncaoNivel',
-    'DataChefInic',
-    'DataChefFim',
+    'DataFuncInicio',
+    'DataFuncFim',
     'TemFuncao', # CAMPO CRIADO
     'FuncSetor', # CAMPO CRIADO É O NrUorgExercicio
     'UnidFuncao',
@@ -297,7 +297,7 @@ HEADER_TIPO_2 = [
     'DataSusp',    
     'DataLotacao',
     'DataCadastro', 
-    'DataOcup',
+    'DataOcupacao',
     'DataSaida', 
     'ApoNumProc',
     'ApoAnoprev',
@@ -330,9 +330,9 @@ HEADER_TIPO_2 = [
     'ObitoReg',    
     'IExcInsti',
     'DtExcInti',
-    'VAlimTipo',
-    'VAlimDtIni',
-    'VAlimDtFim',
+    'ValeAlimTipo',
+    'ValeAlimDataInic',
+    'ValeAlimDataFim',
     'RX',
     'OrgReq',
     'DenoOrgRequisitante',
@@ -341,7 +341,7 @@ HEADER_TIPO_2 = [
     'RxPerc',
     'GOcorreVat',
     'OcreverAti',
-    'DTREVERSAOATIV',
+    'DataReversaoAtiv',
     'IndiceCargo',
     'IndiceFuncao',
     'IndiceSalarioFamilia',
@@ -394,7 +394,7 @@ HEADER_TIPO_2 = [
     # 'DLAPO',
     # 'DLNUMAPO',
     # 'DLPUBLAPO',
-    # 'DTREVERSAOATIV',
+    # 'DataReversaoAtiv',
     # 'REVERSAO_CODIGO',
     # 'REVERSAO_DIPLOMA_CODIGO',
     # 'REVERSAO_DIPLOMA_DATA_PUB',
@@ -464,7 +464,7 @@ LAYOUT_TIPO_4 = {
 }
 HEADER_TIPO_4 = [
     # "UnidPag",
-    "mes_fita",
+    "MesFita",
     "Matric",
     "SiapeDig",
     # "TipoReg",
@@ -496,7 +496,7 @@ LAYOUT_TIPO_5 = {
     
 }
 HEADER_TIPO_5 =[
-    "mes_fita",
+    "MesFita",
     # "UnidPagadora",
     "SIAPE" ,
     "Nome",
@@ -524,7 +524,7 @@ LAYOUT_TIPO_6 = {
 }
 HEADER_TIPO_6 =[
     # "UnidPagadora",
-    "mes_fita",
+    "MesFita",
     "SIAPE",
     "DigSiape",
     # "TipoReg",
@@ -546,16 +546,16 @@ CAMPOS_DATA = [
     'DataObito',
     'DataLotacao',
     'DataCadastro',
-    'DataOcup',
+    'DataOcupacao',
     'DataSaida',
     'DataLiberacao',
-    'VAlimDtIni',
-    'VAlimDtFim',
+    'ValeAlimDataInic',
+    'ValeAlimDataFim',
     'DtExcInti',
     "DtInicAfast",                          
     "DtFimAfast", 
     "DtPublAfast",  
-    "DataChefInic",
-    "DataChefFim",
+    "DataFuncInicio",
+    "DataFuncFim",
 
 ]
