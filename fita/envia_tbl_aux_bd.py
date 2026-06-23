@@ -21,139 +21,236 @@ diretorio = os.path.join(
     e entre ""
     o sitema enviará tudo como texto para o bd
 """
-tbl_estado_civil = os.path.join(diretorio, 'Tabela Estado Civil.txt')
-df_estado_civil= pd.read_csv(tbl_estado_civil, sep=';',encoding='latin-1',dtype=str)
-df_estado_civil.to_sql( 'aux_estado_civil',engine,if_exists='replace',index=False)
-# a proxima linha envia o df para o access
-# enviar_dataframe_para_access(df_estado_civil,'aux_estado_civil')
-print ('Tabela estado civil enviada')
+# tbl_estado_civil = os.path.join(diretorio, 'Tabela Estado Civil.txt')
+# df_estado_civil= pd.read_csv(tbl_estado_civil, sep=';',encoding='latin-1',dtype=str)
+# df_estado_civil.to_sql( 'aux_estado_civil',engine,if_exists='replace',index=False)
+# # a proxima linha envia o df para o access
+# # enviar_dataframe_para_access(df_estado_civil,'aux_estado_civil')
+# print ('Tabela estado civil enviada')
 
-#-----------------------PAIS
+# -----------------------PAIS
 
-tbl_pais = os.path.join(diretorio, 'Tabela Pais.txt')
-df_pais= pd.read_csv(tbl_pais, sep=';',encoding='latin-1',dtype=str)
-df_pais.to_sql( 'aux_pais',engine,if_exists='replace',index=False)
-print ('Tabela Pais enviada')
+# tbl_pais = os.path.join(diretorio, 'Tabela Pais.txt')
+# df_pais= pd.read_csv(tbl_pais, sep=';',encoding='latin-1',dtype=str)
+# df_pais.to_sql( 'aux_pais',engine,if_exists='replace',index=False)
+# print ('Tabela Pais enviada')
 
 #-----------------------cargo
 
-tbl_cargo = os.path.join(diretorio, 'Tabela Cargo.txt')
-df_cargo= pd.read_csv(tbl_cargo, sep=';',encoding='latin-1',dtype=str)
-df_cargo.to_sql( 'aux_cargo',engine,if_exists='replace',index=False)
-print ('Tabela Cargo enviada')
+# tbl_cargo = os.path.join(diretorio, 'Tabela Cargo.txt')
+# df_cargo= pd.read_csv(tbl_cargo, sep=';',encoding='latin-1',dtype=str)
+# df_cargo.to_sql( 'aux_cargo',engine,if_exists='replace',index=False)
+# print ('Tabela Cargo enviada')
 
-#-----------------------situação
+# #-----------------------situação
 
-tbl_situacao = os.path.join(diretorio, 'Tabela Situacao.txt')
-df_situacao= pd.read_csv(tbl_situacao, sep=';',encoding='latin-1',dtype=str)
-df_situacao.to_sql( 'aux_situacao',engine,if_exists='replace',index=False)
-print ('Tabela Situacao enviada')
+# tbl_situacao = os.path.join(diretorio, 'Tabela Situacao.txt')
+# df_situacao= pd.read_csv(tbl_situacao, sep=';',encoding='latin-1',dtype=str)
+# df_situacao.to_sql( 'aux_situacao',engine,if_exists='replace',index=False)
+# print ('Tabela Situacao enviada')
 
 #-----------------------atividade
 
-tbl_atividade = os.path.join(diretorio, 'Tabela Atividade.txt')
-df_atividade= pd.read_csv(tbl_atividade, sep=';',encoding='latin-1',dtype=str)
-df_atividade.to_sql( 'aux_atividade',engine,if_exists='replace',index=False)
-print ('Tabela Atividade enviada')
+# tbl_atividade = os.path.join(diretorio, 'Tabela Atividade.txt')
+# df_atividade= pd.read_csv(tbl_atividade, sep=';',encoding='latin-1',dtype=str)
+# df_atividade.to_sql( 'aux_atividade',engine,if_exists='replace',index=False)
+# print ('Tabela Atividade enviada')
 
 #-----------------------classe
 
-tbl_classe = os.path.join(diretorio,'Tabela Classe.txt')
-df_classe = pd.read_csv(tbl_classe, sep=';',encoding='latin-1',dtype=str)
-df_classe.to_sql( 'aux_classe',engine,if_exists='replace',index=False)
-print('Tabela Classe enviada')
+# tbl_classe = os.path.join(diretorio,'Tabela Classe.txt')
+# df_classe = pd.read_csv(tbl_classe, sep=';',encoding='latin-1',dtype=str)
+# df_classe.to_sql( 'aux_classe',engine,if_exists='replace',index=False)
+# print('Tabela Classe enviada')
 
 #-----------------------escolaridade
 
-tbl_escolaridade = os.path.join(diretorio,'Tabela Escolaridade.txt')
-df_escolaridade = pd.read_csv(tbl_escolaridade,sep=';',encoding='latin-1',dtype=str)
-df_escolaridade.to_sql('aux_escolaridade',engine,if_exists='replace',index=False)
-print('Tabela Escolaridade enviada')
+# tbl_escolaridade = os.path.join(diretorio,'Tabela Escolaridade.txt')
+# df_escolaridade = pd.read_csv(tbl_escolaridade,sep=';',encoding='latin-1',dtype=str)
+# df_escolaridade.to_sql('aux_escolaridade',engine,if_exists='replace',index=False)
+# print('Tabela Escolaridade enviada')
 
-#-----------------------titulação
+# #-----------------------titulação
 
-tbl_titulacao = os.path.join(diretorio,'Tabela Titulacao.txt')
-df_titulacao = pd.read_csv(tbl_titulacao,sep=';',encoding='latin-1',dtype=str)
-df_titulacao.to_sql('aux_titulacao',engine,if_exists='replace',index=False)
-print('Tabela Titulacao enviada')
-
-
-#-----------------------local aposentadoria
-
-tbl_local_aposentadoria = os.path.join(diretorio,'Tabela Local Aposentadoria.txt')
-df_local_aposentadoria = pd.read_csv(tbl_local_aposentadoria,sep=';',encoding='latin-1',dtype=str)
-df_local_aposentadoria.to_sql('aux_local_aposentadoria',engine,if_exists='replace',index=False)
-print('Tabela Local Aposentadoria enviada')
+# tbl_titulacao = os.path.join(diretorio,'Tabela Titulacao.txt')
+# df_titulacao = pd.read_csv(tbl_titulacao,sep=';',encoding='latin-1',dtype=str)
+# df_titulacao.to_sql('aux_titulacao',engine,if_exists='replace',index=False)
+# print('Tabela Titulacao enviada')
 
 
+# #-----------------------local aposentadoria
 
-#-----------------------municipio
+# tbl_local_aposentadoria = os.path.join(diretorio,'Tabela Local Aposentadoria.txt')
+# df_local_aposentadoria = pd.read_csv(tbl_local_aposentadoria,sep=';',encoding='latin-1',dtype=str)
+# df_local_aposentadoria.to_sql('aux_local_aposentadoria',engine,if_exists='replace',index=False)
+# print('Tabela Local Aposentadoria enviada')
 
-tbl_municipio = os.path.join(diretorio,'Tabela Municipio.txt')
-df_municipio = pd.read_csv(tbl_municipio,sep=';',encoding='latin-1',dtype=str)
-df_municipio.to_sql('aux_municipio',engine,if_exists='replace',index=False)
-print('Tabela Municipio enviada')
 
-#-----------------------unidade atual
 
-tbl_unidade_atual = os.path.join(diretorio,'Tabela Unidade Atual.txt')
-df_unidade_atual = pd.read_csv(tbl_unidade_atual,sep=';',encoding='latin-1',dtype=str)
-df_unidade_atual.to_sql('aux_unidade_atual',engine,if_exists='replace',index=False)
-print('Tabela Unidade Atual enviada')
+# #-----------------------municipio
 
-#-----------------------uorg endereco
+# tbl_municipio = os.path.join(diretorio,'Tabela Municipio.txt')
+# df_municipio = pd.read_csv(tbl_municipio,sep=';',encoding='latin-1',dtype=str)
+# df_municipio.to_sql('aux_municipio',engine,if_exists='replace',index=False)
+# print('Tabela Municipio enviada')
+
+# #-----------------------unidade atual
+
+# tbl_unidade_atual = os.path.join(diretorio,'Tabela Unidade Atual.txt')
+# df_unidade_atual = pd.read_csv(tbl_unidade_atual,sep=';',encoding='latin-1',dtype=str)
+# df_unidade_atual.to_sql('aux_unidade_atual',engine,if_exists='replace',index=False)
+# print('Tabela Unidade Atual enviada')
+
+# #-----------------------uorg endereco
 
 tbl_uorg_endereco = os.path.join(diretorio,'Tabela UORG Endereco.txt')
 df_uorg_endereco = pd.read_csv(tbl_uorg_endereco,sep=';',encoding='latin-1',dtype=str)
 df_uorg_endereco.to_sql('aux_uorg_endereco',engine,if_exists='replace',index=False)
 print('Tabela UORG Endereco enviada')
 
-#-----------------------titulação correção
+# #-----------------------titulação correção
 
-tbl_titulacao_correcao = os.path.join(diretorio,'Tabela Titulacao Correção.txt')
-df_titulacao_correcao = pd.read_csv(tbl_titulacao_correcao,sep=';',encoding='latin-1',dtype=str)
-df_titulacao_correcao.to_sql('aux_titulacao_correcao',engine,if_exists='replace',index=False)
-print('Tabela Titulação Correção enviada')
+# tbl_titulacao_correcao = os.path.join(diretorio,'Tabela Titulacao Correção.txt')
+# df_titulacao_correcao = pd.read_csv(tbl_titulacao_correcao,sep=';',encoding='latin-1',dtype=str)
+# df_titulacao_correcao.to_sql('aux_titulacao_correcao',engine,if_exists='replace',index=False)
+# print('Tabela Titulação Correção enviada')
 
-#-----------------------rubrica icq
+# #-----------------------rubrica icq
 
-tbl_rubrica_incentivo_qualificacao = os.path.join(diretorio,'Tabela Rubrica Incentivo Qualificacao.txt')
-df_rubrica_incentivo_qualificacao = pd.read_csv(tbl_rubrica_incentivo_qualificacao,sep=';',encoding='latin-1',dtype=str)
-df_rubrica_incentivo_qualificacao.to_sql('aux_rubrica_incentivo_qualificacao',engine,if_exists='replace',index=False)
-print('Tabela Rubrica Incentivo Qualificacao enviada')
-
-#-----------------------ocorrencia
-
-tbl_ocorrencia = os.path.join(diretorio,'Tabela Ocorrencia.txt')
-df_ocorrencia = pd.read_csv(tbl_ocorrencia,sep=';',encoding='latin-1',dtype=str)
-df_ocorrencia.to_sql('aux_ocorrencia',engine,if_exists='replace',index=False)
-print('Tabela Ocorrencia enviada')
-
-#-----------------------orgaos
-
-tbl_orgaos = os.path.join(diretorio,'Tabela Orgaos.txt')
-df_orgaos = pd.read_csv(tbl_orgaos,sep=';',encoding='latin-1',dtype=str)
-df_orgaos.to_sql('aux_orgaos',engine,if_exists='replace',index=False)
-print('Tabela Orgaos enviada')
+# tbl_rubrica_incentivo_qualificacao = os.path.join(diretorio,'Tabela Rubrica Incentivo Qualificacao.txt')
+# df_rubrica_incentivo_qualificacao = pd.read_csv(tbl_rubrica_incentivo_qualificacao,sep=';',encoding='latin-1',dtype=str)
+# df_rubrica_incentivo_qualificacao.to_sql('aux_rubrica_incentivo_qualificacao',engine,if_exists='replace',index=False)
+# print('Tabela Rubrica Incentivo Qualificacao enviada')
 
 
-#-----------------------pescad
+
+# #-----------------------rubrica
+
+# tbl_rubrica = os.path.join(diretorio,'Tabela Rubrica.txt')
+# df_rubrica = pd.read_csv(tbl_rubrica,sep=';',encoding='latin-1',dtype=str)
+# df_rubrica.to_sql('aux_rubrica',engine,if_exists='replace',index=False)
+# print('Tabela Rubrica enviada')
+
+# #-----------------------ocorrencia
+
+# tbl_ocorrencia = os.path.join(diretorio,'Tabela Ocorrencia.txt')
+# df_ocorrencia = pd.read_csv(tbl_ocorrencia,sep=';',encoding='latin-1',dtype=str)
+# df_ocorrencia.to_sql('aux_ocorrencia',engine,if_exists='replace',index=False)
+# print('Tabela Ocorrencia enviada')
+
+# #-----------------------orgaos
+
+# tbl_orgaos = os.path.join(diretorio,'Tabela Orgaos.txt')
+# df_orgaos = pd.read_csv(tbl_orgaos,sep=';',encoding='latin-1',dtype=str)
+# df_orgaos.to_sql('aux_orgaos',engine,if_exists='replace',index=False)
+# print('Tabela Orgaos enviada')
+
+
+# #-----------------------pescad
 
 tbl_pescad = os.path.join(diretorio,'Pescad_InscUFMG.txt')
-df_pescad = pd.read_csv(tbl_pescad,sep=';',encoding='latin-1',dtype=str)
+df_ValeAlimTipo = pd.read_csv(tbl_pescad,sep=';',encoding='latin-1',dtype=str)
 df_pescad.to_sql('aux_pescad_insc_ufmg',engine,if_exists='replace',index=False)
 print('Tabela Pescad enviada')
 
-#-----------------------cad_apf resolve situação da categoria MAGISTERIO X TEC-ADMINISTRATIVO
+# #-----------------------cad_apf resolve situação da categoria MAGISTERIO X TEC-ADMINISTRATIVO
 
-tbl_cad_apf = os.path.join(diretorio,'CadAPF.txt')
-tbl_cad_apf = pd.read_csv(tbl_cad_apf,sep=';',encoding='utf-8-sig',dtype=str)
-tbl_cad_apf.to_sql('aux_cad_apf',engine,if_exists='replace',index=False)
-print('Tabela CadAPF enviada')
+# tbl_cad_apf = os.path.join(diretorio,'CadAPF.txt')
+# tbl_cad_apf = pd.read_csv(tbl_cad_apf,sep=';',encoding='utf-8-sig',dtype=str)
+# tbl_cad_apf.to_sql('aux_cad_apf',engine,if_exists='replace',index=False)
+# print('Tabela CadAPF enviada')
 
-#-----------------------rubrica
+#-----------------------uorgs
 
-tbl_rubrica = os.path.join(diretorio,'Tabela Rubrica.txt')
-tbl_rubrica = pd.read_csv(tbl_rubrica,sep=';',encoding='utf-8-sig',dtype=str)
-tbl_rubrica.to_sql('aux_rubrica',engine,if_exists='replace',index=False)
-print('Tabela Tabela Rubrica enviada')
+tbl_uorgs = os.path.join(diretorio, 'Extr_UORGs.txt')
+df_uorgs = pd.read_csv(tbl_uorgs, sep=';', encoding='latin1', dtype=str)
+
+# CodUnid: "000" & Direita([NrUorg];6)
+df_uorgs['NrUorg'] = (
+    '000'
+    + df_uorgs['NrUorg'].str[-6:]
+)
+
+df_uorgs = df_uorgs.rename(
+    columns={
+        'NrUorg': 'CodUnid'
+    }
+)
+
+tbl_nome_uorg_pai = os.path.join(diretorio, 'Tabela Nome Uorg Pai.txt')
+df_nome_uorg_pai = pd.read_csv(tbl_nome_uorg_pai, sep=';', encoding='latin1', dtype=str)
+
+# NomeUorgPai: tradução de UorgPai
+mapa_nome_uorg_pai = dict(
+    zip(
+        df_nome_uorg_pai['UorgPai'],
+        df_nome_uorg_pai['NomeUorg']
+    )
+)
+
+df_uorgs['NomeUorgPai'] = df_uorgs['UorgPai'].map(mapa_nome_uorg_pai)
+df_uorgs['NomeUorgPai'] = df_uorgs['NomeUorgPai'].fillna('')
+
+# Unid: 3 primeiras letras do NomeUorg
+df_uorgs['Unid'] = df_uorgs['NomeUorg'].str[:3]
+
+# Correção técnica para UFMG
+df_uorgs.loc[
+    df_uorgs['CodUnid'] == '000000001',
+    'Unid'
+] = 'UFM'
+
+# DenoSetor
+df_uorgs['DenoSetor'] = df_uorgs.apply(
+    lambda linha:
+        str(linha['NomeUorg'])
+        if '-' in str(linha['NomeUorg'])
+        else str(linha['Unid']) + '-' + str(linha['NomeUorg']),
+    axis=1
+)
+
+# Data de cadastro
+df_uorgs['DtCadUorgFita'] = pd.Timestamp.now()
+
+# Mantém somente as colunas finais, na ordem da tabela antiga
+df_uorgs = df_uorgs[
+    [
+        'CodUnid',
+        'SiglaUorg',
+        'Unid',
+        'DenoSetor',
+        'DtCriacaoUorg',
+        'DtExtincaoUorg',
+        'UorgPai',
+        'NomeUorgPai',
+        'DtCadUorgFita'
+    ]
+]
+
+# Registro técnico para unidades 000000000
+linha_vazia = {
+    'CodUnid': '000000000',
+    'SiglaUorg': None,
+    'Unid': None,
+    'DenoSetor': None,
+    'DtCriacaoUorg': None,
+    'DtExtincaoUorg': None,
+    'UorgPai': None,
+    'NomeUorgPai': None,
+    'DtCadUorgFita': None
+}
+
+df_uorgs = pd.concat(
+    [pd.DataFrame([linha_vazia]), df_uorgs],
+    ignore_index=True
+)
+
+df_uorgs.to_sql(
+    'aux_unidade_atual',
+    engine,
+    if_exists='replace',
+    index=False
+)
+
+print('Tabela aux_unidade_atual enviada')
+

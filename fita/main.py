@@ -5,11 +5,11 @@
 
 import os
 # biblioteca padrão do py serve para interagir com 
-# o sistema operacional(caminhos,pasta...)
-import pandas as pd  # blibioteca para manipulaçao de dados, como se fosse um excel dentro do py
+# o sistema operacional ex:(caminhos,pasta...)
 
-# from conexao_access import conectar_access
-# from envia_access import enviar_dataframe_para_access
+import pandas as pd  
+# blibioteca para manipulaçao de dados, como se fosse um excel dentro do py
+
 from sqlalchemy import text  
 # Biblioteca para trabalhar com banco de dados.
 # O text() faz o SQLAlchemy reconhecer o texto como um comando SQL.
@@ -21,7 +21,6 @@ from funcoes import (
     formatar_valores, # converte em valores
     salvar_dataframe #cria e envia os df paa o banco de dados
 )
-# from envia_access import enviar_dataframe_para_access
 
 from mapeamentos import (
     # LAYOUT_TIPO_ são as posições na fita ex:'SIAPE': (9, 16),
@@ -42,8 +41,7 @@ from mapeamentos import (
 )
 from conexao import engine
 # Importa o objeto de conexão (engine) utilizado para acessar o banco de dados MySQL.
-# conexao_access = conectar_access()
-# cursor_access = conexao_access.cursor()
+
 
 # =========================
 # CAMINHOS PARA LOCALIZAÇÃO DE ARQUIVOS
@@ -184,16 +182,16 @@ df_titulacao_correcao = pd.read_sql(
 df_pescad_matricula_ufmg = pd.read_sql(
     """
         SELECT
-        Inscr,
-        SIAPE
+        InscUFMG,
+        MATRIC
         FROM aux_pescad_insc_ufmg          
     """,
     engine
 )
 mapa_insc_ufmg = dict(
     zip(
-        df_pescad_matricula_ufmg['SIAPE'],
-        df_pescad_matricula_ufmg['Inscr']
+        df_pescad_matricula_ufmg['MATRIC'],
+        df_pescad_matricula_ufmg['InscUFMG']
     )
 )
 # SITUACAO------------------------------------------------------------------------
