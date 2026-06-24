@@ -149,7 +149,7 @@ print('Tabela UORG Endereco enviada')
 # #-----------------------pescad
 
 tbl_pescad = os.path.join(diretorio,'Pescad_InscUFMG.txt')
-df_ValeAlimTipo = pd.read_csv(tbl_pescad,sep=';',encoding='latin-1',dtype=str)
+df_pescad = pd.read_csv(tbl_pescad,sep=';',encoding='latin-1',dtype=str)
 df_pescad.to_sql('aux_pescad_insc_ufmg',engine,if_exists='replace',index=False)
 print('Tabela Pescad enviada')
 
@@ -160,11 +160,34 @@ print('Tabela Pescad enviada')
 # tbl_cad_apf.to_sql('aux_cad_apf',engine,if_exists='replace',index=False)
 # print('Tabela CadAPF enviada')
 
-#-----------------------uorgs
+#-----------------------cria a tabela  unidade atual
 
 tbl_uorgs = os.path.join(diretorio, 'Extr_UORGs.txt')
+
+
 df_uorgs = pd.read_csv(tbl_uorgs, sep=';', encoding='latin1', dtype=str)
 
+tbl_uorgs = os.path.join(diretorio, 'Extr_UORGs.txt')
+df_uorgs = pd.read_csv(
+    tbl_uorgs,
+    sep=';',
+    encoding='latin1',
+    dtype=str
+)
+
+# ==========================
+# TESTE
+# ==========================
+
+
+
+
+
+# ==========================
+# FIM TESTE
+# ==========================
+
+#  aqui sera criada a tabela unidade atual, que não pode ser apagada!!!!!
 # CodUnid: "000" & Direita([NrUorg];6)
 df_uorgs['NrUorg'] = (
     '000'
@@ -192,13 +215,10 @@ df_uorgs['NomeUorgPai'] = df_uorgs['UorgPai'].map(mapa_nome_uorg_pai)
 df_uorgs['NomeUorgPai'] = df_uorgs['NomeUorgPai'].fillna('')
 
 # Unid: 3 primeiras letras do NomeUorg
-df_uorgs['Unid'] = df_uorgs['NomeUorg'].str[:3]
+df_uorgs['Unid'] = df_uorgs['NomeUorg'].fillna('').str[:3]
 
-# Correção técnica para UFMG
-df_uorgs.loc[
-    df_uorgs['CodUnid'] == '000000001',
-    'Unid'
-] = 'UFM'
+
+
 
 # DenoSetor
 df_uorgs['DenoSetor'] = df_uorgs.apply(
@@ -227,30 +247,64 @@ df_uorgs = df_uorgs[
     ]
 ]
 
-# Registro técnico para unidades 000000000
-linha_vazia = {
-    'CodUnid': '000000000',
-    'SiglaUorg': None,
-    'Unid': None,
-    'DenoSetor': None,
-    'DtCriacaoUorg': None,
-    'DtExtincaoUorg': None,
-    'UorgPai': None,
-    'NomeUorgPai': None,
-    'DtCadUorgFita': None
-}
+caminho_csv_saida= os.path.join(diretorio,'aux_unidade_atual.csv')
 
-df_uorgs = pd.concat(
-    [pd.DataFrame([linha_vazia]), df_uorgs],
-    ignore_index=True
+# df_uorgs.to_csv(
+#     caminho_csv_saida,
+#     sep=';',
+#     index=False,
+#     encoding='latin1'
+
+# )
+print(f'tabela unidade atual {caminho_csv_saida}')
+
+df_existente = pd.read_sql(
+    "SELECT CodUnid FROM aux_unidade_atual",
+    engine
+)
+cod_existentes = set(
+    df_existente['CodUnid'].astype(str)
+)
+df_novos = df_uorgs[
+    ~df_uorgs['CodUnid'].astype(str).isin(cod_existentes)
+]
+print('Registro novos encontrados: ')
+print(len(df_novos))
+
+if len(df_novos) > 0:
+    df_novos.to_sql(
+        'aux_unidade_atual',
+        engine,
+        if_exists='append',
+        index=False
+    )
+    print('Registros novos inseridos:')
+else:
+     print('Nenhum registro novo para inserir.')
+
+
+df_final = pd.read_sql(
+    "SELECT * FROM aux_unidade_atual",
+    engine
 )
 
-df_uorgs.to_sql(
-    'aux_unidade_atual',
-    engine,
-    if_exists='replace',
-    index=False
+caminho_csv_saida = os.path.join(
+    diretorio,
+    'aux_unidade_atual.csv'
 )
 
-print('Tabela aux_unidade_atual enviada')
+df_final.to_csv(
+    caminho_csv_saida,
+    sep=';',
+    index=False,
+    encoding='latin1'
+)
+
+print('CSV completo gerado:')
+print(caminho_csv_saida)
+print('Total de registros no CSV:')
+print(len(df_final))
+
+
+
 
