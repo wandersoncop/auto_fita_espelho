@@ -1,4 +1,6 @@
 import pandas as pd
+import os
+import sys
 
 def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
     """Traduz uma linha da fita espelho usando as posições do layout."""
@@ -52,11 +54,6 @@ def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
             #         registro[nome_campo_novo] = mapa[valor]
            #============================================================================ 
 
-
-
-
-         
-
     return registro
 
 def extrair_tipo_0(caminho_arquivo):
@@ -67,21 +64,13 @@ def extrair_tipo_0(caminho_arquivo):
         for linha in arquivo_txt:
 
             if len(linha) > 18 and linha[17] == '0':
-
                 mes = linha[45:47]
                 ano = linha[47:51]
 
                 return f"{ano}_{mes}"
-
     return "0000_00"
 
-def ler_fita_por_tipo(
-    caminho_arquivo,
-    layout,
-    tipo_registro,
-    campos_data=None,
-    mapas_auxiliares=None
-):
+def ler_fita_por_tipo(caminho_arquivo,layout,tipo_registro,campos_data=None,mapas_auxiliares=None):
     """Lê os registros da fita e os separa por tipo."""
 
     registros = []
@@ -89,7 +78,6 @@ def ler_fita_por_tipo(
     with open(caminho_arquivo, encoding='latin-1') as arquivo_txt:
         for linha in arquivo_txt:
             if len(linha) > 18 and linha[17] == tipo_registro:
-
                 dados = extrair_tipos(
                     linha,
                     layout,
@@ -275,16 +263,27 @@ def formatar_valores(valor):
 
 def salvar_dataframe(df,nome_csv,nome_tabela,engine):
     """
-        salva um dataframe em csv e envia para o banco de dados.
-    """        
+        salva o dataframe em csv e envia para o banco de dados.
+    """   
+
+    pasta_saida = os.path.join(
+       obter_pasta_base(),
+        'Saida'
+    ) 
+    os.makedirs(pasta_saida,exist_ok=True)    
+    caminho_csv = os.path.join(
+        pasta_saida,
+        nome_csv
+    )
     df.to_csv(
-        nome_csv,
+        caminho_csv,
         sep=';',
         decimal=',',
         index=False,
         encoding='utf-8-sig'
     )
     print(f"✅ CSV {nome_csv} exportado com sucesso!")
+    print(caminho_csv)
 
     df.to_sql(
         nome_tabela,
@@ -294,5 +293,18 @@ def salvar_dataframe(df,nome_csv,nome_tabela,engine):
     )
     print(f"✅ {nome_tabela} salvo no banco!")
 
+def obter_pasta_base():
+    """
+    Retorna a pasta base do sistema.
 
+    Quando roda pelo Python:
+    C:/Users/wandersoncop/Desktop/auto_fita_espelho
 
+    Quando roda pelo EXE:
+    pasta onde está o AutoFita.exe.
+    """
+
+    if getattr(sys, "frozen", False):
+        return os.path.dirname(sys.executable)
+
+    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

@@ -1,1 +1,1 @@
-aux_unidade_atual
+encoding='latin1',
