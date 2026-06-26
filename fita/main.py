@@ -303,23 +303,23 @@ def main():
         )
     )
     # LOCAL APOSENTADORIA---------------------------------------------------------------------
-    df_local_ap = pd.read_sql(
-        """
-            SELECT
-                MATRIC,
-                NrUorgLocalAp,
-                DenoSetorLocalAp            
-            FROM aux_local_aposentadoria
-        """,
-        engine
-    )
-    mapa_local_ap = (
-    df_local_ap
-    .drop_duplicates(subset=['MATRIC'],keep='first')
-    .set_index('MATRIC')
-    [['NrUorgLocalAp','DenoSetorLocalAp']]
-    .to_dict('index')
-    )
+    #  pd.read_sql(
+    #     """
+    #         SELECT
+    #             MATRIC,
+    #             NrUorgLocalAp,
+    #           df_local_ap =  DenoSetorLocalAp            
+    #         FROM aux_local_aposentadoria
+    #     """,
+    #     engine
+    # )
+    # mapa_local_ap = (
+    # df_local_ap
+    # .drop_duplicates(subset=['MATRIC'],keep='first')
+    # .set_index('MATRIC')
+    # [['NrUorgLocalAp','DenoSetorLocalAp']]
+    # .to_dict('index')
+    # )
     # ATIVIDADE---------------------------------------------------------------------------------
     df_atividade = pd.read_sql(
         """
@@ -504,20 +504,16 @@ def main():
         df_funcional = pd.DataFrame(registros_tipo_2)# cria como se fosse um excel na memoria
         
 
-        #--------------------------------- CRIA O CAMPO
-        # cria o campo UnidLotacao usando o valor que esta em NrUorgLotacao
-        df_funcional['UnidLotacao']= df_funcional['NrUorgLotacao'].apply(
-            lambda codigo: mapa_unidade.get(codigo,{}).get('Unid','')
+            # UnidLotacao usando NrUorgLotacao
+        df_funcional['UnidLotacao'] = df_funcional['NrUorgLotacao'].apply(
+            lambda codigo: mapa_unidade.get(codigo, {}).get('Unid', '') or ''
         )
+
         df_funcional['DenoSetorLotacao'] = df_funcional['NrUorgLotacao'].apply(
-            lambda codigo:mapa_unidade.get(codigo,{}).get('DenoSetor','')
+            lambda codigo: mapa_unidade.get(codigo, {}).get('DenoSetor', '') or ''
         )
-        df_funcional['UorgPaiExercicio'] = df_funcional['NrUorgLotacao'].apply(
-            lambda  codigo:mapa_unidade.get(codigo,{}).get('UorgPai','')
-        )
-        df_funcional['NomeUorgPaiExercicio'] = df_funcional['NrUorgLotacao'].apply(
-            lambda codigo: mapa_unidade.get(codigo,{}).get('NomeUorgPai','')
-        )
+
+        # Primeiro cria FuncSetor
         df_funcional['FuncSetor'] = df_funcional.apply(
             lambda linha:
                 linha['NOVFUNCUNORG']
@@ -525,6 +521,8 @@ def main():
                 else linha['FUNCUNORG'],
             axis=1
         )
+
+        # Depois cria TemFuncao
         df_funcional['TemFuncao'] = df_funcional.apply(
             lambda linha: 'S'
             if (
@@ -537,6 +535,8 @@ def main():
             else 'N',
             axis=1
         )
+
+        # Depois cria NrUorgExercicio
         df_funcional['NrUorgExercicio'] = df_funcional.apply(
             lambda linha:
                 linha['Setor']
@@ -559,13 +559,22 @@ def main():
                     )
                 ),
             axis=1
-        )    
-      
-# serve somente para retirar a cedeia de zeros e colocar como vazio
+        )
+
+        # Retira 000000000
         df_funcional.loc[
             df_funcional['NrUorgExercicio'].astype(str).str.strip() == '000000000',
             'NrUorgExercicio'
         ] = ''
+
+        # Agora sim cria UorgPaiExercicio
+        df_funcional['UorgPaiExercicio'] = df_funcional['NrUorgExercicio'].apply(
+            lambda codigo: mapa_unidade.get(codigo, {}).get('UorgPai') or ''
+        )
+
+        df_funcional['NomeUorgPaiExercicio'] = df_funcional['NrUorgExercicio'].apply(
+            lambda codigo: mapa_unidade.get(codigo, {}).get('NomeUorgPai') or ''
+        )
 
 
         df_funcional['UnidExercicio'] = df_funcional['NrUorgExercicio'].apply(
@@ -574,7 +583,6 @@ def main():
         df_funcional['DenoSetorExercicio'] = df_funcional['NrUorgExercicio'].apply(
             lambda codigo:mapa_unidade.get(codigo,{}).get('DenoSetor','')
         )
-
         df_funcional['EmailUorgExercicio'] = df_funcional['NrUorgExercicio'].apply(
             lambda codigo: mapa_email_uorg.get(codigo, {}).get('ED-EMAIL-UORG', '')
         )
@@ -584,6 +592,75 @@ def main():
         df_funcional['MunicipioUorgExercicio'] = df_funcional['CodMunicipioUORGExercicio'].apply(
             lambda codigo: mapa_municipio.get(codigo, '')
         )
+
+
+
+
+        # df_novos_local_ap = df_funcional[
+        #     (df_funcional['CodSituacao'].astype(str).str.strip() == '02') &
+        #     (df_funcional['NrUorgExercicio'].astype(str).str.strip() != '')
+        # ][
+        #     ['SIAPE', 'NrUorgExercicio', 'DenoSetorExercicio']
+        # ].copy()
+
+        # df_novos_local_ap = df_novos_local_ap.rename(
+        #     columns={
+        #         'SIAPE': 'MATRIC',
+        #         'NrUorgExercicio': 'NrUorgLocalAp',
+        #         'DenoSetorExercicio': 'DenoSetorLocalAp'
+        #     }
+        # )
+
+        # df_existente_local_ap = pd.read_sql(
+        #     """
+        #         SELECT
+        #             MATRIC
+        #         FROM aux_local_aposentadoria
+        #     """,
+        #     engine
+        # )
+
+        # df_novos_local_ap = df_novos_local_ap[
+        #     ~df_novos_local_ap['MATRIC'].isin(df_existente_local_ap['MATRIC'])
+        # ]
+
+        # if not df_novos_local_ap.empty:
+        #     df_novos_local_ap.to_sql(
+        #         'aux_local_aposentadoria',
+        #         engine,
+        #         if_exists='append',
+        #         index=False
+        #     )
+
+        #     print(f"✅ aux_local_aposentadoria atualizada: {len(df_novos_local_ap)} novos registros")
+        # else:
+        #     print("ℹ️ aux_local_aposentadoria sem novos registros")
+            
+
+        df_local_ap = pd.read_sql(
+            """
+                SELECT
+                    MATRIC,
+                    NrUorgLocalAp,
+                    DenoSetorLocalAp
+                FROM aux_local_aposentadoria
+            """,
+            engine
+        )
+
+        mapa_local_ap = (
+            df_local_ap
+            .drop_duplicates(subset=['MATRIC'], keep='first')
+            .set_index('MATRIC')
+            [['NrUorgLocalAp', 'DenoSetorLocalAp']]
+            .to_dict('index')
+        )
+
+
+
+
+
+
         df_funcional['NrUorgLocalAp'] = df_funcional['SIAPE'].apply(
             lambda siape: mapa_local_ap.get(str(siape).zfill(7), {}).get('NrUorgLocalAp', '')
         )
