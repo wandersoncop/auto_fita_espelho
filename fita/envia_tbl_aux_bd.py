@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from conexao import engine
 from funcoes import obter_pasta_base
-
+from sqlalchemy import inspect
 def main():
 
     #---------------------------CAMINHO PARA A PASTA DE TABELAS AUXILIARES
@@ -155,11 +155,19 @@ def main():
     print('Tabela CadAPF enviada')
 
     #-----------------------CRIA UNIDADE ATUAL SERÁ ENVIADA UMA UNICA VEZ (BASE INCREMENTAL)
-    #REMOVER OU COMENTAR DEPOIS DA PRIMEIRA CARGA QUE SERA COM A ATUAL DA FITA
-    # tbl_unidade_atual = os.path.join(diretorio,'Tabela Unidade Atual.txt')
-    # tbl_unidade_atual = pd.read_csv(tbl_unidade_atual,sep=';',encoding='utf-8-sig',dtype=str)
-    # tbl_unidade_atual.to_sql('aux_unidade_atual',engine,if_exists='replace',index=False)
-    # print(' Tabela Unidade Atual enviada')
+    #usando o inspct
+    inspetor = inspect(engine)
+
+    if not inspetor.has_table('aux_unidade_atual'):
+        print('Primeira carga da aux_unidade_atual...')
+
+        tbl_unidade_atual = os.path.join(diretorio,'Tabela Unidade Atual.txt')
+        df_unidade_atual = pd.read_csv(tbl_unidade_atual,sep=';',encoding='utf-8-sig',dtype=str)
+
+        df_unidade_atual.to_sql('aux_unidade_atual',engine,if_exists='replace',index=False)
+        print(' Tabela Unidade Atual enviada')
+    else:
+        print(' Tabela Unidade Atual ja existia.') 
 
 
     #-----------------------CRIA UNIDADE ATUAL

@@ -559,13 +559,22 @@ def main():
                     )
                 ),
             axis=1
-        )
+        )    
+      
+# serve somente para retirar a cedeia de zeros e colocar como vazio
+        df_funcional.loc[
+            df_funcional['NrUorgExercicio'].astype(str).str.strip() == '000000000',
+            'NrUorgExercicio'
+        ] = ''
+
+
         df_funcional['UnidExercicio'] = df_funcional['NrUorgExercicio'].apply(
             lambda codigo:mapa_unidade.get(codigo,{}).get('Unid','')
         )
         df_funcional['DenoSetorExercicio'] = df_funcional['NrUorgExercicio'].apply(
             lambda codigo:mapa_unidade.get(codigo,{}).get('DenoSetor','')
         )
+
         df_funcional['EmailUorgExercicio'] = df_funcional['NrUorgExercicio'].apply(
             lambda codigo: mapa_email_uorg.get(codigo, {}).get('ED-EMAIL-UORG', '')
         )
