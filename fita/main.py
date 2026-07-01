@@ -18,6 +18,7 @@ from funcoes import (
     ler_fita_por_tipo,  # chama a função que Le o registros da fita e os separa por tipo
     extrair_tipo_0,  # serve somente para extrair o mes fita
     criar_escolaridade, #Cria o campo Escolaridade comparando escolaridade e titulação
+    formatar_data, #foramta as datas
     formatar_valores, # converte em valores
     salvar_dataframe, #cria e envia os df paa o banco de dados
     obter_pasta_base, # para tornar a fita portatil
@@ -302,24 +303,7 @@ def main():
             df_municipio['DENOMUNIC']
         )
     )
-    # LOCAL APOSENTADORIA---------------------------------------------------------------------
-    #  pd.read_sql(
-    #     """
-    #         SELECT
-    #             MATRIC,
-    #             NrUorgLocalAp,
-    #           df_local_ap =  DenoSetorLocalAp            
-    #         FROM aux_local_aposentadoria
-    #     """,
-    #     engine
-    # )
-    # mapa_local_ap = (
-    # df_local_ap
-    # .drop_duplicates(subset=['MATRIC'],keep='first')
-    # .set_index('MATRIC')
-    # [['NrUorgLocalAp','DenoSetorLocalAp']]
-    # .to_dict('index')
-    # )
+
     # ATIVIDADE---------------------------------------------------------------------------------
     df_atividade = pd.read_sql(
         """
@@ -513,6 +497,15 @@ def main():
             lambda codigo: mapa_unidade.get(codigo, {}).get('DenoSetor', '') or ''
         )
 
+        df_funcional['Funcao'] = df_funcional.apply(
+            lambda linha:
+                linha['NOVFUNCSIGLA']
+                if str(linha.get('NOVFUNCSIGLA', '')).strip() != ''
+                else linha['Funcao'],
+            axis=1
+        )
+
+
         # Primeiro cria FuncSetor
         df_funcional['FuncSetor'] = df_funcional.apply(
             lambda linha:
@@ -521,6 +514,24 @@ def main():
                 else linha['FUNCUNORG'],
             axis=1
         )
+
+        df_funcional['DataFuncInicio'] = df_funcional.apply(
+            lambda linha:
+                linha['NOVFUNCDTING']
+                if str(linha.get('NOVFUNCSIGLA', '')).strip() != ''
+                else linha['DataFuncInicio'],
+            axis=1
+        )
+       
+        df_funcional['DataFuncFim'] = df_funcional.apply(
+            lambda linha:
+                linha['NOVFUNCDTSAIDA']
+                if str(linha.get('NOVFUNCSIGLA', '')).strip() != ''
+                else linha['DataFuncFim'],
+            axis=1
+        )
+        df_funcional['DataFuncInicio'] = df_funcional['DataFuncInicio'].apply(formatar_data)
+        df_funcional['DataFuncFim'] = df_funcional['DataFuncFim'].apply(formatar_data)
 
         # Depois cria TemFuncao
         df_funcional['TemFuncao'] = df_funcional.apply(
@@ -592,49 +603,6 @@ def main():
         df_funcional['MunicipioUorgExercicio'] = df_funcional['CodMunicipioUORGExercicio'].apply(
             lambda codigo: mapa_municipio.get(codigo, '')
         )
-
-
-
-
-        # df_novos_local_ap = df_funcional[
-        #     (df_funcional['CodSituacao'].astype(str).str.strip() == '02') &
-        #     (df_funcional['NrUorgExercicio'].astype(str).str.strip() != '')
-        # ][
-        #     ['SIAPE', 'NrUorgExercicio', 'DenoSetorExercicio']
-        # ].copy()
-
-        # df_novos_local_ap = df_novos_local_ap.rename(
-        #     columns={
-        #         'SIAPE': 'MATRIC',
-        #         'NrUorgExercicio': 'NrUorgLocalAp',
-        #         'DenoSetorExercicio': 'DenoSetorLocalAp'
-        #     }
-        # )
-
-        # df_existente_local_ap = pd.read_sql(
-        #     """
-        #         SELECT
-        #             MATRIC
-        #         FROM aux_local_aposentadoria
-        #     """,
-        #     engine
-        # )
-
-        # df_novos_local_ap = df_novos_local_ap[
-        #     ~df_novos_local_ap['MATRIC'].isin(df_existente_local_ap['MATRIC'])
-        # ]
-
-        # if not df_novos_local_ap.empty:
-        #     df_novos_local_ap.to_sql(
-        #         'aux_local_aposentadoria',
-        #         engine,
-        #         if_exists='append',
-        #         index=False
-        #     )
-
-        #     print(f"✅ aux_local_aposentadoria atualizada: {len(df_novos_local_ap)} novos registros")
-        # else:
-        #     print("ℹ️ aux_local_aposentadoria sem novos registros")
             
 
         df_local_ap = pd.read_sql(
@@ -667,10 +635,10 @@ def main():
         df_funcional['DenoSetorLocalAp'] = df_funcional['SIAPE'].apply(
             lambda siape: mapa_local_ap.get(str(siape).zfill(7), {}).get('DenoSetorLocalAp', '')
         )
-        df_funcional['UnidFuncao'] = df_funcional['FUNCUNORG'].apply(
+        df_funcional['UnidFuncao'] = df_funcional['FuncSetor'].apply(
             lambda codigo: mapa_unidade.get(codigo, {}).get('Unid', '')
         )
-        df_funcional['DenoSetorFunc'] = df_funcional['FUNCUNORG'].apply(
+        df_funcional['DenoSetorFunc'] = df_funcional['FuncSetor'].apply(
             lambda codigo: mapa_unidade.get(codigo, {}).get('DenoSetor', '')
         )
         df_funcional['DenoAtiv'] = df_funcional['CodFuncao'].apply(
@@ -742,16 +710,49 @@ def main():
             axis=1
         )
     #-----------------------CRIA A COLUNA E ESTABELECE REGRAS DE NEGOCIO DE CATEGORIA
-        df_funcional['Categoria'] = df_funcional['GrCargo'].apply(
-            lambda gr_cargo: 'Docente'
-            if str(gr_cargo).strip().zfill(3) in ('060', '702', '705', '706', '707')
-            else 'Tec-Administrativo'
-        )
+        df_funcional['Categoria'] = df_funcional.apply(
+            lambda linha:
+                'Estagiario'
+                if str(linha['RegJuridico']).strip() == 'ETG'
+                else (
+                    'Residente'
+                    if str(linha['RegJuridico']).strip() in ('RMP', 'MRD')
+                    else (
+                        'Prof Magisterio Superior'
+                        if (
+                            str(linha['RegJuridico']).strip() == 'CDT'
+                            and str(linha['GrCargo']).strip().zfill(3) == '705'
+                        )
+                        else (
+                            'PROF ENS BAS TEC TECNOLOGICO'
+                            if (
+                                str(linha['RegJuridico']).strip() == 'CDT'
+                                and str(linha['GrCargo']).strip().zfill(3) == '707'
+                            )
+                            else (
+                            'VERIFICAR A SITUAÇÃO'
+                            if (
+                                str(linha['RegJuridico']).strip() == 'CDT'
+                                and str(linha['GrCargo']).strip().zfill(3) == '000'
+                            )
+                            else (
+                                'Docente'
+                                if str(linha['GrCargo']).strip().zfill(3) in ('060', '702', '706')
+                                else 'Tec-Administrativo'
+                            )
+                        )
+                    )
+                    )    
+                ),
+            axis=1
+    )
+       
     #-----------------------CRIA A CHAVE DA CLASSE CONFORME REGRA DO ACCESS
         def codigo_categoria_classe(gr_cargo):
             return (
                 'M'
                 if str(gr_cargo).strip().zfill(3) in ('060', '702', '705', '706', '707')
+                
                 else 'T'
         )
         df_funcional['ChaveClass'] = df_funcional.apply(

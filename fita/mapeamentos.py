@@ -91,7 +91,7 @@ LAYOUT_TIPO_2 = {
     'RTRAB': (90, 92),#
     'Anuenio': (92, 94),#
     'DataCadastro': (94, 102),#
-    'SuspPagamnto': (102, 103),#
+    'SuspPagamento': (102, 103),#
     'DataSusp':(103,109),#
     'NumApos': (109, 114),#
     'DenoApos': (114, 119),#
@@ -166,7 +166,7 @@ LAYOUT_TIPO_2 = {
     'OrgAtual': (528, 533),
     'SIAPEAtual': (533, 540),
     'MudUpagCod': (540, 549),
-    'MudUpagDtLb': (549, 557),
+    'MudUpagDtLib': (549, 557),
     'MudUpagMoti': (557, 558),
     'IPagServ': (558, 559),
     'ObitoCart': (559, 609),
@@ -185,7 +185,7 @@ LAYOUT_TIPO_2 = {
     'ANUEMES': (678, 680),
     'RxPerc': (680, 685),
     'GOcorreVat': (717, 719),
-    'OcreverAti': (719, 722),
+    'OcReverAti': (719, 722),
      'DataReversaoAtiv': (722, 730),
     # 'REVERSAO_CODIGO': (714, 722),
     'DtRevers': (700, 708),
@@ -293,7 +293,7 @@ HEADER_TIPO_2 = [
     'DenoIngSerPublico',    
     'OcorrExclusao', 
     'DenoExclusao',   
-    'SuspPagamnto',  
+    'SuspPagamento',  
     'DataSusp',    
     'DataLotacao',
     'DataCadastro', 
@@ -321,7 +321,7 @@ HEADER_TIPO_2 = [
     'OrgAtual',
     'SIAPEAtual',
     'MudUpagCod',
-    'MudUpagDtLb',
+    'MudUpagDtLib',
     'MudUpagMoti',
     'IPagServ',
     'ObitoCart',
@@ -340,7 +340,7 @@ HEADER_TIPO_2 = [
     'ANUEMES',
     'RxPerc',
     'GOcorreVat',
-    'OcreverAti',
+    'OcReverAti',
     'DataReversaoAtiv',
     'IndiceCargo',
     'IndiceFuncao',
@@ -555,7 +555,7 @@ CAMPOS_DATA = [
     "DtInicAfast",                          
     "DtFimAfast", 
     "DtPublAfast",  
-    "DataFuncInicio",
+    "DataFuncInicio",   
     "DataFuncFim",
 
 ]

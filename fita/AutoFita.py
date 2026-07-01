@@ -12,6 +12,7 @@ atualizar_tabelas()
 
 print("\n✅ Tabelas auxiliares atualizadas com sucesso.")
 
+
 print("\n2/2 - Processando fita espelho...")
 processar_fita()
 

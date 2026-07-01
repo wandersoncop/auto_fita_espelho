@@ -62,7 +62,7 @@ def main():
     #-----------------------CLASSE
 
     tbl_classe = os.path.join(diretorio,'Tabela Classe.txt')
-    df_classe = pd.read_csv(tbl_classe, sep=';',encoding='latin-1',dtype=str)
+    df_classe = pd.read_csv(tbl_classe, sep=';',encoding='utf-8-sig',dtype=str)
     df_classe.to_sql( 'aux_classe',engine,if_exists='replace',index=False)
     print('Tabela Classe enviada')
 
@@ -76,15 +76,19 @@ def main():
     # #-----------------------TITULAÇÃO
 
     tbl_titulacao = os.path.join(diretorio,'Tabela Titulacao.txt')
-    df_titulacao = pd.read_csv(tbl_titulacao,sep=';',encoding='latin-1',dtype=str)
+    df_titulacao = pd.read_csv(tbl_titulacao,sep=';',encoding='utf-8-sig',dtype=str)
+
+   
+
     df_titulacao.to_sql('aux_titulacao',engine,if_exists='replace',index=False)
     print('Tabela Titulacao enviada')
+    
 
 
     # #-----------------------LOCAL APOSENTADORIA
 
     tbl_local_aposentadoria = os.path.join(diretorio,'Tabela Local Aposentadoria.txt')
-    df_local_aposentadoria = pd.read_csv(tbl_local_aposentadoria,sep=';',encoding='latin-1',dtype=str)
+    df_local_aposentadoria = pd.read_csv(tbl_local_aposentadoria,sep=';',encoding='utf-8-sig',dtype=str)
     df_local_aposentadoria.to_sql('aux_local_aposentadoria',engine,if_exists='replace',index=False)
     print('Tabela Local Aposentadoria enviada')
 
