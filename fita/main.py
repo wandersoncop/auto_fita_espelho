@@ -711,40 +711,50 @@ def main():
         )
     #-----------------------CRIA A COLUNA E ESTABELECE REGRAS DE NEGOCIO DE CATEGORIA
         df_funcional['Categoria'] = df_funcional.apply(
-            lambda linha:
-                'Estagiario'
-                if str(linha['RegJuridico']).strip() == 'ETG'
+        lambda linha:
+            'ESTAGIARIO'
+            if str(linha['RegJuridico']).strip() == 'ETG'
+            else (
+                'RESIDENTE'
+                if str(linha['RegJuridico']).strip() in ('RMP', 'MRD')
                 else (
-                    'Residente'
-                    if str(linha['RegJuridico']).strip() in ('RMP', 'MRD')
+                    'PROFESSOR CDT'
+                    if (
+                        str(linha['RegJuridico']).strip() == 'CDT'
+                        and str(linha['GrCargo']).strip().zfill(3) in ('060', '702', '705', '707')
+                    )
                     else (
-                        'Prof Magisterio Superior'
+                        'PROFESSOR CLT'
                         if (
-                            str(linha['RegJuridico']).strip() == 'CDT'
-                            and str(linha['GrCargo']).strip().zfill(3) == '705'
+                            str(linha['RegJuridico']).strip() == 'CLT'
+                            and str(linha['GrCargo']).strip().zfill(3) in ('060', '705')
                         )
                         else (
-                            'PROF ENS BAS TEC TECNOLOGICO'
-                            if (
-                                str(linha['RegJuridico']).strip() == 'CDT'
-                                and str(linha['GrCargo']).strip().zfill(3) == '707'
-                            )
-                            else (
                             'VERIFICAR A SITUAÇÃO'
                             if (
                                 str(linha['RegJuridico']).strip() == 'CDT'
                                 and str(linha['GrCargo']).strip().zfill(3) == '000'
                             )
                             else (
-                                'Docente'
-                                if str(linha['GrCargo']).strip().zfill(3) in ('060', '702', '706')
-                                else 'Tec-Administrativo'
+                                'PROFESSOR EST'
+                                if (
+                                    str(linha['RegJuridico']).strip() == 'EST'
+                                    and str(linha['GrCargo']).strip().zfill(3) in ('060', '702', '705', '706', '707')
+                                )
+                                else (
+                                    'TECNICO CONTRATADO'
+                                    if (
+                                        str(linha['RegJuridico']).strip() in ('CDT', 'CLT')
+                                        and str(linha['GrCargo']).strip().zfill(3) in ('000', '061', '415')
+                                    )
+                                    else 'TEC ADMINISTRATIVO'
+                                )
                             )
                         )
                     )
-                    )    
-                ),
-            axis=1
+                )
+            ),
+        axis=1
     )
        
     #-----------------------CRIA A CHAVE DA CLASSE CONFORME REGRA DO ACCESS
@@ -835,8 +845,8 @@ def main():
 
         df_pagamento_totais['TotBruto'] = df_pagamento_totais['TotBruto'].apply(formatar_valores)
         df_pagamento_totais['TotDesc'] = df_pagamento_totais['TotDesc'].apply(formatar_valores)
-        df_pagamento_totais['Liquido'] = df_pagamento_totais['Liquido'].apply(formatar_valores)
-        
+        df_pagamento_totais['Liquido'] = (df_pagamento_totais['TotBruto']- df_pagamento_totais['TotDesc']).round(2)
+                
         df_pagamento_totais.insert( #INSERE O MES FITA NA PRIMEIRA COLUNA DE PAGAMENTOS TOTAIS
             0,  # primeira coluna
             'MesFita',  # nome da coluna
@@ -945,7 +955,6 @@ def main():
         )
     # ====================================================================
         salvar_dataframe(
-
             df_pagamento_totais,
             'registro_pagamento_totais.csv',
             'tbl_registro_pagamento_totais',
@@ -961,9 +970,9 @@ def main():
     # ====================================================================  
         salvar_dataframe(
             df_afastamento_total,
-        'afastamento_total.csv',
-        'tbl_afastamento_total',
-        engine
+            'afastamento_total.csv',
+            'tbl_afastamento_total',
+            engine
         )
     # ====================================================================
     # CRIAÇÃO DE TABELA tbl_pgto_incentivo_qualificacao
