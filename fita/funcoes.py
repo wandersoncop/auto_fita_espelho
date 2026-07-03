@@ -314,11 +314,11 @@ def obter_pasta_base():
 
     return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-def arquivar_fita_processada(caminho_arquivo,MesFita):
+def arquivar_fita_processada(caminho_arquivo, MesFita):
     """
         Move a fita processsada para a pasta Processadas
     """
-    ano = Mesfita[:4]
+    ano = MesFita[:4]
 
     pasta_processadas = os.path.join(
         obter_pasta_base(),
@@ -326,7 +326,9 @@ def arquivar_fita_processada(caminho_arquivo,MesFita):
         'Processadas',
         ano
     )
-    nome_arquivo = os.makedirs = os.path.basename(caminho_arquivo)
+    os.makedirs(pasta_processadas,exist_ok=True)
+
+    nome_arquivo = os.path.basename(caminho_arquivo)
 
     destino = os.path.join(
         pasta_processadas,
@@ -334,4 +336,5 @@ def arquivar_fita_processada(caminho_arquivo,MesFita):
     )
 
     shutil.move(caminho_arquivo,destino)
-    print(f"📦 Fita arquivada em: {destino}")
+
+    print(f"📦 {nome_arquivo} arquivada.")

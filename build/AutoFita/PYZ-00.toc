@@ -1,4 +1,4 @@
-('C:\\Users\\wandersoncop\\Desktop\\auto_fita_espelho\\fita\\build\\AutoFita\\PYZ-00.pyz',
+('C:\\Users\\wandersoncop\\Desktop\\auto_fita_espelho\\build\\AutoFita\\PYZ-00.pyz',
  [('IPython',
    'C:\\Users\\wandersoncop\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\IPython\\__init__.py',
    'PYMODULE'),

@@ -7,7 +7,7 @@ import time
 # CONFIGURAÇÕES
 # ==========================================================
 
-LARGURA = 60
+LARGURA = 80
 
 
 def linha():

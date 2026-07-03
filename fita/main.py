@@ -9,7 +9,7 @@ import os
 
 import pandas as pd  
 # blibioteca para manipulaçao de dados, como se fosse um excel dentro do py
-import time
+# import time
 
 from sqlalchemy import text  
 # Biblioteca para trabalhar com banco de dados.
@@ -23,7 +23,7 @@ from funcoes import (
     formatar_valores, # converte em valores
     salvar_dataframe, #cria e envia os df paa o banco de dados
     obter_pasta_base, # para tornar a fita portatil
-    # arquivar_fita_processada, #move a fita processada para pasta
+    arquivar_fita_processada, #move a fita processada para pasta
 )
 
 from mapeamentos import (
@@ -1062,9 +1062,7 @@ def main():
             df_titulacao_correcao,
             mapa_perqualif
         )
-        df_pessoal = df_pessoal[HEADER_TIPO_1]
-
-        
+        df_pessoal = df_pessoal[HEADER_TIPO_1]      
 
 
         salvar_dataframe(
@@ -1074,10 +1072,14 @@ def main():
             engine,
             MesFita
         ) 
-        # arquivar_fita_processada(
-        #     caminho_arquivo,
-        #     MesFita
-        # )
+        print()
+        print('Arquivando fita')
+        print('-' * LARGURA)
+
+        arquivar_fita_processada(
+            caminho_arquivo,
+            MesFita
+        )
     else:
         print("❌ ERRO: Arquivo fita não encontrado.")
         print("📁 Caminho esperado:")
