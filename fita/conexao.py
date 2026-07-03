@@ -29,7 +29,7 @@ def criar_banco():
         )
         conexao.commit()
 
-    print(f"✅ Banco {BANCO} verificado/criado com sucesso!")
+    print(f"✅ Banco {BANCO} criado com sucesso!")
 
 
 # cria o banco antes de conectar
@@ -42,7 +42,7 @@ engine = create_engine(
 
 try:
     with engine.connect() as conexao:
-        print("Conectado com sucesso!")
+        print("✅ Conectado com sucesso!")
 
 except Exception as erro:
     print(f"Erro: {erro}")

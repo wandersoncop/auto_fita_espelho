@@ -9,6 +9,7 @@ import os
 
 import pandas as pd  
 # blibioteca para manipulaçao de dados, como se fosse um excel dentro do py
+import time
 
 from sqlalchemy import text  
 # Biblioteca para trabalhar com banco de dados.
@@ -22,6 +23,7 @@ from funcoes import (
     formatar_valores, # converte em valores
     salvar_dataframe, #cria e envia os df paa o banco de dados
     obter_pasta_base, # para tornar a fita portatil
+    # arquivar_fita_processada, #move a fita processada para pasta
 )
 
 from mapeamentos import (
@@ -43,6 +45,9 @@ from mapeamentos import (
 )
 from conexao import engine
 # Importa o objeto de conexão (engine) utilizado para acessar o banco de dados MySQL.
+LARGURA = 80
+def imprimir_registro(descricao,quantidade):
+    print(f'{descricao:.<35}{quantidade:>8,}'.replace(",","."))
 
 def main():
 # ==============================================
@@ -86,8 +91,8 @@ def main():
     else:
         caminho_arquivo = None
 
-    if caminho_arquivo and os.path.exists(caminho_arquivo):
-        print(f"✅ Arquivo encontrado: {arquivo_encontrado}")
+    # if caminho_arquivo and os.path.exists(caminho_arquivo):
+    #     print(f"✅ Arquivo encontrado: {arquivo_encontrado}")
 
 
     # ==============================================
@@ -464,7 +469,7 @@ def main():
             CAMPOS_DATA,#lista de campos que são data
             mapas_auxiliares, # e o dicionario para configuracao dos novos campos
         )
-        print(f'Tipo_1_pessoal finalizado: {len(registros_tipo_1)} registros') #exibe mensagem com quantidade de registros encontrados
+        # print(f'Tipo_1_pessoal finalizado: {len(registros_tipo_1)} registros') #exibe mensagem com quantidade de registros encontrados
     
         df_pessoal = pd.DataFrame(registros_tipo_1)
         # insere o mes fita na tbl
@@ -483,7 +488,7 @@ def main():
             CAMPOS_DATA,#busca os campos que são data
             mapas_auxiliares,
         )
-        print(f'Tipo_2_funcional finalizado: {len(registros_tipo_2)} registros')#exibe mensagem com quantidade de registros encontrados
+        # print(f'Tipo_2_funcional finalizado: {len(registros_tipo_2)} registros')#exibe mensagem com quantidade de registros encontrados
 
         df_funcional = pd.DataFrame(registros_tipo_2)# cria como se fosse um excel na memoria
         
@@ -817,7 +822,7 @@ def main():
             CAMPOS_DATA,
             mapas_auxiliares
         )
-        print(f'Tipo_3_registro_pagamento finalizado: {len(registros_tipo_3)} registros')
+        # print(f'Tipo_3_registro_pagamento finalizado: {len(registros_tipo_3)} registros')
 
         df_pagamento = pd.DataFrame(registros_tipo_3)
 
@@ -839,7 +844,7 @@ def main():
             CAMPOS_DATA,
             mapas_auxiliares
         )   
-        print(f'Tipo_4_registro_pagamento_totais finalizado: {len(registros_tipo_4)} registros')
+        # print(f'Tipo_4_registro_pagamento_totais finalizado: {len(registros_tipo_4)} registros')
 
         df_pagamento_totais = pd.DataFrame(registros_tipo_4)
 
@@ -878,7 +883,7 @@ def main():
             CAMPOS_DATA,
             mapas_auxiliares
         )   
-        print(f'Tipo_5_afastamento finalizado: {len(registros_tipo_5)} registros')
+        # print(f'Tipo_5_afastamento finalizado: {len(registros_tipo_5)} registros')
 
         df_afastamento = pd.DataFrame(registros_tipo_5)    
         
@@ -914,7 +919,7 @@ def main():
             CAMPOS_DATA,
             mapas_auxiliares
         )   
-        print(f'Tipo_6_afastamento finalizado: {len(registros_tipo_6)} registros')
+        # print(f'Tipo_6_afastamento finalizado: {len(registros_tipo_6)} registros')
 
         df_afastamento_total = pd.DataFrame(registros_tipo_6)
         df_afastamento_total.insert( #INSERE O MES FITA NA PRIMEIRA COLUNA DE AFASTAMENTO
@@ -937,42 +942,72 @@ def main():
         )
         df_afastamento_total = df_afastamento_total[HEADER_TIPO_6]
 
+         
+        print()
+        print("Registros encontrados")
+        print("-" * LARGURA)
+
+        imprimir_registro("Pessoal", len(registros_tipo_1))
+        imprimir_registro("Funcional", len(registros_tipo_2))
+        imprimir_registro("Pagamentos", len(registros_tipo_3))
+        imprimir_registro("Pagamento Totais", len(registros_tipo_4))
+        imprimir_registro("Afastamentos", len(registros_tipo_5))
+        imprimir_registro("Afastamento Totais", len(registros_tipo_6))
+
+        print()
+
     # ====================================================================
     # SALVA OS DF EM CSV NO DIRETORIO E ENVIA PARA O BD MYSQL
     # ====================================================================
+
+
+        print("Atualizando banco de dados")
+        print("-" * LARGURA)
+
+
         salvar_dataframe(
             df_funcional,
             'funcional.csv',
             'tbl_funcional',
-            engine
+            engine,
+            MesFita
+            
         ) 
     # ====================================================================     
         salvar_dataframe(
             df_pagamento,
             'registro_pagamento.csv',
             'tbl_registro_pagamento',
-            engine
+            engine,
+            MesFita
+            
         )
     # ====================================================================
         salvar_dataframe(
             df_pagamento_totais,
             'registro_pagamento_totais.csv',
             'tbl_registro_pagamento_totais',
-            engine
+            engine,
+            MesFita
+            
         )  
     # ==================================================================== 
         salvar_dataframe(
             df_afastamento,
             'afastamento.csv',
             'tbl_afastamento',
-            engine
+            engine,
+            MesFita
+            
         )
     # ====================================================================  
         salvar_dataframe(
             df_afastamento_total,
             'afastamento_total.csv',
             'tbl_afastamento_total',
-            engine
+            engine,
+            MesFita
+            
         )
     # ====================================================================
     # CRIAÇÃO DE TABELA tbl_pgto_incentivo_qualificacao
@@ -998,7 +1033,7 @@ def main():
             conexao.execute(text(query_drop))
             conexao.execute(text(query_create))
 
-        print("✅ tbl_pgto_incentivo_qualificacao criada com sucesso!")
+       
 
         # ====================================================================
         # MAPA PERQUALIF
@@ -1029,18 +1064,28 @@ def main():
         )
         df_pessoal = df_pessoal[HEADER_TIPO_1]
 
+        
+
+
         salvar_dataframe(
             df_pessoal,
             'pessoal.csv',
             'tbl_pessoal',
-            engine
+            engine,
+            MesFita
         ) 
+        # arquivar_fita_processada(
+        #     caminho_arquivo,
+        #     MesFita
+        # )
     else:
         print("❌ ERRO: Arquivo fita não encontrado.")
         print("📁 Caminho esperado:")
         print(caminho_arquivo)
         print("Verifique se o arquivo foi copiado para a pasta auto_fita_espelho.")
 
+
+      
 
 if __name__ == "__main__":
     main()

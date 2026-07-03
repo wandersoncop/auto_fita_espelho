@@ -29,49 +29,49 @@ def main():
     df_estado_civil.to_sql( 'aux_estado_civil',engine,if_exists='replace',index=False)
     # a proxima linha envia o df para o access
     # enviar_dataframe_para_access(df_estado_civil,'aux_estado_civil')
-    print ('Tabela estado civil enviada')
+    # print ('Tabela estado civil enviada')
 
     # -----------------------PAIS
 
     tbl_pais = os.path.join(diretorio, 'Tabela Pais.txt')
     df_pais= pd.read_csv(tbl_pais, sep=';',encoding='latin-1',dtype=str)
     df_pais.to_sql( 'aux_pais',engine,if_exists='replace',index=False)
-    print ('Tabela Pais enviada')
+    # print ('Tabela Pais enviada')
 
     #-----------------------CARGO
 
     tbl_cargo = os.path.join(diretorio, 'Tabela Cargo.txt')
     df_cargo= pd.read_csv(tbl_cargo, sep=';',encoding='latin-1',dtype=str)
     df_cargo.to_sql( 'aux_cargo',engine,if_exists='replace',index=False)
-    print ('Tabela Cargo enviada')
+    # print ('Tabela Cargo enviada')
 
     # #-----------------------SITUAÇÃO
 
     tbl_situacao = os.path.join(diretorio, 'Tabela Situacao.txt')
     df_situacao= pd.read_csv(tbl_situacao, sep=';',encoding='latin-1',dtype=str)
     df_situacao.to_sql( 'aux_situacao',engine,if_exists='replace',index=False)
-    print ('Tabela Situacao enviada')
+    # print ('Tabela Situacao enviada')
 
     #-----------------------ATIVIDADE
 
     tbl_atividade = os.path.join(diretorio, 'Tabela Atividade.txt')
     df_atividade= pd.read_csv(tbl_atividade, sep=';',encoding='latin-1',dtype=str)
     df_atividade.to_sql( 'aux_atividade',engine,if_exists='replace',index=False)
-    print ('Tabela Atividade enviada')
+    # print ('Tabela Atividade enviada')
 
     #-----------------------CLASSE
 
     tbl_classe = os.path.join(diretorio,'Tabela Classe.txt')
     df_classe = pd.read_csv(tbl_classe, sep=';',encoding='utf-8-sig',dtype=str)
     df_classe.to_sql( 'aux_classe',engine,if_exists='replace',index=False)
-    print('Tabela Classe enviada')
+    # print('Tabela Classe enviada')
 
     #-----------------------ESCOLARIDADE
 
     tbl_escolaridade = os.path.join(diretorio,'Tabela Escolaridade.txt')
     df_escolaridade = pd.read_csv(tbl_escolaridade,sep=';',encoding='latin-1',dtype=str)
     df_escolaridade.to_sql('aux_escolaridade',engine,if_exists='replace',index=False)
-    print('Tabela Escolaridade enviada')
+    # print('Tabela Escolaridade enviada')
 
     # #-----------------------TITULAÇÃO
 
@@ -81,7 +81,7 @@ def main():
    
 
     df_titulacao.to_sql('aux_titulacao',engine,if_exists='replace',index=False)
-    print('Tabela Titulacao enviada')
+    # print('Tabela Titulacao enviada')
     
 
 
@@ -90,7 +90,7 @@ def main():
     tbl_local_aposentadoria = os.path.join(diretorio,'Tabela Local Aposentadoria.txt')
     df_local_aposentadoria = pd.read_csv(tbl_local_aposentadoria,sep=';',encoding='utf-8-sig',dtype=str)
     df_local_aposentadoria.to_sql('aux_local_aposentadoria',engine,if_exists='replace',index=False)
-    print('Tabela Local Aposentadoria enviada')
+    # print('Tabela Local Aposentadoria enviada')
 
 
 
@@ -99,7 +99,7 @@ def main():
     tbl_municipio = os.path.join(diretorio,'Tabela Municipio.txt')
     df_municipio = pd.read_csv(tbl_municipio,sep=';',encoding='latin-1',dtype=str)
     df_municipio.to_sql('aux_municipio',engine,if_exists='replace',index=False)
-    print('Tabela Municipio enviada')
+    # print('Tabela Municipio enviada')
 
 
     # #-----------------------UORG ENDEREÇO
@@ -107,56 +107,56 @@ def main():
     tbl_uorg_endereco = os.path.join(diretorio,'Tabela UORG Endereco.txt')
     df_uorg_endereco = pd.read_csv(tbl_uorg_endereco,sep=';',encoding='latin-1',dtype=str)
     df_uorg_endereco.to_sql('aux_uorg_endereco',engine,if_exists='replace',index=False)
-    print('Tabela UORG Endereco enviada')
+    # print('Tabela UORG Endereco enviada')
 
     # #-----------------------TITULAÇÃO CORREÇÃO
 
     tbl_titulacao_correcao = os.path.join(diretorio,'Tabela Titulacao Correção.txt')
     df_titulacao_correcao = pd.read_csv(tbl_titulacao_correcao,sep=';',encoding='latin-1',dtype=str)
     df_titulacao_correcao.to_sql('aux_titulacao_correcao',engine,if_exists='replace',index=False)
-    print('Tabela Titulação Correção enviada')
+    # print('Tabela Titulação Correção enviada')
 
     # #-----------------------RUBRICA ICQ
 
     tbl_rubrica_incentivo_qualificacao = os.path.join(diretorio,'Tabela Rubrica Incentivo Qualificacao.txt')
     df_rubrica_incentivo_qualificacao = pd.read_csv(tbl_rubrica_incentivo_qualificacao,sep=';',encoding='latin-1',dtype=str)
     df_rubrica_incentivo_qualificacao.to_sql('aux_rubrica_incentivo_qualificacao',engine,if_exists='replace',index=False)
-    print('Tabela Rubrica Incentivo Qualificacao enviada')
+    # print('Tabela Rubrica Incentivo Qualificacao enviada')
 
     # #-----------------------RUBRICA
 
     tbl_rubrica = os.path.join(diretorio,'Tabela Rubrica.txt')
     df_rubrica = pd.read_csv(tbl_rubrica,sep=';',encoding='latin-1',dtype=str)
     df_rubrica.to_sql('aux_rubrica',engine,if_exists='replace',index=False)
-    print('Tabela Rubrica enviada')
+    # print('Tabela Rubrica enviada')
 
     # #-----------------------OCORRENCIA
 
     tbl_ocorrencia = os.path.join(diretorio,'Tabela Ocorrencia.txt')
     df_ocorrencia = pd.read_csv(tbl_ocorrencia,sep=';',encoding='latin-1',dtype=str)
     df_ocorrencia.to_sql('aux_ocorrencia',engine,if_exists='replace',index=False)
-    print('Tabela Ocorrencia enviada')
+    # print('Tabela Ocorrencia enviada')
 
     # #-----------------------ORGÃOS
 
     tbl_orgaos = os.path.join(diretorio,'Tabela Orgaos.txt')
     df_orgaos = pd.read_csv(tbl_orgaos,sep=';',encoding='latin-1',dtype=str)
     df_orgaos.to_sql('aux_orgaos',engine,if_exists='replace',index=False)
-    print('Tabela Orgaos enviada')
+    # print('Tabela Orgaos enviada')
 
     # #-----------------------PESCAD
 
     tbl_pescad = os.path.join(diretorio,'Pescad_InscUFMG.txt')
     df_pescad = pd.read_csv(tbl_pescad,sep=';',encoding='latin-1',dtype=str)
     df_pescad.to_sql('aux_pescad_insc_ufmg',engine,if_exists='replace',index=False)
-    print('Tabela Pescad enviada')
+    # print('Tabela Pescad enviada')
 
     # #-----------------------cad_apf resolve situação da categoria MAGISTERIO X TEC-ADMINISTRATIVO
 
     tbl_cad_apf = os.path.join(diretorio,'CadAPF.txt')
     tbl_cad_apf = pd.read_csv(tbl_cad_apf,sep=';',encoding='utf-8-sig',dtype=str)
     tbl_cad_apf.to_sql('aux_cad_apf',engine,if_exists='replace',index=False)
-    print('Tabela CadAPF enviada')
+    # print('Tabela CadAPF enviada')
 
     #-----------------------CRIA UNIDADE ATUAL SERÁ ENVIADA UMA UNICA VEZ (BASE INCREMENTAL)
     #usando o inspct
@@ -169,10 +169,7 @@ def main():
         df_unidade_atual = pd.read_csv(tbl_unidade_atual,sep=';',encoding='utf-8-sig',dtype=str)
 
         df_unidade_atual.to_sql('aux_unidade_atual',engine,if_exists='replace',index=False)
-        print(' Tabela Unidade Atual enviada')
-    else:
-        print(' Tabela Unidade Atual ja existia.') 
-
+       
 
     #-----------------------CRIA UNIDADE ATUAL
 
@@ -251,7 +248,7 @@ def main():
 
     caminho_csv_saida= os.path.join(diretorio,'aux_unidade_atual.csv')
 
-    print(f'tabela unidade atual {caminho_csv_saida}')
+    # print(f'tabela unidade atual {caminho_csv_saida}')
 
     df_existente = pd.read_sql(
         "SELECT CodUnid FROM aux_unidade_atual",
@@ -263,8 +260,7 @@ def main():
     df_novos = df_uorgs[
         ~df_uorgs['CodUnid'].astype(str).isin(cod_existentes)
     ]
-    print('Registro novos encontrados: ')
-    print(len(df_novos))
+    
 
     if len(df_novos) > 0:
         df_novos.to_sql(
@@ -273,9 +269,7 @@ def main():
             if_exists='append',
             index=False
         )
-        print('Registros novos inseridos:')
-    else:
-        print('Nenhum registro novo para inserir.')
+        print(f"✔ Unidade Atual: {len(df_novos)} novo(s) registro(s) adicionados.")  
 
 
     df_final = pd.read_sql(
@@ -294,10 +288,7 @@ def main():
         index=False,
         encoding='utf-8-sig'
     )
-    print('CSV completo gerado:')
-    print(caminho_csv_saida)
-    print('Total de registros no CSV:')
-    print(len(df_final))
+   
 
 if __name__ == "__main__":
     main()

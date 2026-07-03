@@ -1,6 +1,8 @@
 import pandas as pd
 import os
+import shutil
 import sys
+from sqlalchemy import text
 
 def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
     """Traduz uma linha da fita espelho usando as posições do layout."""
@@ -261,37 +263,40 @@ def formatar_valores(valor):
         pd.to_numeric(valor,errors='coerce')/100,2
     )
 
-def salvar_dataframe(df,nome_csv,nome_tabela,engine):
+def salvar_dataframe(df,nome_csv,nome_tabela,engine,MesFita):
     """
         salva o dataframe em csv e envia para o banco de dados.
     """   
 
     pasta_saida = os.path.join(
        obter_pasta_base(),
-        'Saida'
+        'Saida',
+        MesFita
     ) 
     os.makedirs(pasta_saida,exist_ok=True)    
     caminho_csv = os.path.join(
         pasta_saida,
         nome_csv
     )
-    df.to_csv(
-        caminho_csv,
-        sep=';',
-        decimal=',',
-        index=False,
-        encoding='utf-8-sig'
+    df.to_csv(caminho_csv,sep=';',decimal=',',index=False,encoding='utf-8-sig'
     )
-    print(f"✅ CSV {nome_csv} exportado com sucesso!")
-    print(caminho_csv)
+    # print(f"✅ CSV {nome_csv} exportado com sucesso!")
+    # print(caminho_csv)
+
+    with engine.begin() as conexao:
+        conexao.execute(
+            text(f'DELETE FROM {nome_tabela} WHERE MesFita = :MesFita'),
+            {'MesFita':MesFita}
+        )
 
     df.to_sql(
         nome_tabela,
         engine,
-        if_exists='replace',
+        if_exists='append',
         index=False
     )
-    print(f"✅ {nome_tabela} salvo no banco!")
+    print(f"✅ {nome_csv:<32} -> {nome_tabela}")
+    # print(f"✅ {nome_tabela} salvo no banco!")
 
 def obter_pasta_base():
     """
@@ -308,3 +313,25 @@ def obter_pasta_base():
         return os.path.dirname(sys.executable)
 
     return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def arquivar_fita_processada(caminho_arquivo,MesFita):
+    """
+        Move a fita processsada para a pasta Processadas
+    """
+    ano = Mesfita[:4]
+
+    pasta_processadas = os.path.join(
+        obter_pasta_base(),
+        'Entrada',
+        'Processadas',
+        ano
+    )
+    nome_arquivo = os.makedirs = os.path.basename(caminho_arquivo)
+
+    destino = os.path.join(
+        pasta_processadas,
+        nome_arquivo
+    )
+
+    shutil.move(caminho_arquivo,destino)
+    print(f"📦 Fita arquivada em: {destino}")
