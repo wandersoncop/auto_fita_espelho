@@ -1,1 +1,1 @@
-LARGURA = 50
+.center(LARGURA)

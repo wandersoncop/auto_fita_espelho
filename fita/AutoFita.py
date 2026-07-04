@@ -1,21 +1,15 @@
 from envia_tbl_aux_bd import main as atualizar_tabelas
 from main import main as processar_fita
 import time
-
+from datetime import datetime
+from terminal import ok, info, aviso, erro,linha,separador,LARGURA
+import os
+import sys
 
 # ==========================================================
 # CONFIGURAÇÕES
 # ==========================================================
 
-LARGURA = 80
-
-
-def linha():
-    print("=" * LARGURA)
-
-
-def separador():
-    print("-" * LARGURA)
 
 
 # ==========================================================
@@ -29,10 +23,20 @@ inicio = time.time()
 # CABEÇALHO
 # ==========================================================
 
-print()
+print('\n' * 2)
 linha()
 print("AUTO FITA ESPELHO".center(LARGURA))
-print("Processamento da Fita".center(LARGURA))
+print('Versão 1.0.0'. center(LARGURA))
+linha()
+
+data_hora = datetime.now().strftime('%d/%m/%y %H:%M:%S')
+
+print(f"{'Sistema':<18}: Processamento da Fita Espelho")
+print(f"{'Banco de Dados':<18}: MySQL")
+
+
+print(f"{'Processamento':<18}: {data_hora}")
+
 linha()
 print()
 
@@ -41,26 +45,27 @@ print()
 # ETAPA 1
 # ==========================================================
 
-print("[1/2] Atualizando tabelas auxiliares")
-separador()
+aviso("ATUALIZANDO TABELAS AUXILIARES")
 
 atualizar_tabelas()
 
 print()
-print("✅ Tabelas auxiliares atualizadas com sucesso.")
+ok("Tabelas auxiliares atualizadas com sucesso.")
 
+separador()
 
 # ==========================================================
 # ETAPA 2
 # ==========================================================
 
 print()
-print("[2/2] Processando fita espelho")
+aviso("PROCESSANDO FITA ESPELHO")
+print()
+
+
+sucesso = processar_fita()
+
 separador()
-
-processar_fita()
-
-
 # ==========================================================
 # TEMPO DE PROCESSAMENTO
 # ==========================================================
@@ -79,14 +84,23 @@ segundos = int(tempo % 60)
 
 print()
 linha()
-print("PROCESSO FINALIZADO COM SUCESSO".center(LARGURA))
+
+if sucesso:
+    ("PROCESSO FINALIZADO COM SUCESSO".center(LARGURA))
+else:
+    erro('PROCESSO FINALIZADO COM ERRO'.center(LARGURA))    
 linha()
 
-if minutos == 0:
-    print(f"Tempo de processamento: {segundos} segundos")
-else:
-    print(f"Tempo de processamento: {minutos} min {segundos} s")
+print()
+print('RESUMO DO PROCESAMENTO'.center(LARGURA))
+print('-' * LARGURA)
 
+if minutos == 0:
+   tempo = f'{segundos} segundos'  
+else:
+    tempo = f'{minutos} min {segundos} s'
+
+print(f"{'Tempo total':.<30} {tempo}")
 print()
 
 input("Pressione ENTER para sair...")

@@ -4,3 +4,4 @@ pymysql
 pyodbc
 openpyxl
 pyinstaller
+colorama

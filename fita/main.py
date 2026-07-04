@@ -10,7 +10,7 @@ import os
 import pandas as pd  
 # blibioteca para manipulaçao de dados, como se fosse um excel dentro do py
 # import time
-
+from terminal import ok, info, aviso, erro,linha,separador
 from sqlalchemy import text  
 # Biblioteca para trabalhar com banco de dados.
 # O text() faz o SQLAlchemy reconhecer o texto como um comando SQL.
@@ -18,14 +18,17 @@ from sqlalchemy import text
 from funcoes import (
     ler_fita_por_tipo,  # chama a função que Le o registros da fita e os separa por tipo
     extrair_tipo_0,  # serve somente para extrair o mes fita
+    extrair_tipo_9, #extrai a quantidade de registros para validacao
     criar_escolaridade, #Cria o campo Escolaridade comparando escolaridade e titulação
     formatar_data, #foramta as datas
     formatar_valores, # converte em valores
     salvar_dataframe, #cria e envia os df paa o banco de dados
     obter_pasta_base, # para tornar a fita portatil
     arquivar_fita_processada, #move a fita processada para pasta
+    
+   
 )
-
+from terminal import ok, info, aviso, erro
 from mapeamentos import (
     # LAYOUT_TIPO_ são as posições na fita ex:'SIAPE': (9, 16),
     # HEADER_TIPO_ faz a sequecia desejada
@@ -91,9 +94,7 @@ def main():
     else:
         caminho_arquivo = None
 
-    # if caminho_arquivo and os.path.exists(caminho_arquivo):
-    #     print(f"✅ Arquivo encontrado: {arquivo_encontrado}")
-
+    
 
     # ==============================================
     #  CRIAÇÃO DOS CAMPOS COM BASE NAS TABELAS AUXILIARES
@@ -409,7 +410,8 @@ def main():
 
     if caminho_arquivo and os.path.exists(caminho_arquivo):    
 
-        print(f"✅ Arquivo encontrado:{arquivo_encontrado}")
+        ok(f" Arquivo encontrado:{arquivo_encontrado}")
+        print()
 
         # aqui é cria  todos os campos com base nas regras que vem dos mapas tbl auxiliares 
         mapas_auxiliares = {
@@ -448,15 +450,27 @@ def main():
             }   
         }
 
-
         # ====================================================================
         # TIPO 0 - MesFita
         # ====================================================================
         # AQUI COMEÇA O PROJETO
         # AQUI FAREMOS SOMENTE A EXTRACAO DO MES FITA
         MesFita = extrair_tipo_0(caminho_arquivo)
-        print(f'📅 Mês da fita: {MesFita}')
+        info(f' Mês da fita: {MesFita}')
+        print()
         
+
+        # ====================================================================
+        # TIPO 9 - PARA VALIDAÇÃO DA QUANTIDADE DE REGISTROS DO MesFita
+        #vai chamar a função que esta no arquivo de funções
+        # ====================================================================
+        total_controle_fita = extrair_tipo_9(caminho_arquivo)
+        info(f'Total de Registros : {total_controle_fita}')
+        print()
+
+
+
+
 
         # ====================================================================
         # TIPO 1 - PESSOAL
@@ -942,10 +956,45 @@ def main():
         )
         df_afastamento_total = df_afastamento_total[HEADER_TIPO_6]
 
+
+
+    # ====================================================================
+    # VALIDACAO DA FITA
+    # ====================================================================
+        separador()
+        aviso('VALIDAÇÃO DO QUANTITATIVO DA FITA')
+           
+        print()   
+
+        if total_controle_fita == len(registros_tipo_1):
+            ok("Quantidade conferida com sucesso.")
+        else:
+            diferenca = total_controle_fita - len(registros_tipo_1)
+            erro(f"ATENÇÃO: divergência de {abs(diferenca):,} registros.".replace(",", "."))
+
+        print()
+
+        imprimir_registro('Quantidade de registros no txt', total_controle_fita)
+        imprimir_registro('Quantidade de registros processados',len(registros_tipo_1))
+
+
+
+
+
+
+
+
+
+    # ====================================================================
+    # IMPRESSÃO DOS QUANTITATIVOS
+    # ====================================================================
+
          
         print()
-        print("Registros encontrados")
-        print("-" * LARGURA)
+        linha()
+        print()
+        aviso("REGISTROS ENCONTRADOS")
+       
 
         imprimir_registro("Pessoal", len(registros_tipo_1))
         imprimir_registro("Funcional", len(registros_tipo_2))
@@ -956,13 +1005,22 @@ def main():
 
         print()
 
+   
+
+
+
+
+
+
+
     # ====================================================================
     # SALVA OS DF EM CSV NO DIRETORIO E ENVIA PARA O BD MYSQL
     # ====================================================================
 
-
-        print("Atualizando banco de dados")
-        print("-" * LARGURA)
+        linha()
+        aviso("ATUALIZANDO BANCO DE DADOS")
+        print()
+    
 
 
         salvar_dataframe(
@@ -1072,21 +1130,24 @@ def main():
             engine,
             MesFita
         ) 
+        linha()
         print()
-        print('Arquivando fita')
-        print('-' * LARGURA)
+        aviso('ARQUIVANDO FITA')
+       
 
         arquivar_fita_processada(
             caminho_arquivo,
             MesFita
         )
+        return True
     else:
-        print("❌ ERRO: Arquivo fita não encontrado.")
-        print("📁 Caminho esperado:")
-        print(caminho_arquivo)
-        print("Verifique se o arquivo foi copiado para a pasta auto_fita_espelho.")
-
-
+        erro("Arquivo fita não encontrado.")
+        print()
+        info(f"Pasta esperada: {diretorio}")
+        print()
+        aviso("Copie o arquivo fita_servidor_AAAA_MM.txt para a pasta Entrada.")
+        print()
+        return False
       
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ import os
 import shutil
 import sys
 from sqlalchemy import text
+from terminal import ok, info, aviso, erro
 
 def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
     """Traduz uma linha da fita espelho usando as posições do layout."""
@@ -71,6 +72,19 @@ def extrair_tipo_0(caminho_arquivo):
 
                 return f"{ano}_{mes}"
     return "0000_00"
+
+def extrair_tipo_9(caminho_arquivo):
+            """
+            Extrai do o quantitativo de registros do arquivo txt da fita
+            que fica na ultima linha
+            """
+            with open(caminho_arquivo,encoding='latin-1') as arquivo_txt:
+                for linha in arquivo_txt:
+                    if len(linha) > 18 and linha[17] == '9':
+                        return int(linha.strip()[-8:])
+            return 0        
+           
+
 
 def ler_fita_por_tipo(caminho_arquivo,layout,tipo_registro,campos_data=None,mapas_auxiliares=None):
     """Lê os registros da fita e os separa por tipo."""
@@ -295,7 +309,7 @@ def salvar_dataframe(df,nome_csv,nome_tabela,engine,MesFita):
         if_exists='append',
         index=False
     )
-    print(f"✅ {nome_csv:<32} -> {nome_tabela}")
+    ok(f"{nome_csv:<32} -> {nome_tabela}")
     # print(f"✅ {nome_tabela} salvo no banco!")
 
 def obter_pasta_base():
@@ -337,4 +351,4 @@ def arquivar_fita_processada(caminho_arquivo, MesFita):
 
     shutil.move(caminho_arquivo,destino)
 
-    print(f"📦 {nome_arquivo} arquivada.")
+    ok(f"{nome_arquivo} arquivada.")

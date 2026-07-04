@@ -1,6 +1,7 @@
 """cria a conexao com o banco Mysql"""
 
 from sqlalchemy import create_engine, text
+from terminal import ok, info, aviso, erro
 
 HOST = "localhost"
 USUARIO = "root"
@@ -29,7 +30,9 @@ def criar_banco():
         )
         conexao.commit()
 
-    print(f"✅ Banco {BANCO} criado com sucesso!")
+        print()
+        aviso(f"Banco {BANCO} verificado / criado com sucesso!")
+        print()
 
 
 # cria o banco antes de conectar
@@ -42,7 +45,7 @@ engine = create_engine(
 
 try:
     with engine.connect() as conexao:
-        print("✅ Conectado com sucesso!")
+       aviso("Conectado com sucesso!")
 
-except Exception as erro:
-    print(f"Erro: {erro}")
+except Exception as e:
+    erro(f"Falha na conexão com o banco: {e}")
