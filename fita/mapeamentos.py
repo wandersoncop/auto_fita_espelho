@@ -241,7 +241,7 @@ HEADER_TIPO_2 = [
     'RegimeTrab', # CAMPO CRIADO 
     'Anuenio', 
     'NumApos',    
-    'DenoApos',
+    'DenoApos',# CAMPO CRIADO 
     'GrCargo',
     'Cargo',
     'CodCargo',# CAMPO CRIADO  JUNÇÃO DE GRUPO E CARGO 
@@ -369,7 +369,7 @@ HEADER_TIPO_2 = [
 
     
     # 'FUNCUNORG',
-    # 'NOVFUNCSIGLA',
+    
     # 'NOVFUNCNIV',
     # 'NOVFUNCDTING',
     # 'NOVFUNCDTSAIDA',   

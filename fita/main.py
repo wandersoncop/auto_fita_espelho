@@ -1,6 +1,6 @@
 """
     Processa os arquivos da fita espelho e envia os 
-    dados para o banco
+    dados para o banco e cria os csv
 """
 
 import os
@@ -9,8 +9,10 @@ import os
 
 import pandas as pd  
 # blibioteca para manipulaçao de dados, como se fosse um excel dentro do py
-# import time
+
 from terminal import ok, info, aviso, erro,linha,separador
+# aqui estão as configurações usadas na exibição do  terminal
+
 from sqlalchemy import text  
 # Biblioteca para trabalhar com banco de dados.
 # O text() faz o SQLAlchemy reconhecer o texto como um comando SQL.
@@ -24,14 +26,12 @@ from funcoes import (
     formatar_valores, # converte em valores
     salvar_dataframe, #cria e envia os df paa o banco de dados
     obter_pasta_base, # para tornar a fita portatil
-    arquivar_fita_processada, #move a fita processada para pasta
-    
-   
+    arquivar_fita_processada, #move a fita processada para pasta 
 )
-from terminal import ok, info, aviso, erro
+
 from mapeamentos import (
     # LAYOUT_TIPO_ são as posições na fita ex:'SIAPE': (9, 16),
-    # HEADER_TIPO_ faz a sequecia desejada
+    # HEADER_TIPO_ faz a sequencia desejada
     # CAMPOS_DATA aqui é  lista de campos de data que serão formatados pela função formatar_data
     LAYOUT_TIPO_1,
     HEADER_TIPO_1,
@@ -48,21 +48,29 @@ from mapeamentos import (
 )
 from conexao import engine
 # Importa o objeto de conexão (engine) utilizado para acessar o banco de dados MySQL.
-LARGURA = 80
+
+# LARGURA = 80
 def imprimir_registro(descricao,quantidade):
+    """    vai imprimir a descriação e a quantidade de registros
+    encontrados, craia  no print  a visualização:  '.<35' significa alinhar a esq usando
+    35 caracteres e preencher com '.'  '> 8' alinhar a dir    
+    """
+   
     print(f'{descricao:.<35}{quantidade:>8,}'.replace(",","."))
 
+
 def main():
-# ==============================================
-# CAMINHO PARA PASTA ONDE ESTA O ARQUIVO FITA
-# ==============================================
+    """parte principal da automação
+    """
+    # ==============================================
+    # CAMINHO PARA PASTA ONDE ESTA O ARQUIVO FITA
+    # ==============================================
 
     diretorio = os.path.join(
         obter_pasta_base(),
         "Entrada"
     )   # Monta e armazena o caminho para a  pasta "arquivos_fita", onde o programa irá procurar o arquivo da fita.
         # print(diretorio)
-
 
     # ==============================================
     # PROCURA O ARQUIVO DA FITA DENTRO DA PASTA
@@ -102,9 +110,10 @@ def main():
 
     # ESTADO CIVIL------------------------------------------------------------------------------------
     df_estado_civil = pd.read_sql(
-        # função do Pandas que executa o camandao SQL e devolve um dataframe
+        # aqui faz um select na tabela aux_estado_civil nos campos CodECiv,DenoECiv 
+        # função do Pandas que executa o camando SQL e devolve um dataframe
         #dataframe é uma tabela em memoria      
-        #comando sql
+        
         """
             SELECT 
                 CodECiv, 
@@ -113,12 +122,20 @@ def main():
         """, 
         engine # é a conexao com o bd Mysql
     )
+    #para ver o que retorna 
+    # print(df_estado_civil)
+
+    #aqui vai pegar as colunas do select  
+    # e transformar em um dicionario chave:valor 
     mapa_estado_civil = dict(
         zip(
             df_estado_civil['CodECiv'],
             df_estado_civil['DenoECiv']
         )
     )
+    #para ver o que retorna 
+    # print(mapa_estado_civil)
+
     # PAIS-------------------------------------------------------------------------------------------
     df_pais = pd.read_sql(
         """
@@ -129,12 +146,15 @@ def main():
         """,
         engine
     )
+    #para ver o que retorna 
+    # print(df_pais)
     mapa_pais = dict(
         zip(
             df_pais['CODPAIS'],
             df_pais['DENOPAIS']
         )
     )
+    # print(mapa_pais)
     # DENO_ESCOLARIDADE-----------------------------------------------------------------------------
     df_escolaridade = pd.read_sql(
         """
@@ -220,21 +240,23 @@ def main():
         """,
         engine
     )
+    # print(df_deno_cargo)
     mapa_deno_cargo = dict(
         zip(
             df_deno_cargo['GRCARGO']
-                .astype(str)
-                .str.replace('.0', '', regex=False)
-                .str.zfill(3)
-            +
+                .astype(str) # tranforma valor numerico em string
+                .str.replace('.0', '', regex=False) # remove o .0 ex se for 60.0 vira 60
+                .str.zfill(3) # completa com 0 a esquerda ate completar 3 casas decimais ex 6 vira 006
+            + # aqui contatena GRCARGO com CARGO
             df_deno_cargo['CARGO']
                 .astype(str)
-                .str.replace('.0', '', regex=False)
+                .str.replace('.0', '', regex=False) # regex é para o Pandas entender o .0 literalmente como .0
                 .str.zfill(3),
 
             df_deno_cargo['NOME_CARGO']
         )
     )
+    # print(mapa_deno_cargo)
     #CLASSE-------------------------------------------------
     df_classe = pd.read_sql(
         """
@@ -274,6 +296,7 @@ def main():
         [['Unid','DenoSetor','UorgPai','NomeUorgPai']]
         .to_dict('index')
     )
+    # print(mapa_unidade)
     # EMAIL------------------------------------------------------------------------
     df_email_uorg = pd.read_sql(
         """
@@ -413,7 +436,7 @@ def main():
         ok(f" Arquivo encontrado:{arquivo_encontrado}")
         print()
 
-        # aqui é cria  todos os campos com base nas regras que vem dos mapas tbl auxiliares 
+        # aqui  cria  todos os campos com base nas regras dos mapas tbl auxiliares 
         mapas_auxiliares = {
 
             'CodEstadoCiv': {              #campo original da fita
@@ -454,7 +477,8 @@ def main():
         # TIPO 0 - MesFita
         # ====================================================================
         # AQUI COMEÇA O PROJETO
-        # AQUI FAREMOS SOMENTE A EXTRACAO DO MES FITA
+        # AQUI FAZ A EXTRACAO DO MES FITA
+        # PARA SER COLOCADA EM CADA TIPO
         MesFita = extrair_tipo_0(caminho_arquivo)
         info(f' Mês da fita: {MesFita}')
         print()
@@ -467,9 +491,6 @@ def main():
         total_controle_fita = extrair_tipo_9(caminho_arquivo)
         info(f'Total de Registros : {total_controle_fita}')
         print()
-
-
-
 
 
         # ====================================================================
@@ -504,28 +525,34 @@ def main():
         )
         # print(f'Tipo_2_funcional finalizado: {len(registros_tipo_2)} registros')#exibe mensagem com quantidade de registros encontrados
 
-        df_funcional = pd.DataFrame(registros_tipo_2)# cria como se fosse um excel na memoria
+        df_funcional = pd.DataFrame(registros_tipo_2)
+        # cria um data frame, como se fosse uma tabela do excel na memoria da maquina
         
+        # ====================================================================
+            # EXEMPLO DE COMO CRIAR UM CAMPO!
+           
+            # Criar a coluna 'UnidLotacao' no DataFrame df_funcional.
+            # O valor é obtido a partir da coluna 'NrUorgLotacao' que vem da fita,
+            # o código é traduzindo pelo dicionário 'mapa_unidade' 
+            # que utiliza a tabela unidade_atual 
+            # e retornando do campo do 'Unid' a unidade correspondente
+            # o campo deve esta listado no HEADER correspondente no arquivo mapeamentos.py 
 
-            # UnidLotacao usando NrUorgLotacao
+        # ====================================================================
+
         df_funcional['UnidLotacao'] = df_funcional['NrUorgLotacao'].apply(
             lambda codigo: mapa_unidade.get(codigo, {}).get('Unid', '') or ''
         )
-
         df_funcional['DenoSetorLotacao'] = df_funcional['NrUorgLotacao'].apply(
             lambda codigo: mapa_unidade.get(codigo, {}).get('DenoSetor', '') or ''
         )
-
-        df_funcional['Funcao'] = df_funcional.apply(
+        df_funcional['Funcao'] = df_funcional.apply(#apply percorre cada linha do df
             lambda linha:
                 linha['NOVFUNCSIGLA']
                 if str(linha.get('NOVFUNCSIGLA', '')).strip() != ''
                 else linha['Funcao'],
             axis=1
         )
-
-
-        # Primeiro cria FuncSetor
         df_funcional['FuncSetor'] = df_funcional.apply(
             lambda linha:
                 linha['NOVFUNCUNORG']
@@ -533,15 +560,13 @@ def main():
                 else linha['FUNCUNORG'],
             axis=1
         )
-
         df_funcional['DataFuncInicio'] = df_funcional.apply(
             lambda linha:
                 linha['NOVFUNCDTING']
                 if str(linha.get('NOVFUNCSIGLA', '')).strip() != ''
                 else linha['DataFuncInicio'],
             axis=1
-        )
-       
+        )       
         df_funcional['DataFuncFim'] = df_funcional.apply(
             lambda linha:
                 linha['NOVFUNCDTSAIDA']
@@ -552,7 +577,7 @@ def main():
         df_funcional['DataFuncInicio'] = df_funcional['DataFuncInicio'].apply(formatar_data)
         df_funcional['DataFuncFim'] = df_funcional['DataFuncFim'].apply(formatar_data)
 
-        # Depois cria TemFuncao
+        
         df_funcional['TemFuncao'] = df_funcional.apply(
             lambda linha: 'S'
             if (
@@ -564,9 +589,7 @@ def main():
             )
             else 'N',
             axis=1
-        )
-
-        # Depois cria NrUorgExercicio
+        )     
         df_funcional['NrUorgExercicio'] = df_funcional.apply(
             lambda linha:
                 linha['Setor']
@@ -590,23 +613,18 @@ def main():
                 ),
             axis=1
         )
-
-        # Retira 000000000
+      
         df_funcional.loc[
             df_funcional['NrUorgExercicio'].astype(str).str.strip() == '000000000',
             'NrUorgExercicio'
         ] = ''
 
-        # Agora sim cria UorgPaiExercicio
         df_funcional['UorgPaiExercicio'] = df_funcional['NrUorgExercicio'].apply(
             lambda codigo: mapa_unidade.get(codigo, {}).get('UorgPai') or ''
         )
-
         df_funcional['NomeUorgPaiExercicio'] = df_funcional['NrUorgExercicio'].apply(
             lambda codigo: mapa_unidade.get(codigo, {}).get('NomeUorgPai') or ''
         )
-
-
         df_funcional['UnidExercicio'] = df_funcional['NrUorgExercicio'].apply(
             lambda codigo:mapa_unidade.get(codigo,{}).get('Unid','')
         )
@@ -621,9 +639,7 @@ def main():
         )
         df_funcional['MunicipioUorgExercicio'] = df_funcional['CodMunicipioUORGExercicio'].apply(
             lambda codigo: mapa_municipio.get(codigo, '')
-        )
-            
-
+        )       
         df_local_ap = pd.read_sql(
             """
                 SELECT
@@ -634,7 +650,6 @@ def main():
             """,
             engine
         )
-
         mapa_local_ap = (
             df_local_ap
             .drop_duplicates(subset=['MATRIC'], keep='first')
@@ -642,12 +657,6 @@ def main():
             [['NrUorgLocalAp', 'DenoSetorLocalAp']]
             .to_dict('index')
         )
-
-
-
-
-
-
         df_funcional['NrUorgLocalAp'] = df_funcional['SIAPE'].apply(
             lambda siape: mapa_local_ap.get(str(siape).zfill(7), {}).get('NrUorgLocalAp', '')
         )
@@ -969,10 +978,18 @@ def main():
         if total_controle_fita == len(registros_tipo_1):
             ok("Quantidade conferida com sucesso.")
         else:
-            diferenca = total_controle_fita - len(registros_tipo_1)
-            erro(f"ATENÇÃO: divergência de {abs(diferenca):,} registros.".replace(",", "."))
+            diferenca = abs(total_controle_fita - len(registros_tipo_1))
 
-        print()
+            erro(f"""
+            Falha na validação da fita.
+            Diferença encontrada: {diferenca:,} registros.
+            Nenhum dado foi gravado no banco de dados.
+            Corrija a fita e execute o processamento novamente.
+            """.replace(",", "."))
+           
+
+            print()
+            return False
 
         imprimir_registro('Quantidade de registros no txt', total_controle_fita)
         imprimir_registro('Quantidade de registros processados',len(registros_tipo_1))
@@ -994,6 +1011,7 @@ def main():
         linha()
         print()
         aviso("REGISTROS ENCONTRADOS")
+        print()
        
 
         imprimir_registro("Pessoal", len(registros_tipo_1))
@@ -1133,6 +1151,7 @@ def main():
         linha()
         print()
         aviso('ARQUIVANDO FITA')
+        print()
        
 
         arquivar_fita_processada(

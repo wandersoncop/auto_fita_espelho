@@ -1,1 +1,1 @@
-.center(LARGURA)
+ PROCESAMENTO

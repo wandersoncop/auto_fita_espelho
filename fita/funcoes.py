@@ -1,12 +1,12 @@
-import pandas as pd
+import pandas as pd 
 import os
-import shutil
+import shutil # serve para mudar uma pasta de um lagar para outro
 import sys
 from sqlalchemy import text
 from terminal import ok, info, aviso, erro
 
 def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
-    """Traduz uma linha da fita espelho usando as posições do layout."""
+    """Traduz cada linha da fita espelho usando as posições existentes no layout."""
 
     if campos_data is None:
         campos_data = []
@@ -37,7 +37,8 @@ def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
             nome_campo_novo = mapas_auxiliares[nome_campo]['nome_campo']
             mapa = mapas_auxiliares[nome_campo]['mapa']
            
-            #FAZ A VERIFICAÇÃO DE CAMPO SEM TRADUÇÃO
+            #FAZ A VERIFICAÇÃO DE CAMPO SEM TRADUÇÃO E RETORNA AVISO CASO NÃO
+            #TENHA TRADUÇÃO DO COD NA TABELA AUXILIAR
 
             if valor not in mapa:
                 if nome_campo == 'SIAPE':

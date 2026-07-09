@@ -92,7 +92,7 @@ else:
 linha()
 
 print()
-print('RESUMO DO PROCESAMENTO'.center(LARGURA))
+print(' TEMPO PROCESAMENTO'.center(LARGURA))
 print('-' * LARGURA)
 
 if minutos == 0:
