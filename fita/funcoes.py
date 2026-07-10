@@ -280,7 +280,9 @@ def formatar_valores(valor):
 
 def salvar_dataframe(df,nome_csv,nome_tabela,engine,MesFita):
     """
-        salva o dataframe em csv e envia para o banco de dados.
+        salva o dataframe em csv e envia para o banco de dados
+        cria a tabela caso não exista.
+        se existir remove os registros para inserir os da nova fita
     """   
 
     pasta_saida = os.path.join(
@@ -299,10 +301,22 @@ def salvar_dataframe(df,nome_csv,nome_tabela,engine,MesFita):
     # print(caminho_csv)
 
     with engine.begin() as conexao:
-        conexao.execute(
-            text(f'DELETE FROM {nome_tabela} WHERE MesFita = :MesFita'),
-            {'MesFita':MesFita}
-        )
+
+        tabela_existe = conexao.execute(
+            text("""
+                SELECT COUNT(*)
+                FROM information_schema.tables
+                WHERE table_schema = DATABASE()
+                AND table_name = :nome_tabela
+            """),
+            {"nome_tabela": nome_tabela}
+        ).scalar()
+
+        if tabela_existe:
+            conexao.execute(
+                text(f"DELETE FROM {nome_tabela} WHERE MesFita = :MesFita"),
+                {"MesFita": MesFita}
+            )
 
     df.to_sql(
         nome_tabela,

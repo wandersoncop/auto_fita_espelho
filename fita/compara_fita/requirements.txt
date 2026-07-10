@@ -1,0 +1,7 @@
+pandas
+sqlalchemy
+pymysql
+pyodbc
+openpyxl
+pyinstaller
+colorama

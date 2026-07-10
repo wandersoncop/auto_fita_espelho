@@ -1,3 +1,4 @@
+#MEU!!!!!!
 from colorama import init,Fore,Style
 init(autoreset=True)
 
@@ -20,26 +21,16 @@ def separador():
     print("-" * LARGURA)
 
 def ok(texto):
-    """
-    exibe o prefixo '[OK]' na cor verde antes da  menssagem de  confirmação no terminal    
-    """
-    print(Fore.GREEN + "[OK] " + Style.RESET_ALL + texto)
+    print(Fore.GREEN + Style.BRIGHT + "✔ [OK] " + Style.RESET_ALL + texto)
 
 def info(texto):
-    """
-    exibe o prefixo '[INFO]' na cor azul antes da  menssagem de  informação no terminal    
-    """
-    print(Fore.CYAN + "[INFO] " + Style.RESET_ALL + texto)
+    print(Fore.CYAN + Style.BRIGHT + "ℹ [INFO] " + Style.RESET_ALL + texto)
 
 def aviso(texto):
-    """
-    exibe o prefixo '[AVISO] ' na cor amarela antes da  menssagem de  aviso no terminal    
-    """
-    print(Fore.YELLOW + "[AVISO] " + Style.RESET_ALL + texto)
+    print(Fore.YELLOW + Style.BRIGHT + "⚠ [AVISO] " + Style.RESET_ALL + texto)
 
 def erro(texto):
-    """
-    exibe o prefixo '[ERRO] ' na cor vermelha antes da  menssagem de erro no terminal      """
+    print(Fore.RED + Style.BRIGHT + "✖ [ERRO] " + Style.RESET_ALL + texto)
 
-    print(Fore.RED + "[ERRO] " + Style.RESET_ALL + texto)
-    
+def tempo_operacao(texto):
+    print(Fore.BLUE + Style.BRIGHT + "🕒 " + Style.RESET_ALL + texto)
