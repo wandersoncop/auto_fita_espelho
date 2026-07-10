@@ -1,0 +1,7 @@
+[BASIC]
+const-rgx=([A-Z_][A-Z0-9_]*)|([a-z_][a-z0-9_]*) # para aceitar nome maiuscula e minusculo para variaveis e constantes
+
+[FORMAT]
+max-module-lines=1500 # para parar de reclamar sobre a quantidade de linhas
+
+

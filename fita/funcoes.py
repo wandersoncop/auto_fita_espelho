@@ -335,7 +335,7 @@ def obter_pasta_base():
     C:/Users/wandersoncop/Desktop/auto_fita_espelho
 
     Quando roda pelo EXE:
-    pasta onde está o AutoFita.exe.
+    pasta onde está o auto_fita.exe.
     """
 
     if getattr(sys, "frozen", False):

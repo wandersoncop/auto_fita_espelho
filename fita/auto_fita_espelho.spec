@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['AutoFita.py'],
+    ['auto_fita.py'],
     pathex=[],
     binaries=[],
     datas=[],

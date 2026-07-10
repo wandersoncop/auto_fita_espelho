@@ -1,21 +1,21 @@
 """
-    Processa os arquivos da fita espelho e envia os 
+    Processa os arquivos da fita espelho e envia os
     dados para o banco e cria os csv
 """
 
 import os
-# biblioteca padrão do py serve para interagir com 
+# biblioteca padrão do py serve para interagir com
 # o sistema operacional ex:(caminhos,pasta...)
 
-import pandas as pd  
+import pandas as pd
 # blibioteca para manipulaçao de dados, como se fosse um excel dentro do py
+
+from sqlalchemy import text
+# Biblioteca para trabalhar com banco de dados.
+# O text() faz o SQLAlchemy reconhecer o texto como um comando SQL.
 
 from terminal import ok, info, aviso, erro,linha,separador
 # aqui estão as configurações usadas na exibição do  terminal
-
-from sqlalchemy import text  
-# Biblioteca para trabalhar com banco de dados.
-# O text() faz o SQLAlchemy reconhecer o texto como um comando SQL.
 
 from funcoes import (
     ler_fita_por_tipo,  # chama a função que Le o registros da fita e os separa por tipo
@@ -26,7 +26,7 @@ from funcoes import (
     formatar_valores, # converte em valores
     salvar_dataframe, #cria e envia os df paa o banco de dados
     obter_pasta_base, # para tornar a fita portatil
-    arquivar_fita_processada, #move a fita processada para pasta 
+    arquivar_fita_processada, #move a fita processada para pasta
 )
 
 from mapeamentos import (
@@ -44,7 +44,7 @@ from mapeamentos import (
     HEADER_TIPO_5,
     LAYOUT_TIPO_6,
     HEADER_TIPO_6,
-    CAMPOS_DATA 
+    CAMPOS_DATA
 )
 from conexao import engine
 # Importa o objeto de conexão (engine) utilizado para acessar o banco de dados MySQL.
@@ -53,9 +53,9 @@ from conexao import engine
 def imprimir_registro(descricao,quantidade):
     """    vai imprimir a descriação e a quantidade de registros
     encontrados, craia  no print  a visualização:  '.<35' significa alinhar a esq usando
-    35 caracteres e preencher com '.'  '> 8' alinhar a dir    
+    35 caracteres e preencher com '.'  '> 8' alinhar a dir
     """
-   
+
     print(f'{descricao:.<35}{quantidade:>8,}'.replace(",","."))
 
 
@@ -69,7 +69,8 @@ def main():
     diretorio = os.path.join(
         obter_pasta_base(),
         "Entrada"
-    )   # Monta e armazena o caminho para a  pasta "arquivos_fita", onde o programa irá procurar o arquivo da fita.
+    )   # Monta e armazena o caminho para a  pasta "arquivos_fita",
+        # onde o programa irá procurar o arquivo da fita.
         # print(diretorio)
 
     # ==============================================
@@ -102,7 +103,7 @@ def main():
     else:
         caminho_arquivo = None
 
-    
+
 
     # ==============================================
     #  CRIAÇÃO DOS CAMPOS COM BASE NAS TABELAS AUXILIARES
@@ -110,43 +111,43 @@ def main():
 
     # ESTADO CIVIL------------------------------------------------------------------------------------
     df_estado_civil = pd.read_sql(
-        # aqui faz um select na tabela aux_estado_civil nos campos CodECiv,DenoECiv 
+        # aqui faz um select na tabela aux_estado_civil nos campos CodECiv,DenoECiv
         # função do Pandas que executa o camando SQL e devolve um dataframe
-        #dataframe é uma tabela em memoria      
-        
+        #dataframe é uma tabela em memoria
+
         """
-            SELECT 
-                CodECiv, 
-                DenoECiv 
+            SELECT
+                CodECiv,
+                DenoECiv
             FROM aux_estado_civil
-        """, 
+        """,
         engine # é a conexao com o bd Mysql
     )
-    #para ver o que retorna 
+    #para ver o que retorna
     # print(df_estado_civil)
 
-    #aqui vai pegar as colunas do select  
-    # e transformar em um dicionario chave:valor 
+    #aqui vai pegar as colunas do select
+    # e transformar em um dicionario chave:valor
     mapa_estado_civil = dict(
         zip(
             df_estado_civil['CodECiv'],
             df_estado_civil['DenoECiv']
         )
     )
-    #para ver o que retorna 
+    #para ver o que retorna
     # print(mapa_estado_civil)
 
     # PAIS-------------------------------------------------------------------------------------------
     df_pais = pd.read_sql(
         """
-            SELECT 
-                CODPAIS, 
-                DENOPAIS 
+            SELECT
+                CODPAIS,
+                DENOPAIS
             FROM aux_pais
         """,
         engine
     )
-    #para ver o que retorna 
+    #para ver o que retorna
     # print(df_pais)
     mapa_pais = dict(
         zip(
@@ -158,9 +159,9 @@ def main():
     # DENO_ESCOLARIDADE-----------------------------------------------------------------------------
     df_escolaridade = pd.read_sql(
         """
-            SELECT 
-                CodEsco, 
-                DenoEscol 
+            SELECT
+                CodEsco,
+                DenoEscol
             FROM aux_escolaridade
         """,
         engine
@@ -173,9 +174,9 @@ def main():
     )
     # DENO_TITULACAO----------------------------------------------------------------------------------
     df_titulacao = pd.read_sql(
-        """SELECT 
-            CodTit, 
-            DenoTit 
+        """SELECT
+            CodTit,
+            DenoTit
         FROM aux_titulacao""",
         engine
     )
@@ -188,7 +189,7 @@ def main():
     # TITULACAO CORRECAO---------------------------------------------------------------------------
     df_titulacao_correcao = pd.read_sql(
         """
-            SELECT 
+            SELECT
                 codEscolaridade,
                 codTitulacao,
                 denoEscolaridade,
@@ -203,7 +204,7 @@ def main():
             SELECT
             InscUFMG,
             MATRIC
-            FROM aux_pescad_insc_ufmg          
+            FROM aux_pescad_insc_ufmg
         """,
         engine
     )
@@ -216,10 +217,10 @@ def main():
     # SITUACAO------------------------------------------------------------------------
     df_situacao = pd.read_sql(
         """
-            SELECT 
+            SELECT
                 CodSit,
                 DenoSit
-            FROM aux_situacao  
+            FROM aux_situacao
         """,
         engine
     )
@@ -236,7 +237,7 @@ def main():
                 GRCARGO,
                 CARGO,
                 NOME_CARGO
-            FROM aux_cargo    
+            FROM aux_cargo
         """,
         engine
     )
@@ -246,11 +247,13 @@ def main():
             df_deno_cargo['GRCARGO']
                 .astype(str) # tranforma valor numerico em string
                 .str.replace('.0', '', regex=False) # remove o .0 ex se for 60.0 vira 60
-                .str.zfill(3) # completa com 0 a esquerda ate completar 3 casas decimais ex 6 vira 006
+                .str.zfill(3) # completa com 0 a esquerda
+                              # ate completar 3 casas decimais ex 6 vira 006
             + # aqui contatena GRCARGO com CARGO
             df_deno_cargo['CARGO']
                 .astype(str)
-                .str.replace('.0', '', regex=False) # regex é para o Pandas entender o .0 literalmente como .0
+                .str.replace('.0', '', regex=False)
+                # o regex é para o Pandas entender o .0 literalmente como .0
                 .str.zfill(3),
 
             df_deno_cargo['NOME_CARGO']
@@ -263,7 +266,7 @@ def main():
             SELECT
                 ChaveClasse,
                 DenoClasse
-            FROM aux_classe    
+            FROM aux_classe
         """,
         engine
     )
@@ -282,7 +285,7 @@ def main():
                 DenoSetor,
                 UorgPai,
                 NomeUorgPai
-            FROM aux_unidade_atual   
+            FROM aux_unidade_atual
         """,
         engine
     )
@@ -355,7 +358,7 @@ def main():
             SELECT
                 GROCOR,
                 CODOCOR,
-                DESC_OCORR           
+                DESC_OCORR
             FROM aux_ocorrencia
         """,
         engine
@@ -370,13 +373,13 @@ def main():
     )
     # ORGAOS-----------------------------------------------------------------------------------
     df_orgaos = pd.read_sql(
-    """ 
+    """
             SELECT
                 COD_ORGAO,
                 NOME_ORGAO
-            FROM aux_orgaos  
+            FROM aux_orgaos
         """,
-        engine  
+        engine
     )
     mapa_orgaos = dict(
         zip(
@@ -419,7 +422,7 @@ def main():
         """
             SELECT
                 Rubrica,
-                DescRubri            
+                DescRubri
             FROM aux_rubrica
         """,
         engine
@@ -427,16 +430,16 @@ def main():
     mapa_rubrica = dict(
     zip(
         df_rubrica['Rubrica'].astype(str).str.zfill(5),
-        df_rubrica['DescRubri'].astype(str)     
+        df_rubrica['DescRubri'].astype(str)
         )
     )
 
-    if caminho_arquivo and os.path.exists(caminho_arquivo):    
+    if caminho_arquivo and os.path.exists(caminho_arquivo):
 
         ok(f" Arquivo encontrado:{arquivo_encontrado}")
         print()
 
-        # aqui  cria  todos os campos com base nas regras dos mapas tbl auxiliares 
+        # aqui  cria  todos os campos com base nas regras dos mapas tbl auxiliares
         mapas_auxiliares = {
 
             'CodEstadoCiv': {              #campo original da fita
@@ -446,7 +449,7 @@ def main():
             'CodPais': {
                 'nome_campo': 'Pais',
                 'mapa': mapa_pais
-            },       
+            },
             'CodEscolaridade': {
                 'nome_campo': 'DenoEscolaridade',
                 'mapa': mapa_escolaridade
@@ -462,7 +465,7 @@ def main():
             'CodSituacao':{
                 'nome_campo':'Situacao',
                 'mapa':mapa_situacao
-            },       
+            },
             'ChaveClass': {
                 'nome_campo': 'DenoClasse',
                 'mapa': mapa_classe
@@ -470,7 +473,7 @@ def main():
             'CodRub': { #campo que será traduzido, campo que existe na fita 'LAYOUT_TIPO'
                 'nome_campo': 'DenoRubrica',# no dado ao campo que será criado apos a traducao
                 'mapa': mapa_rubrica # mapa que será utilizado
-            }   
+            }
         }
 
         # ====================================================================
@@ -482,7 +485,7 @@ def main():
         MesFita = extrair_tipo_0(caminho_arquivo)
         info(f' Mês da fita: {MesFita}')
         print()
-        
+
 
         # ====================================================================
         # TIPO 9 - PARA VALIDAÇÃO DA QUANTIDADE DE REGISTROS DO MesFita
@@ -504,8 +507,6 @@ def main():
             CAMPOS_DATA,#lista de campos que são data
             mapas_auxiliares, # e o dicionario para configuracao dos novos campos
         )
-        # print(f'Tipo_1_pessoal finalizado: {len(registros_tipo_1)} registros') #exibe mensagem com quantidade de registros encontrados
-    
         df_pessoal = pd.DataFrame(registros_tipo_1)
         # insere o mes fita na tbl
         df_pessoal.insert(
@@ -523,20 +524,18 @@ def main():
             CAMPOS_DATA,#busca os campos que são data
             mapas_auxiliares,
         )
-        # print(f'Tipo_2_funcional finalizado: {len(registros_tipo_2)} registros')#exibe mensagem com quantidade de registros encontrados
-
         df_funcional = pd.DataFrame(registros_tipo_2)
         # cria um data frame, como se fosse uma tabela do excel na memoria da maquina
-        
+
         # ====================================================================
             # EXEMPLO DE COMO CRIAR UM CAMPO!
-           
+
             # Criar a coluna 'UnidLotacao' no DataFrame df_funcional.
             # O valor é obtido a partir da coluna 'NrUorgLotacao' que vem da fita,
-            # o código é traduzindo pelo dicionário 'mapa_unidade' 
-            # que utiliza a tabela unidade_atual 
+            # o código é traduzindo pelo dicionário 'mapa_unidade'
+            # que utiliza a tabela unidade_atual
             # e retornando do campo do 'Unid' a unidade correspondente
-            # o campo deve esta listado no HEADER correspondente no arquivo mapeamentos.py 
+            # o campo deve esta listado no HEADER correspondente no arquivo mapeamentos.py
 
         # ====================================================================
 
@@ -566,7 +565,7 @@ def main():
                 if str(linha.get('NOVFUNCSIGLA', '')).strip() != ''
                 else linha['DataFuncInicio'],
             axis=1
-        )       
+        )
         df_funcional['DataFuncFim'] = df_funcional.apply(
             lambda linha:
                 linha['NOVFUNCDTSAIDA']
@@ -577,7 +576,7 @@ def main():
         df_funcional['DataFuncInicio'] = df_funcional['DataFuncInicio'].apply(formatar_data)
         df_funcional['DataFuncFim'] = df_funcional['DataFuncFim'].apply(formatar_data)
 
-        
+
         df_funcional['TemFuncao'] = df_funcional.apply(
             lambda linha: 'S'
             if (
@@ -589,7 +588,7 @@ def main():
             )
             else 'N',
             axis=1
-        )     
+        )
         df_funcional['NrUorgExercicio'] = df_funcional.apply(
             lambda linha:
                 linha['Setor']
@@ -613,7 +612,7 @@ def main():
                 ),
             axis=1
         )
-      
+
         df_funcional.loc[
             df_funcional['NrUorgExercicio'].astype(str).str.strip() == '000000000',
             'NrUorgExercicio'
@@ -639,7 +638,7 @@ def main():
         )
         df_funcional['MunicipioUorgExercicio'] = df_funcional['CodMunicipioUORGExercicio'].apply(
             lambda codigo: mapa_municipio.get(codigo, '')
-        )       
+        )
         df_local_ap = pd.read_sql(
             """
                 SELECT
@@ -657,11 +656,26 @@ def main():
             [['NrUorgLocalAp', 'DenoSetorLocalAp']]
             .to_dict('index')
         )
-        df_funcional['NrUorgLocalAp'] = df_funcional['SIAPE'].apply(
-            lambda siape: mapa_local_ap.get(str(siape).zfill(7), {}).get('NrUorgLocalAp', '')
-        )
-        df_funcional['DenoSetorLocalAp'] = df_funcional['SIAPE'].apply(
-            lambda siape: mapa_local_ap.get(str(siape).zfill(7), {}).get('DenoSetorLocalAp', '')
+        df_funcional['NrUorgLocalAp'] = df_funcional.apply(
+        lambda linha: (
+            ''
+            if str(linha.get('CodSituacao', '')).strip() == '01'
+            else mapa_local_ap
+                .get(str(linha['SIAPE']).zfill(7), {})
+                .get('NrUorgLocalAp', '')
+        ),
+        axis=1
+    )
+
+        df_funcional['DenoSetorLocalAp'] = df_funcional.apply(
+            lambda linha: (
+                ''
+                if str(linha.get('CodSituacao', '')).strip() == '01'
+                else mapa_local_ap
+                    .get(str(linha['SIAPE']).zfill(7), {})
+                    .get('DenoSetorLocalAp', '')
+            ),
+            axis=1
         )
         df_funcional['UnidFuncao'] = df_funcional['FuncSetor'].apply(
             lambda codigo: mapa_unidade.get(codigo, {}).get('Unid', '')
@@ -690,12 +704,12 @@ def main():
         ).apply(
             lambda codigo:mapa_ocorrencia.get(codigo,'')
         )
-        df_funcional['DenoExclusao'] = (        
+        df_funcional['DenoExclusao'] = (
             df_funcional['GrExclusao'].astype(str).str.zfill(2)
             +df_funcional['OcorrExclusao'].astype(str).str.zfill(3)
         ).apply(
             lambda codigo:mapa_ocorrencia.get(codigo,'')
-        )    
+        )
         df_funcional['DenoOrigem'] = df_funcional['OrgOrigem'].apply(
             lambda codigo:mapa_orgaos.get(codigo,'')
         )
@@ -706,8 +720,8 @@ def main():
             lambda codigo: mapa_orgaos.get(codigo,'')
         )
 
-    #-----------------------CRIA As REGRAS DE NEGOCIO Do CARGO QUE INFLUENCIA NA CATEGORIA MAGISTERIO
-        
+    #CRIA AS REGRAS DE NEGOCIO DO CARGO QUE INFLUENCIA NA CATEGORIA MAGISTERIO
+
         df_funcional['GrCargo'] = df_funcional.apply(
         lambda linha:
             mapa_cad_apf_gr_cargo.get(str(linha['SIAPE']).zfill(7))
@@ -767,13 +781,15 @@ def main():
                                 'PROFESSOR EST'
                                 if (
                                     str(linha['RegJuridico']).strip() == 'EST'
-                                    and str(linha['GrCargo']).strip().zfill(3) in ('060', '702', '705', '706', '707')
+                                    and str(linha['GrCargo']).strip().zfill(3) in (
+                                    '060', '702', '705', '706', '707')
                                 )
                                 else (
                                     'TECNICO CONTRATADO'
                                     if (
                                         str(linha['RegJuridico']).strip() in ('CDT', 'CLT')
-                                        and str(linha['GrCargo']).strip().zfill(3) in ('000', '061', '415')
+                                        and str(linha['GrCargo']).strip().zfill(3) in (
+                                        '000', '061', '415')
                                     )
                                     else 'TEC ADMINISTRATIVO'
                                 )
@@ -784,13 +800,13 @@ def main():
             ),
         axis=1
     )
-       
+
     #-----------------------CRIA A CHAVE DA CLASSE CONFORME REGRA DO ACCESS
         def codigo_categoria_classe(gr_cargo):
             return (
                 'M'
                 if str(gr_cargo).strip().zfill(3) in ('060', '702', '705', '706', '707')
-                
+
                 else 'T'
         )
         df_funcional['ChaveClass'] = df_funcional.apply(
@@ -812,15 +828,17 @@ def main():
         df_funcional['DenoClasse'] = df_funcional['ChaveClass'].apply(
             lambda codigo: mapa_classe.get(codigo, '')
         )
-    #-----------------------CRIA A COLUNA E ESTABELECE REGRAS DE NEGOCIO DO TEM FUNCAO   
+    #-----------------------CRIA A COLUNA E ESTABELECE REGRAS DE NEGOCIO DO TEM FUNCAO
         df_funcional = df_funcional.merge( # e como o join em sql entre a funciona e pessoal
-            df_pessoal[['SIAPE','Nome']], #join entre SIAPE e Nome 
+            df_pessoal[['SIAPE','Nome']], #join entre SIAPE e Nome
             on= 'SIAPE', # achave é o SIAPE
             how='left' # e o join e´um left-join
-        )    
-        nome_coluna = df_funcional.pop('Nome')# remove a coluna da ultima posicao para reinserir na posição indicada
+        )
+        nome_coluna = df_funcional.pop('Nome')
+        # remove a coluna da ultima posicao para reinserir na posição indicada
 
-        posicao = df_funcional.columns.get_loc('SiapeDig') + 1 #aqui indica onde colocar o campo apos SiapeDig
+        posicao = df_funcional.columns.get_loc('SiapeDig') + 1
+        #aqui indica onde colocar o campo apos SiapeDig
 
         df_funcional.insert(# aqui inserre de fato o campo na posição
             posicao,
@@ -854,7 +872,7 @@ def main():
             'MesFita',  # nome da coluna
             MesFita  # valor
         )
-    #-----------------------TRATA O CAMPO VALOR RETIRANDO OS ZEROS A ESQUERDA E DEIXANDO CO 2 CASAS DECIMAIS
+    #TRATA O CAMPO VALOR RETIRANDO OS ZEROS A ESQUERDA E DEIXANDO CO 2 CASAS DECIMAIS
         df_pagamento['Valor'] = df_pagamento['Valor'].apply(formatar_valores)
 
     # =================================================================
@@ -866,22 +884,23 @@ def main():
             '4',
             CAMPOS_DATA,
             mapas_auxiliares
-        )   
+        )
         # print(f'Tipo_4_registro_pagamento_totais finalizado: {len(registros_tipo_4)} registros')
 
         df_pagamento_totais = pd.DataFrame(registros_tipo_4)
 
         df_pagamento_totais['TotBruto'] = df_pagamento_totais['TotBruto'].apply(formatar_valores)
         df_pagamento_totais['TotDesc'] = df_pagamento_totais['TotDesc'].apply(formatar_valores)
-        df_pagamento_totais['Liquido'] = (df_pagamento_totais['TotBruto']- df_pagamento_totais['TotDesc']).round(2)
-                
+        df_pagamento_totais['Liquido'] = (df_pagamento_totais['TotBruto']
+                                          - df_pagamento_totais['TotDesc']).round(2)
+
         df_pagamento_totais.insert( #INSERE O MES FITA NA PRIMEIRA COLUNA DE PAGAMENTOS TOTAIS
             0,  # primeira coluna
             'MesFita',  # nome da coluna
             MesFita  # valor
-        )    
+        )
         df_pagamento_totais = df_pagamento_totais.merge(
-            df_funcional[           
+            df_funcional[
                 [# USA COLUNAS DA FUNCINAL INEXISTENTES NA PAGAMENTOS TOTAIS
                     'SIAPE',
                     'Nome',
@@ -895,7 +914,7 @@ def main():
             how='left'
         )
         df_pagamento_totais = df_pagamento_totais[HEADER_TIPO_4]
-    
+
     # =================================================================
     # TIPO 5 - AFASTAMENTO
     # ==================================================================
@@ -905,18 +924,18 @@ def main():
             '5',
             CAMPOS_DATA,
             mapas_auxiliares
-        )   
+        )
         # print(f'Tipo_5_afastamento finalizado: {len(registros_tipo_5)} registros')
 
-        df_afastamento = pd.DataFrame(registros_tipo_5)    
-        
+        df_afastamento = pd.DataFrame(registros_tipo_5)
+
         df_afastamento.insert( #INSERE O MES FITA NA PRIMEIRA COLUNA DE AFASTAMENTO
             0,  # primeira coluna
             'MesFita',  # nome da coluna
             MesFita  # valor
-        )     
+        )
         df_afastamento = df_afastamento.merge(
-            df_funcional[           
+            df_funcional[
                 [# USA COLUNAS DA FUNCINAL INEXISTENTES NA AFASTAMENTO
                     'SIAPE',
                     'Nome',
@@ -930,7 +949,7 @@ def main():
             how='left'
         )
         df_afastamento = df_afastamento[HEADER_TIPO_5]
-    
+
     # =================================================================
     # TIPO 6 - AFASTAMENTO TOTAL
     # ==================================================================
@@ -941,7 +960,7 @@ def main():
             '6',
             CAMPOS_DATA,
             mapas_auxiliares
-        )   
+        )
         # print(f'Tipo_6_afastamento finalizado: {len(registros_tipo_6)} registros')
 
         df_afastamento_total = pd.DataFrame(registros_tipo_6)
@@ -949,14 +968,14 @@ def main():
             0,  # primeira coluna
             'MesFita',  # nome da coluna
             MesFita  # valor
-        )  
+        )
         df_afastamento_total = df_afastamento_total.merge(
-            df_funcional[           
+            df_funcional[
                 [# USA COLUNAS DA FUNCIONAL INEXISTENTES NA AFASTAMENTO TOTAL
                     'SIAPE',
                     'Nome',
                     'CodSituacao',
-                    'Situacao',               
+                    'Situacao',
                 ]
             ],
             left_on='SIAPE',
@@ -972,8 +991,8 @@ def main():
     # ====================================================================
         separador()
         aviso('VALIDAÇÃO DO QUANTITATIVO DA FITA')
-           
-        print()   
+
+        print()
 
         if total_controle_fita == len(registros_tipo_1):
             ok("Quantidade conferida com sucesso.")
@@ -986,7 +1005,7 @@ def main():
             Nenhum dado foi gravado no banco de dados.
             Corrija a fita e execute o processamento novamente.
             """.replace(",", "."))
-           
+
 
             print()
             return False
@@ -995,24 +1014,17 @@ def main():
         imprimir_registro('Quantidade de registros processados',len(registros_tipo_1))
 
 
-
-
-
-
-
-
-
     # ====================================================================
     # IMPRESSÃO DOS QUANTITATIVOS
     # ====================================================================
 
-         
+
         print()
         linha()
         print()
         aviso("REGISTROS ENCONTRADOS")
         print()
-       
+
 
         imprimir_registro("Pessoal", len(registros_tipo_1))
         imprimir_registro("Funcional", len(registros_tipo_2))
@@ -1023,14 +1035,6 @@ def main():
 
         print()
 
-   
-
-
-
-
-
-
-
     # ====================================================================
     # SALVA OS DF EM CSV NO DIRETORIO E ENVIA PARA O BD MYSQL
     # ====================================================================
@@ -1038,8 +1042,6 @@ def main():
         linha()
         aviso("ATUALIZANDO BANCO DE DADOS")
         print()
-    
-
 
         salvar_dataframe(
             df_funcional,
@@ -1047,16 +1049,14 @@ def main():
             'tbl_funcional',
             engine,
             MesFita
-            
-        ) 
-    # ====================================================================     
+        )
+    # ====================================================================
         salvar_dataframe(
             df_pagamento,
             'registro_pagamento.csv',
             'tbl_registro_pagamento',
             engine,
             MesFita
-            
         )
     # ====================================================================
         salvar_dataframe(
@@ -1065,25 +1065,22 @@ def main():
             'tbl_registro_pagamento_totais',
             engine,
             MesFita
-            
-        )  
-    # ==================================================================== 
+        )
+    # ====================================================================
         salvar_dataframe(
             df_afastamento,
             'afastamento.csv',
             'tbl_afastamento',
             engine,
             MesFita
-            
         )
-    # ====================================================================  
+    # ====================================================================
         salvar_dataframe(
             df_afastamento_total,
             'afastamento_total.csv',
             'tbl_afastamento_total',
             engine,
             MesFita
-            
         )
     # ====================================================================
     # CRIAÇÃO DE TABELA tbl_pgto_incentivo_qualificacao
@@ -1109,7 +1106,7 @@ def main():
             conexao.execute(text(query_drop))
             conexao.execute(text(query_create))
 
-       
+
 
         # ====================================================================
         # MAPA PERQUALIF
@@ -1130,6 +1127,7 @@ def main():
                 df_perqualif['PERQUALIF']
             )
         )
+
         # ====================================================================
         # ESCOLARIDADE FINAL
         # ====================================================================
@@ -1138,7 +1136,7 @@ def main():
             df_titulacao_correcao,
             mapa_perqualif
         )
-        df_pessoal = df_pessoal[HEADER_TIPO_1]      
+        df_pessoal = df_pessoal[HEADER_TIPO_1]
 
 
         salvar_dataframe(
@@ -1147,12 +1145,12 @@ def main():
             'tbl_pessoal',
             engine,
             MesFita
-        ) 
+        )
         linha()
         print()
         aviso('ARQUIVANDO FITA')
         print()
-       
+
 
         arquivar_fita_processada(
             caminho_arquivo,
@@ -1167,7 +1165,7 @@ def main():
         aviso("Copie o arquivo fita_servidor_AAAA_MM.txt para a pasta Entrada.")
         print()
         return False
-      
+
 
 if __name__ == "__main__":
     main()
