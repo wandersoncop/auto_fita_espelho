@@ -559,6 +559,13 @@ def main():
                 else linha['FUNCUNORG'],
             axis=1
         )
+        df_funcional['FuncaoNivel'] = df_funcional.apply(
+            lambda linha:
+                linha['NOVFUNCNIV']
+                if str(linha.get('NOVFUNCSIGLA', '')).strip() != ''
+                else linha['FuncaoNivel'],
+            axis=1
+        )
         df_funcional['DataFuncInicio'] = df_funcional.apply(
             lambda linha:
                 linha['NOVFUNCDTING']
@@ -716,9 +723,10 @@ def main():
         df_funcional['DenoOrgAnt'] = df_funcional['OrgAnt'].apply(
             lambda codigo: mapa_orgaos.get(codigo,'')
         )
-        df_funcional['DenoOrgRequisitante'] = df_funcional['OrgAnt'].apply(
-            lambda codigo: mapa_orgaos.get(codigo,'')
+        df_funcional['DenoOrgRequisitante'] = df_funcional['OrgReq'].apply(
+            lambda codigo:'' if str(codigo).strip() == '00000' else mapa_orgaos.get(codigo,'')
         )
+        #modificado para atentdr caso seja 00000 para vir vazio
 
     #CRIA AS REGRAS DE NEGOCIO DO CARGO QUE INFLUENCIA NA CATEGORIA MAGISTERIO
 
@@ -995,7 +1003,7 @@ def main():
         print()
 
         if total_controle_fita == len(registros_tipo_1):
-            ok("Quantidade conferida com sucesso.")
+            ok("QUANTIDADE CONFERIDA COM SUCESSO.")
         else:
             diferenca = abs(total_controle_fita - len(registros_tipo_1))
 

@@ -95,11 +95,11 @@ LAYOUT_TIPO_2 = {
     'DataSusp':(103,109),#
     'NumApos': (109, 114),#
     'DenoApos': (114, 119),#
-    'GrCargo': (119, 122),# 701    
-    'Cargo': (122, 125),# 062 ok    
-    'CodCargo': (119, 125),# CAMPO CRIADO  JUNÇÃO DE GRUPO E CARGO                
-    'Classe': (125, 126),# E  
-    'REF': (126, 129),  #         
+    'GrCargo': (119, 122),# 701
+    'Cargo': (122, 125),# 062 ok
+    'CodCargo': (119, 125),# CAMPO CRIADO  JUNÇÃO DE GRUPO E CARGO
+    'Classe': (125, 126),# E
+    'REF': (126, 129),  #
     'DataOcupacao': (129, 137),#
     'DataSaida': (137, 145),#
     'Funcao': (145, 148),#
@@ -111,7 +111,7 @@ LAYOUT_TIPO_2 = {
     'FUNCUNORG': (172, 181),#numero uorg exercicio
     'NOVFUNCSIGLA': (181, 184),
     'NOVFUNCNIV': (184, 189),
-    'NovaFuncEsc': (189, 191),   
+    'NovaFuncEsc': (189, 191),
     'NovaFuncOpcao': (191, 192),
     'NOVFUNCDTING': (192, 200),
     'NOVFUNCDTSAIDA': (200, 208),
@@ -189,10 +189,10 @@ LAYOUT_TIPO_2 = {
      'DataReversaoAtiv': (722, 730),
     # 'REVERSAO_CODIGO': (714, 722),
     'DtRevers': (700, 708),
-    # 'REVERSAO_DIPLOMA_DATA_PUB': (722, 730), 
+    # 'REVERSAO_DIPLOMA_DATA_PUB': (722, 730),
     # 'REVERSAO_DIPLOMA_CODIGO': (724, 726),
-    # 'REVERSAO_DIPLOMA_NUMERO': (731, 749),    
-    'IndiceCargo': (749, 750), 
+    # 'REVERSAO_DIPLOMA_NUMERO': (731, 749),
+    'IndiceCargo': (749, 750),
     'IndiceFuncao': (750, 751),              # 1º S - Deu certo!
     'IndiceSalarioFamilia': (751, 752),     # 2º S
     'IndiceAnuenio': (752, 753), # 3º S
@@ -226,7 +226,7 @@ LAYOUT_TIPO_2 = {
     # 'FGTS_DATA_OPCAO': (60, 68),
     # 'FGTS_BANCO': (68, 71),
     # 'FGTS_Agencia': (71, 77),
-    # 'FGTS_CONTA': (77, 90),    
+    # 'FGTS_CONTA': (77, 90),
 }
 HEADER_TIPO_2 = [
     'MesFita',
@@ -236,20 +236,20 @@ HEADER_TIPO_2 = [
     'Nome',
     'RegJuridico',
     'CodSituacao',
-    'Situacao', # CAMPO CRIADO 
-    'Categoria',  # CAMPO CRIADO 
-    'RegimeTrab', # CAMPO CRIADO 
-    'Anuenio', 
-    'NumApos',    
-    'DenoApos',# CAMPO CRIADO 
+    'Situacao', # CAMPO CRIADO
+    'Categoria',  # CAMPO CRIADO
+    'RegimeTrab', # CAMPO CRIADO
+    'Anuenio',
+    'NumApos',
+    'DenoApos',# CAMPO CRIADO
     'GrCargo',
     'Cargo',
-    'CodCargo',# CAMPO CRIADO  JUNÇÃO DE GRUPO E CARGO 
+    'CodCargo',# CAMPO CRIADO  JUNÇÃO DE GRUPO E CARGO
     'DenoCargo', #CAMPO CRIADO
     'Classe',
     'DenoClasse', #CAMPO CRIADO
     'REF',
-    'Setor',    
+    'Setor',
     'NrUorgLotacao', # NUMERO UORG LOTAÇÃO 'LOTAC'
     'UnidLotacao',#CAMPO CRIADO
     'DenoSetorLotacao',#CAMPO CRIADO
@@ -261,13 +261,13 @@ HEADER_TIPO_2 = [
     'UorgPaiExercicio',
     'NomeUorgPaiExercicio',
     'NrUorgLocalAp',
-    'DenoSetorLocalAp',   
+    'DenoSetorLocalAp',
     'GrExclusao',
     'DataIngOrg',
     'DataIngSP',
     'DataExclusao',
     'DataAposentadoria',
-    'DataObito',   
+    'DataObito',
     'Funcao',
     'FuncaoNivel',
     'DataFuncInicio',
@@ -290,19 +290,19 @@ HEADER_TIPO_2 = [
     'DenoIngOrgao',
     'GrOcorrIngSp',
     'OcorrIngSp',
-    'DenoIngSerPublico',    
-    'OcorrExclusao', 
-    'DenoExclusao',   
-    'SuspPagamento',  
-    'DataSusp',    
+    'DenoIngSerPublico',
+    'OcorrExclusao',
+    'DenoExclusao',
+    'SuspPagamento',
+    'DataSusp',
     'DataLotacao',
-    'DataCadastro', 
+    'DataCadastro',
     'DataOcupacao',
-    'DataSaida', 
+    'DataSaida',
     'ApoNumProc',
     'ApoAnoprev',
-    'CarteiraTrabNum',    
-    'CarteiraTrabSerie',   
+    'CarteiraTrabNum',
+    'CarteiraTrabSerie',
     'CarteiraTrabUf',
     'Banco',
     'Agencia',
@@ -327,7 +327,7 @@ HEADER_TIPO_2 = [
     'ObitoCart',
     'ObitoLivro',
     'ObitoFolha',
-    'ObitoReg',    
+    'ObitoReg',
     'IExcInsti',
     'DtExcInti',
     'ValeAlimTipo',
@@ -363,24 +363,24 @@ HEADER_TIPO_2 = [
     'IndiceDifURV',
     'IndiceAdiantamento',
     'IndicePasep'
-    
-    
+
+
     # 'DtRevers',
 
+
+
+
     
-    # 'FUNCUNORG',
-    
-    # 'NOVFUNCNIV',
     # 'NOVFUNCDTING',
-    # 'NOVFUNCDTSAIDA',   
+    # 'NOVFUNCDTSAIDA',
     # 'NOVFUNCUNORG',
-    # 'LOCALIZ',    
+    # 'LOCALIZ',
     # 'DLINGRORG',
     # 'DLNUMINGRORG',
     # 'DLPUBLINGRORG',
     # 'DLINGRSP',
     # 'DLNUMINGRSP',
-    # 'DLPUBLINGRSP',    
+    # 'DLPUBLINGRSP',
     # 'DLEXC',
     # 'DLNUMEXC',
     # 'DLPUBLEXC',
@@ -390,7 +390,7 @@ HEADER_TIPO_2 = [
     # 'DTAFASTFIM',
     # 'DLAFAST',
     # 'DLNUMAFAST',
-    # 'DLPUBLAFAST',    
+    # 'DLPUBLAFAST',
     # 'DLAPO',
     # 'DLNUMAPO',
     # 'DLPUBLAPO',
@@ -398,8 +398,8 @@ HEADER_TIPO_2 = [
     # 'REVERSAO_CODIGO',
     # 'REVERSAO_DIPLOMA_CODIGO',
     # 'REVERSAO_DIPLOMA_DATA_PUB',
-    # 'REVERSAO_DIPLOMA_NUMERO',    
-#---------------------------------------------------------------------    
+    # 'REVERSAO_DIPLOMA_NUMERO',
+#---------------------------------------------------------------------
     # 'TIPO_REGISTRO',
 ]
 LAYOUT_TIPO_3 = {
@@ -425,9 +425,9 @@ LAYOUT_TIPO_3 = {
     "PAConta": (116, 129),
     "PAAnoMesRub": (129, 135),
     # "Lixo3": (135, 764),
-}   
+}
 HEADER_TIPO_3 = [
-    
+
     "SIAPE",
     "SiapeDig",
     # "TipoReg",
@@ -485,15 +485,15 @@ LAYOUT_TIPO_5 = {
     "SIAPE": (9, 16),
     # "DigSiape": (16, 17),
     # "TipoReg": (17, 18),
-    # "UfUpag": (18, 20),    
-    "CodAfast": (20,24),                             
-    "DenAfast" : (24,84),                             
-    "DtInicAfast":  (84,92),                          
-    "DtFimAfast": (92,100),                           
-    "DiplomAfast": (100,102),                            
-    "DtPublAfast":  (102,110),                         
-    "NumDiplomAfast": (110,129),                         
-    
+    # "UfUpag": (18, 20),
+    "CodAfast": (20,24),
+    "DenAfast" : (24,84),
+    "DtInicAfast":  (84,92),
+    "DtFimAfast": (92,100),
+    "DiplomAfast": (100,102),
+    "DtPublAfast":  (102,110),
+    "NumDiplomAfast": (110,129),
+
 }
 HEADER_TIPO_5 =[
     "MesFita",
@@ -504,14 +504,14 @@ HEADER_TIPO_5 =[
     # "TipoReg",
     'CodSituacao',
     'Situacao',
-    # "UfUpag",    
-    "CodAfast",                             
-    "DenAfast" ,                             
-    "DtInicAfast",                          
-    "DtFimAfast",                           
-    "DiplomAfast",                            
-    "DtPublAfast",                         
-    "NumDiplomAfast",   
+    # "UfUpag",
+    "CodAfast",
+    "DenAfast" ,
+    "DtInicAfast",
+    "DtFimAfast",
+    "DiplomAfast",
+    "DtPublAfast",
+    "NumDiplomAfast",
 
 ]
 LAYOUT_TIPO_6 = {
@@ -520,7 +520,7 @@ LAYOUT_TIPO_6 = {
     "DigSiape": (16, 17),
     # "TipoReg": (17, 18),
     # "UfUpag": (18, 20),
-    "TotRegAfast": (20, 80),   
+    "TotRegAfast": (20, 80),
 }
 HEADER_TIPO_6 =[
     # "UnidPagadora",
@@ -532,7 +532,7 @@ HEADER_TIPO_6 =[
     'CodSituacao',
     'Situacao',
     # "UfUpag",
-    "TotRegAfast",   
+    "TotRegAfast",
 
 ]
 CAMPOS_DATA = [
@@ -552,10 +552,10 @@ CAMPOS_DATA = [
     'ValeAlimDataInic',
     'ValeAlimDataFim',
     'DtExcInti',
-    "DtInicAfast",                          
-    "DtFimAfast", 
-    "DtPublAfast",  
-    "DataFuncInicio",   
+    "DtInicAfast",
+    "DtFimAfast",
+    "DtPublAfast",
+    "DataFuncInicio",
     "DataFuncFim",
 
 ]
