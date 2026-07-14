@@ -582,8 +582,6 @@ def main():
         )
         df_funcional['DataFuncInicio'] = df_funcional['DataFuncInicio'].apply(formatar_data)
         df_funcional['DataFuncFim'] = df_funcional['DataFuncFim'].apply(formatar_data)
-
-
         df_funcional['TemFuncao'] = df_funcional.apply(
             lambda linha: 'S'
             if (
@@ -619,7 +617,6 @@ def main():
                 ),
             axis=1
         )
-
         df_funcional.loc[
             df_funcional['NrUorgExercicio'].astype(str).str.strip() == '000000000',
             'NrUorgExercicio'
@@ -673,7 +670,6 @@ def main():
         ),
         axis=1
     )
-
         df_funcional['DenoSetorLocalAp'] = df_funcional.apply(
             lambda linha: (
                 ''
@@ -896,12 +892,10 @@ def main():
         # print(f'Tipo_4_registro_pagamento_totais finalizado: {len(registros_tipo_4)} registros')
 
         df_pagamento_totais = pd.DataFrame(registros_tipo_4)
-
         df_pagamento_totais['TotBruto'] = df_pagamento_totais['TotBruto'].apply(formatar_valores)
         df_pagamento_totais['TotDesc'] = df_pagamento_totais['TotDesc'].apply(formatar_valores)
         df_pagamento_totais['Liquido'] = (df_pagamento_totais['TotBruto']
                                           - df_pagamento_totais['TotDesc']).round(2)
-
         df_pagamento_totais.insert( #INSERE O MES FITA NA PRIMEIRA COLUNA DE PAGAMENTOS TOTAIS
             0,  # primeira coluna
             'MesFita',  # nome da coluna
@@ -936,7 +930,6 @@ def main():
         # print(f'Tipo_5_afastamento finalizado: {len(registros_tipo_5)} registros')
 
         df_afastamento = pd.DataFrame(registros_tipo_5)
-
         df_afastamento.insert( #INSERE O MES FITA NA PRIMEIRA COLUNA DE AFASTAMENTO
             0,  # primeira coluna
             'MesFita',  # nome da coluna
@@ -961,7 +954,6 @@ def main():
     # =================================================================
     # TIPO 6 - AFASTAMENTO TOTAL
     # ==================================================================
-
         registros_tipo_6 = ler_fita_por_tipo(
             caminho_arquivo,
             LAYOUT_TIPO_6,
@@ -991,7 +983,6 @@ def main():
             how='left'
         )
         df_afastamento_total = df_afastamento_total[HEADER_TIPO_6]
-
 
 
     # ====================================================================
@@ -1025,14 +1016,11 @@ def main():
     # ====================================================================
     # IMPRESSÃO DOS QUANTITATIVOS
     # ====================================================================
-
-
         print()
         linha()
         print()
         aviso("REGISTROS ENCONTRADOS")
         print()
-
 
         imprimir_registro("Pessoal", len(registros_tipo_1))
         imprimir_registro("Funcional", len(registros_tipo_2))
@@ -1046,7 +1034,6 @@ def main():
     # ====================================================================
     # SALVA OS DF EM CSV NO DIRETORIO E ENVIA PARA O BD MYSQL
     # ====================================================================
-
         linha()
         aviso("ATUALIZANDO BANCO DE DADOS")
         print()
@@ -1114,8 +1101,6 @@ def main():
             conexao.execute(text(query_drop))
             conexao.execute(text(query_create))
 
-
-
         # ====================================================================
         # MAPA PERQUALIF
         # ====================================================================
@@ -1146,7 +1131,6 @@ def main():
         )
         df_pessoal = df_pessoal[HEADER_TIPO_1]
 
-
         salvar_dataframe(
             df_pessoal,
             'pessoal.csv',
@@ -1158,7 +1142,6 @@ def main():
         print()
         aviso('ARQUIVANDO FITA')
         print()
-
 
         arquivar_fita_processada(
             caminho_arquivo,
