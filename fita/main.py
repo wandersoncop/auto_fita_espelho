@@ -27,6 +27,7 @@ from funcoes import (
     salvar_dataframe, #cria e envia os df paa o banco de dados
     obter_pasta_base, # para tornar a fita portatil
     arquivar_fita_processada, #move a fita processada para pasta
+    validar_codigos_mapa, # validação dos campos quanto a tradução
 )
 
 from mapeamentos import (
@@ -49,7 +50,8 @@ from mapeamentos import (
 from conexao import engine
 # Importa o objeto de conexão (engine) utilizado para acessar o banco de dados MySQL.
 
-# LARGURA = 80
+
+
 def imprimir_registro(descricao,quantidade):
     """    vai imprimir a descriação e a quantidade de registros
     encontrados, craia  no print  a visualização:  '.<35' significa alinhar a esq usando
@@ -57,6 +59,9 @@ def imprimir_registro(descricao,quantidade):
     """
 
     print(f'{descricao:.<35}{quantidade:>8,}'.replace(",","."))
+
+
+
 
 
 def main():
@@ -289,6 +294,13 @@ def main():
         """,
         engine
     )
+
+    df_unidade['CodUnid'] = (
+        df_unidade['CodUnid']
+        .fillna('')
+        .astype(str)
+        .str.strip()
+    )
     # caso o CodUnid esteja duplicado traz somente a 1 registro
     df_unidade = df_unidade.drop_duplicates(
         subset=['CodUnid'],
@@ -508,6 +520,14 @@ def main():
             mapas_auxiliares, # e o dicionario para configuracao dos novos campos
         )
         df_pessoal = pd.DataFrame(registros_tipo_1)
+        if not validar_codigos_mapa(
+            df_pessoal,
+            'CodEstadoCiv',
+            mapa_estado_civil,
+            'Estado Civil'
+        ):
+            return False
+
         # insere o mes fita na tbl
         df_pessoal.insert(
             0,
@@ -538,6 +558,17 @@ def main():
             # o campo deve esta listado no HEADER correspondente no arquivo mapeamentos.py
 
         # ====================================================================
+
+        #valida as UORGs Lotacao
+        if not validar_codigos_mapa(
+            df_funcional,
+            'NrUorgLotacao',
+            mapa_unidade,
+            'Unidade Atual',
+            codigos_ignorados=['000000000']
+        ):
+            return False
+
 
         df_funcional['UnidLotacao'] = df_funcional['NrUorgLotacao'].apply(
             lambda codigo: mapa_unidade.get(codigo, {}).get('Unid', '') or ''
@@ -622,6 +653,19 @@ def main():
             'NrUorgExercicio'
         ] = ''
 
+
+
+
+
+
+        if not validar_codigos_mapa(
+            df_funcional,
+            'NrUorgExercicio',
+            mapa_unidade,
+            'Unidade Atual'
+        ):
+            return False
+
         df_funcional['UorgPaiExercicio'] = df_funcional['NrUorgExercicio'].apply(
             lambda codigo: mapa_unidade.get(codigo, {}).get('UorgPai') or ''
         )
@@ -680,12 +724,30 @@ def main():
             ),
             axis=1
         )
+        if not validar_codigos_mapa(
+            df_funcional,
+            'FuncSetor',
+            mapa_unidade,
+            'Unidade Atual',
+            codigos_ignorados=['000000000']
+        ):
+            return False
+
         df_funcional['UnidFuncao'] = df_funcional['FuncSetor'].apply(
             lambda codigo: mapa_unidade.get(codigo, {}).get('Unid', '')
         )
         df_funcional['DenoSetorFunc'] = df_funcional['FuncSetor'].apply(
             lambda codigo: mapa_unidade.get(codigo, {}).get('DenoSetor', '')
         )
+        if not validar_codigos_mapa(
+            df_funcional,
+            'CodFuncao',
+            mapa_atividade,
+            'Atividade',
+            codigos_ignorados=['000']
+        ):
+            return False
+
         df_funcional['DenoAtiv'] = df_funcional['CodFuncao'].apply(
             lambda codigo: mapa_atividade.get(codigo, '')
         )

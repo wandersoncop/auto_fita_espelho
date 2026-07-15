@@ -12,12 +12,13 @@ Além disso:
 """
 
 
-
+import os
 import time
 from datetime import datetime
+from funcoes import obter_pasta_base
 
-from atualizar_tabelas_bd import main as atualizar_tabelas
-from main import main as processar_fita
+# from atualizar_tabelas_bd import main as atualizar_tabelas
+# from main import main as processar_fita
 from terminal import (
     ok, aviso, erro, linha, separador, LARGURA, tempo_operacao
 )

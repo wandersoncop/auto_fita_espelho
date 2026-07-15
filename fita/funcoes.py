@@ -1,4 +1,4 @@
-import pandas as pd 
+import pandas as pd
 import os
 import shutil # serve para mudar uma pasta de um lagar para outro
 import sys
@@ -15,7 +15,7 @@ def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
         mapas_auxiliares = {}
 
     registro = {} #cria um dicionario vazio quando percorre o layout coloca o valor da linha EX na fita:
-                  #"CodEstadoCiv":(161,162) 
+                  #"CodEstadoCiv":(161,162)
                   #valor = linha[161:162].strip()
                   #valor = '1'
 
@@ -36,27 +36,32 @@ def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
         if nome_campo in mapas_auxiliares:
             nome_campo_novo = mapas_auxiliares[nome_campo]['nome_campo']
             mapa = mapas_auxiliares[nome_campo]['mapa']
-           
-            #FAZ A VERIFICAÇÃO DE CAMPO SEM TRADUÇÃO E RETORNA AVISO CASO NÃO
-            #TENHA TRADUÇÃO DO COD NA TABELA AUXILIAR
+            registro[nome_campo_novo] = mapa.get(valor,'')
 
-            if valor not in mapa:
-                if nome_campo == 'SIAPE':
-                    registro [nome_campo_novo] = ''
-                else:
-                    raise ValueError(
-                        f'❌ Tradução não encontrada para {nome_campo}: "{valor}"'
-                )
-            else:    
-                registro[nome_campo_novo] = mapa[valor]
-            
-          #PARA VERIFICAR OS CAMPOS QUE FALTAM TRADUÇÃO COMENTAR APOS USO E NÃO APAGAR  
+        # if nome_campo in mapas_auxiliares:
+        #     nome_campo_novo = mapas_auxiliares[nome_campo]['nome_campo']
+        #     mapa = mapas_auxiliares[nome_campo]['mapa']
+
+        #     #FAZ A VERIFICAÇÃO DE CAMPO SEM TRADUÇÃO E RETORNA AVISO CASO NÃO
+        #     #TENHA TRADUÇÃO DO COD NA TABELA AUXILIAR
+
+        #     if valor not in mapa:
+        #         if nome_campo == 'SIAPE':
+        #             registro [nome_campo_novo] = ''
+        #         else:
+        #             raise ValueError(
+        #                 f'❌ Tradução não encontrada para {nome_campo}: "{valor}"'
+        #         )
+        #     else:
+        #         registro[nome_campo_novo] = mapa[valor]
+
+          #PARA VERIFICAR OS CAMPOS QUE FALTAM TRADUÇÃO COMENTAR APOS USO E NÃO APAGAR
             # if valor not in mapa:
             #     print(f'❌ Tradução não encontrada para {nome_campo}: "{valor}"')
             #     registro[nome_campo_novo] = ''
             # else:
             #         registro[nome_campo_novo] = mapa[valor]
-           #============================================================================ 
+           #============================================================================
 
     return registro
 
@@ -83,8 +88,8 @@ def extrair_tipo_9(caminho_arquivo):
                 for linha in arquivo_txt:
                     if len(linha) > 18 and linha[17] == '9':
                         return int(linha.strip()[-8:])
-            return 0        
-           
+            return 0
+
 
 
 def ler_fita_por_tipo(caminho_arquivo,layout,tipo_registro,campos_data=None,mapas_auxiliares=None):
@@ -266,7 +271,7 @@ def criar_escolaridade(df_pessoal, df_titulacao_correcao, mapa_perqualif=None):
         escolaridades
     )
 
-    return df_pessoal     
+    return df_pessoal
 
 def formatar_valores(valor):
     """
@@ -278,19 +283,81 @@ def formatar_valores(valor):
         pd.to_numeric(valor,errors='coerce')/100,2
     )
 
+def validar_codigos_mapa(df, coluna, mapa, descricao_tabela, codigos_ignorados=None):
+    """
+    Verifica se todos os códigos preenchidos de uma coluna
+    existem no dicionário utilizado para tradução.
+
+    Retorna True quando todos os códigos são válidos.
+    Retorna False quando encontra códigos inexistentes.
+    """
+    if codigos_ignorados is None:
+        codigos_ignorados = []
+    codigos_ignorados = {
+        str(codigo).strip()
+        for codigo in codigos_ignorados
+    }
+
+
+    # Padroniza os códigos da coluna como texto e remove espaços
+    codigos_coluna = (
+        df[coluna]
+        .fillna('')
+        .astype(str)
+        .str.strip()
+    )
+
+    # Padroniza também as chaves existentes no dicionário
+    codigos_validos = {
+        str(codigo).strip()
+        for codigo in mapa.keys()
+    }
+
+    # Localiza códigos preenchidos que não existem no mapa
+    codigos_invalidos = sorted(
+        set(
+            codigos_coluna[
+                (codigos_coluna != '')
+                & (~codigos_coluna.isin(codigos_ignorados))
+                & (~codigos_coluna.isin(codigos_validos))
+            ]
+        )
+    )
+
+    if codigos_invalidos:
+        print()
+        erro(
+            f"Códigos da coluna {coluna} não encontrados "
+            f"na tabela auxiliar {descricao_tabela}:"
+        )
+        print()
+
+        for codigo in codigos_invalidos:
+            print(f"   {codigo}")
+
+        print()
+        aviso(
+            f"Atualize a tabela auxiliar {descricao_tabela} "
+            "e execute o processamento novamente."
+        )
+        print()
+
+        return False
+
+    return True
 def salvar_dataframe(df,nome_csv,nome_tabela,engine,MesFita):
     """
         salva o dataframe em csv e envia para o banco de dados
         cria a tabela caso não exista.
         se existir remove os registros para inserir os da nova fita
-    """   
+    """
 
     pasta_saida = os.path.join(
        obter_pasta_base(),
         'Saida',
         MesFita
-    ) 
-    os.makedirs(pasta_saida,exist_ok=True)    
+    )
+    os.makedirs(pasta_saida,exist_ok=True)
     caminho_csv = os.path.join(
         pasta_saida,
         nome_csv
@@ -367,3 +434,4 @@ def arquivar_fita_processada(caminho_arquivo, MesFita):
     shutil.move(caminho_arquivo,destino)
 
     ok(f"{nome_arquivo} arquivada.")
+
