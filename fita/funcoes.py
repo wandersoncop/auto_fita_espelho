@@ -3,7 +3,7 @@ import os
 import shutil # serve para mudar uma pasta de um lagar para outro
 import sys
 from sqlalchemy import text
-from terminal import ok, info, aviso, erro
+from terminal import ok, aviso, erro
 
 def extrair_tipos(linha, layout, campos_data=None, mapas_auxiliares=None):
     """Traduz cada linha da fita espelho usando as posições existentes no layout."""
@@ -443,7 +443,7 @@ def localizar_arquivo_fita():
     else:
         caminho_arquivo = None
 
-    return caminho_arquivo, arquivo_encontrado, diretorio 
+    return caminho_arquivo, arquivo_encontrado, diretorio
 
 
 def arquivar_fita_processada(caminho_arquivo, MesFita):

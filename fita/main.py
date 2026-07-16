@@ -25,7 +25,7 @@ from funcoes import (
     formatar_data, #foramta as datas
     formatar_valores, # converte em valores
     salvar_dataframe, #cria e envia os df paa o banco de dados
-    obter_pasta_base, # para tornar a fita portatil
+    # obter_pasta_base, # para tornar a fita portatil
     localizar_arquivo_fita, #localiza o arquivo a ser processado
     arquivar_fita_processada, #move a fita processada para pasta
     validar_codigos_mapa, # validação dos campos quanto a tradução
@@ -75,7 +75,7 @@ def main():
 
     caminho_arquivo, arquivo_encontrado, diretorio = localizar_arquivo_fita()
 
-    
+
 
 
     # ==============================================
@@ -488,15 +488,45 @@ def main():
             mapas_auxiliares, # e o dicionario para configuracao dos novos campos
         )
         df_pessoal = pd.DataFrame(registros_tipo_1)
-        
+
+        # VALIDAÇÃO DE PAIS
+        # df_pessoal.loc[df_pessoal.index[0], 'CodPais'] = '999999'
+        if not validar_codigos_mapa(
+            df_pessoal,
+            'CodPais',
+            mapa_pais,
+            'Pais'
+        ):
+            return False
+
         # VALIDAÇÃO DE ESTADO CIVIL
-        # df_pessoal.loc[df_pessoal.index[0], 'CodEstadoCiv'] = '999999'
+        #df_pessoal.loc[df_pessoal.index[0], 'CodEstadoCiv'] = '999999'
 
         if not validar_codigos_mapa(
             df_pessoal,
             'CodEstadoCiv',
             mapa_estado_civil,
             'Estado Civil'
+        ):
+            return False
+
+        # VALIDAÇÃO DE ESCOLARIDADE
+        # df_pessoal.loc[df_pessoal.index[0], 'CodEscolaridade'] = '999999'
+        if not validar_codigos_mapa(
+            df_pessoal,
+            'CodEscolaridade',
+            mapa_escolaridade,
+            'Escolaridade'
+        ):
+            return False
+
+        # VALIDAÇÃO DE TITULAÇÃO
+        # df_pessoal.loc[df_pessoal.index[0], 'CodTitulacao'] = '999999'
+        if not validar_codigos_mapa(
+            df_pessoal,
+            'CodTitulacao',
+            mapa_titulacao,
+            'aux_titulacao'
         ):
             return False
 
@@ -531,9 +561,20 @@ def main():
 
         # ====================================================================
 
+        # VALIDAÇÃO DA TABELA AUX_SITUACAO
+        # df_funcional.loc[df_funcional.index[0], 'CodSituacao'] = '999999'
+        if not validar_codigos_mapa(
+            df_funcional,
+            'CodSituacao',
+            mapa_situacao,
+            'aux_situacao'
+        ):
+            return False
+
+
         # VALIDAÇÃO DE UORGS
-        #df_funcional.loc[df_funcional.index[0], 'NrUorgLotacao'] = '999999'
-        
+        # df_funcional.loc[df_funcional.index[0], 'NrUorgLotacao'] = '999999'
+
         if not validar_codigos_mapa(
             df_funcional,
             'NrUorgLotacao',
@@ -627,10 +668,8 @@ def main():
             'NrUorgExercicio'
         ] = ''
 
-
-
-
-
+        # VALIDAÇÃO DE NrUorgExercicio
+        # df_funcional.loc[df_funcional.index[0], 'NrUorgExercicio'] = '999999'
 
         if not validar_codigos_mapa(
             df_funcional,
@@ -658,6 +697,18 @@ def main():
         df_funcional['CodMunicipioUORGExercicio'] = df_funcional['NrUorgExercicio'].apply(
             lambda codigo: mapa_email_uorg.get(codigo, {}).get('ED-MUNICIPIO-ENDERECO-UORG', '')
         )
+
+        # VALIDAÇÃO DE MUNICIPIO
+        # df_funcional.loc[df_funcional.index[0], 'CodMunicipioUORGExercicio'] = '999999'
+
+        if not validar_codigos_mapa(
+            df_funcional,
+            'CodMunicipioUORGExercicio',
+            mapa_municipio,
+            'Municipio'
+        ):
+            return False
+
         df_funcional['MunicipioUorgExercicio'] = df_funcional['CodMunicipioUORGExercicio'].apply(
             lambda codigo: mapa_municipio.get(codigo, '')
         )
@@ -698,6 +749,9 @@ def main():
             ),
             axis=1
         )
+        # VALIDAÇÃO DE FuncSetor
+        # df_funcional.loc[df_funcional.index[0], 'FuncSetor'] = '999999'
+
         if not validar_codigos_mapa(
             df_funcional,
             'FuncSetor',
@@ -714,6 +768,8 @@ def main():
             lambda codigo: mapa_unidade.get(codigo, {}).get('DenoSetor', '')
         )
         # VALIDAÇÃO DE COD FUNÇÃO IGNORANDO SE FOR 0000
+        # df_funcional.loc[df_funcional.index[0], 'CodFuncao'] = '999999'
+
         if not validar_codigos_mapa(
             df_funcional,
             'CodFuncao',
@@ -750,6 +806,43 @@ def main():
         ).apply(
             lambda codigo:mapa_ocorrencia.get(codigo,'')
         )
+        # VALIDAÇÃO DE OrgOrigem IGNORANDO SE FOR 00000
+        # df_funcional.loc[df_funcional.index[0], 'OrgOrigem'] = '999999'
+        if not validar_codigos_mapa(
+            df_funcional,
+            'OrgOrigem',
+            mapa_orgaos,
+            'orgaos',
+            codigos_ignorados=['', '00000']
+        ):
+            return False
+
+        # VALIDAÇÃO DE OrgAnt IGNORANDO SE FOR 000000
+        # df_funcional.loc[df_funcional.index[0], 'OrgAnt'] = '999999'
+
+        if not validar_codigos_mapa(
+            df_funcional,
+            'OrgAnt',
+            mapa_orgaos,
+            'orgaos',
+            codigos_ignorados=['', '00000']
+        ):
+            return False
+
+
+        # VALIDAÇÃO DE orgaos IGNORANDO SE FOR 000000
+        # df_funcional.loc[df_funcional.index[0], 'OrgReq'] = '999999'
+        if not validar_codigos_mapa(
+            df_funcional,
+            'OrgReq',
+            mapa_orgaos,
+            'orgaos',
+            codigos_ignorados=['', '00000']
+        ):
+            return False
+
+
+
         df_funcional['DenoOrigem'] = df_funcional['OrgOrigem'].apply(
             lambda codigo:mapa_orgaos.get(codigo,'')
         )
@@ -792,7 +885,7 @@ def main():
             'Cargo'
         ):
             return False
-        
+
         df_funcional['DenoCargo'] = df_funcional['CodCargo'].apply(
             lambda codigo: mapa_deno_cargo.get(codigo, '')
         )
@@ -865,23 +958,43 @@ def main():
         )
         df_funcional['ChaveClass'] = df_funcional.apply(
             lambda linha:
-                codigo_categoria_classe(linha['GrCargo'])
-                + str(linha['GrCargo']).strip().zfill(3)
-                + str(linha['Classe']).strip()
-                + str(linha['REF']).strip()[:1]
-                if (
-                    str(linha['GrCargo']).strip().zfill(3) == '705'
-                    and str(linha['Classe']).strip() == '4'
-                    and str(linha['REF']).strip()[:1] != '4'
-                )
-                else
-                codigo_categoria_classe(linha['GrCargo'])
-                + str(linha['Classe']).strip(),
+                'T'
+                if str(linha['Classe']).strip() == 'T'
+                else (
+                    codigo_categoria_classe(linha['GrCargo'])
+                    + str(linha['GrCargo']).strip().zfill(3)
+                    + str(linha['Classe']).strip()
+                    + str(linha['REF']).strip()[:1]
+                    if (
+                        str(linha['GrCargo']).strip().zfill(3) == '705'
+                        and str(linha['Classe']).strip() == '4'
+                        and str(linha['REF']).strip()[:1] != '4'
+                    )
+                    else (
+                        codigo_categoria_classe(linha['GrCargo'])
+                        + str(linha['Classe']).strip()
+                    )
+                ),
             axis=1
         )
+        # VALLIDACAO DA CHAVE CLASS
+        # df_funcional.loc[df_funcional.index[0], 'ChaveClass'] = '999999'
+        if not validar_codigos_mapa(
+            df_funcional,
+            'ChaveClass',
+            mapa_classe,
+            'Classe'
+        ):
+            return False
+
         df_funcional['DenoClasse'] = df_funcional['ChaveClass'].apply(
             lambda codigo: mapa_classe.get(codigo, '')
         )
+
+
+
+
+
     #-----------------------CRIA A COLUNA E ESTABELECE REGRAS DE NEGOCIO DO TEM FUNCAO
         df_funcional = df_funcional.merge( # e como o join em sql entre a funciona e pessoal
             df_pessoal[['SIAPE','Nome']], #join entre SIAPE e Nome
@@ -920,6 +1033,18 @@ def main():
         # print(f'Tipo_3_registro_pagamento finalizado: {len(registros_tipo_3)} registros')
 
         df_pagamento = pd.DataFrame(registros_tipo_3)
+
+         # VALLIDACAO DA RUBRICA
+        # df_funcional.loc[df_funcional.index[0], 'CodRub'] = '999999'
+
+        # VALIDAÇÃO DA TABELA AUX_RUBRICA
+        if not validar_codigos_mapa(
+            df_pagamento,
+            'CodRub',
+            mapa_rubrica,
+            'aux_rubrica'
+        ):
+            return False
 
         df_pagamento.insert(
             0,  # primeira coluna
