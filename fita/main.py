@@ -26,6 +26,7 @@ from funcoes import (
     formatar_valores, # converte em valores
     salvar_dataframe, #cria e envia os df paa o banco de dados
     obter_pasta_base, # para tornar a fita portatil
+    localizar_arquivo_fita, #localiza o arquivo a ser processado
     arquivar_fita_processada, #move a fita processada para pasta
     validar_codigos_mapa, # validação dos campos quanto a tradução
 )
@@ -64,50 +65,17 @@ def imprimir_registro(descricao,quantidade):
 
 
 
+
 def main():
     """parte principal da automação
     """
-    # ==============================================
-    # CAMINHO PARA PASTA ONDE ESTA O ARQUIVO FITA
-    # ==============================================
+   # ==========================================================
+# VERIFICA SE EXISTE O ARQUIVO DA FITA
+# ==========================================================
 
-    diretorio = os.path.join(
-        obter_pasta_base(),
-        "Entrada"
-    )   # Monta e armazena o caminho para a  pasta "arquivos_fita",
-        # onde o programa irá procurar o arquivo da fita.
-        # print(diretorio)
+    caminho_arquivo, arquivo_encontrado, diretorio = localizar_arquivo_fita()
 
-    # ==============================================
-    # PROCURA O ARQUIVO DA FITA DENTRO DA PASTA
-    # ==============================================
-
-    arquivo_encontrado = None
-
-    # procura dentro do diretorio um arquivo
-    # com o nome começando com fita_servidor_
-    # e com extenção .txt
-    for arquivo in os.listdir(diretorio):
-    # lower() coloca tudo em minusculo
-    # .startswith('começa com')
-    # .endswith('termina com')
-    # break para de procurar assim que encontra
-        if (
-            arquivo.lower().startswith('fita_servidor_')
-            and arquivo.lower().endswith('.txt')
-        ):
-            arquivo_encontrado = arquivo
-            break
-
-    if arquivo_encontrado:
-        caminho_arquivo = os.path.join(
-            diretorio,
-            arquivo_encontrado
-        )
-    # aqui retorna o arquivo encontrado
-    else:
-        caminho_arquivo = None
-
+    
 
 
     # ==============================================
@@ -520,6 +488,10 @@ def main():
             mapas_auxiliares, # e o dicionario para configuracao dos novos campos
         )
         df_pessoal = pd.DataFrame(registros_tipo_1)
+        
+        # VALIDAÇÃO DE ESTADO CIVIL
+        # df_pessoal.loc[df_pessoal.index[0], 'CodEstadoCiv'] = '999999'
+
         if not validar_codigos_mapa(
             df_pessoal,
             'CodEstadoCiv',
@@ -559,7 +531,9 @@ def main():
 
         # ====================================================================
 
-        #valida as UORGs Lotacao
+        # VALIDAÇÃO DE UORGS
+        #df_funcional.loc[df_funcional.index[0], 'NrUorgLotacao'] = '999999'
+        
         if not validar_codigos_mapa(
             df_funcional,
             'NrUorgLotacao',
@@ -739,12 +713,13 @@ def main():
         df_funcional['DenoSetorFunc'] = df_funcional['FuncSetor'].apply(
             lambda codigo: mapa_unidade.get(codigo, {}).get('DenoSetor', '')
         )
+        # VALIDAÇÃO DE COD FUNÇÃO IGNORANDO SE FOR 0000
         if not validar_codigos_mapa(
             df_funcional,
             'CodFuncao',
             mapa_atividade,
             'Atividade',
-            codigos_ignorados=['000']
+            codigos_ignorados=['0000']
         ):
             return False
 
@@ -805,6 +780,19 @@ def main():
             axis=1
         )
         df_funcional['CodCargo'] = df_funcional['GrCargo'] + df_funcional['Cargo']
+
+        # APENAS PARA TESTE DE VALIDAÇÃO
+        # df_funcional.loc[df_funcional.index[0], 'CodCargo'] = '999999'
+
+        # VALLIDAÇÃO DE CARGO
+        if not validar_codigos_mapa(
+            df_funcional,
+            'CodCargo',
+            mapa_deno_cargo,
+            'Cargo'
+        ):
+            return False
+        
         df_funcional['DenoCargo'] = df_funcional['CodCargo'].apply(
             lambda codigo: mapa_deno_cargo.get(codigo, '')
         )

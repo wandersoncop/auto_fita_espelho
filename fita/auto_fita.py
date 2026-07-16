@@ -12,13 +12,13 @@ Além disso:
 """
 
 
-import os
+
 import time
 from datetime import datetime
-from funcoes import obter_pasta_base
+from funcoes import (   
+    localizar_arquivo_fita)
 
-# from atualizar_tabelas_bd import main as atualizar_tabelas
-# from main import main as processar_fita
+
 from terminal import (
     ok, aviso, erro, linha, separador, LARGURA, tempo_operacao
 )
@@ -50,9 +50,28 @@ linha()
 print()
 
 # ==========================================================
-# ETAPA 1
+# VERIFICA SE EXISTE O ARQUIVO DA FITA
 # ==========================================================
 
+caminho_arquivo, arquivo_encontrado, diretorio = localizar_arquivo_fita()
+
+if caminho_arquivo is None:
+    erro("Arquivo da Fita Espelho não encontrado.")
+    print()
+    aviso("Copie o arquivo fita_servidor_AAAA_MM.txt para a pasta Entrada.")
+    print()
+    linha()
+    input("Pressione ENTER para sair...")
+    raise SystemExit
+
+ok(f"Arquivo encontrado: {arquivo_encontrado}")
+
+
+# Somente importa os módulos do banco após encontrar a fita
+from atualizar_tabelas_bd import main as atualizar_tabelas
+from main import main as processar_fita
+linha()
+print()
 aviso("ATUALIZANDO TABELAS AUXILIARES")
 atualizar_tabelas()
 print()
@@ -96,8 +115,8 @@ else:
 linha()
 
 print()
-print(' TEMPO PROCESAMENTO')
-print('-' * LARGURA)
+print(' TEMPO PROCESSAMENTO')
+
 
 if minutos == 0:
     tempo = f'{segundos} segundos'
@@ -106,5 +125,6 @@ else:
 
 tempo_operacao(f"{'Tempo total':.<30} {tempo}")
 print()
-
+linha()
+print()
 input("Pressione ENTER para sair...")

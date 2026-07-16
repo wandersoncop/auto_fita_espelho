@@ -302,7 +302,7 @@ def validar_codigos_mapa(df, coluna, mapa, descricao_tabela, codigos_ignorados=N
     # Padroniza os códigos da coluna como texto e remove espaços
     codigos_coluna = (
         df[coluna]
-        .fillna('')
+        .fillna('') # usado para aparecer vazio ao invez de NaN
         .astype(str)
         .str.strip()
     )
@@ -409,6 +409,42 @@ def obter_pasta_base():
         return os.path.dirname(sys.executable)
 
     return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def localizar_arquivo_fita():
+    """
+    Procura o arquivo da Fita Espelho dentro da pasta Entrada.
+
+    Retorna:
+        caminho_arquivo: caminho completo do arquivo encontrado
+        arquivo_encontrado: nome do arquivo encontrado
+        diretorio: caminho da pasta Entrada
+    """
+
+    diretorio = os.path.join(
+        obter_pasta_base(),
+        "Entrada"
+    )
+
+    arquivo_encontrado = None
+
+    for arquivo in os.listdir(diretorio):
+        if (
+            arquivo.lower().startswith("fita_servidor_")
+            and arquivo.lower().endswith(".txt")
+        ):
+            arquivo_encontrado = arquivo
+            break
+
+    if arquivo_encontrado:
+        caminho_arquivo = os.path.join(
+            diretorio,
+            arquivo_encontrado
+        )
+    else:
+        caminho_arquivo = None
+
+    return caminho_arquivo, arquivo_encontrado, diretorio 
+
 
 def arquivar_fita_processada(caminho_arquivo, MesFita):
     """
