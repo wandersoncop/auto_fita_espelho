@@ -22,6 +22,7 @@ from terminal import (
     ok, aviso, erro, linha, separador, LARGURA, tempo_operacao
 )
 
+
 # ==========================================================
 # INÍCIO DA CONTAGEM DO TEMPO
 # ==========================================================

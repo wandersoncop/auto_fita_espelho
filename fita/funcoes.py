@@ -350,6 +350,160 @@ def validar_codigos_mapa(df, coluna, mapa, descricao_tabela, codigos_ignorados=N
         return False
 
     return True
+
+from sqlalchemy import text
+import pandas as pd
+
+def atualizar_local_aposentadoria(
+    df_funcional,
+    engine,
+    MesFita
+):
+    """
+    Atualiza a tabela aux_local_aposentadoria com os servidores
+    que passaram para aposentados na fita atual.
+    """
+
+    # procura o último mês gravado no banco
+    df_meses = pd.read_sql(
+        """
+        SELECT DISTINCT MesFita
+        FROM tbl_funcional
+        WHERE MesFita <> %(MesFita)s
+        ORDER BY MesFita DESC
+        LIMIT 1
+        """,
+        engine,
+        params={"MesFita": MesFita}
+    )
+
+    if df_meses.empty:
+        return
+
+    mes_anterior = df_meses.iloc[0]["MesFita"]
+
+    # Dados do mês anterior
+    df_anterior = pd.read_sql(
+        """
+        SELECT
+            SIAPE,
+            CodSituacao,
+            NrUorgExercicio,
+            DenoSetorExercicio
+        FROM tbl_funcional
+        WHERE MesFita = %(MesFita)s
+        """,
+        engine,
+        params={"MesFita": mes_anterior}
+    )
+
+    # Junta mês anterior com a fita atual
+    df = df_funcional.merge(
+        df_anterior,
+        on="SIAPE",
+        suffixes=("_atual", "_anterior")
+    )
+
+    # Quem virou aposentado
+    df = df[
+        (df["CodSituacao_anterior"].str.strip() != "02") &
+        (df["CodSituacao_atual"].str.strip() == "02")
+    ]
+
+    if df.empty:
+        return
+
+    # Remove quem já existe na tabela auxiliar
+    df_existentes = pd.read_sql(
+        "SELECT MATRIC FROM aux_local_aposentadoria",
+        engine
+    )
+
+    existentes = set(df_existentes["MATRIC"].astype(str))
+
+    df = df[
+        ~df["SIAPE"].astype(str).isin(existentes)
+    ]
+
+    if df.empty:
+        return
+
+    inserir = df[
+        [
+            "SIAPE",
+            "NrUorgExercicio_anterior",
+            "DenoSetorExercicio_anterior"
+        ]
+    ].rename(
+        columns={
+            "SIAPE": "MATRIC",
+            "NrUorgExercicio_anterior": "NrUorgLocalAp",
+            "DenoSetorExercicio_anterior": "DenoSetorLocalAp"
+        }
+    )
+
+    inserir.to_sql(
+        "aux_local_aposentadoria",
+        engine,
+        if_exists="append",
+        index=False
+    )
+
+    ok(f"{len(inserir)} aposentado(s) incluído(s) na aux_local_aposentadoria.")
+
+
+def preencher_local_aposentadoria(df_funcional, engine):
+    """
+    Preenche os campos NrUorgLocalAp e DenoSetorLocalAp
+    utilizando a tabela aux_local_aposentadoria.
+    """
+
+    df_local_ap = pd.read_sql(
+        """
+        SELECT
+            MATRIC,
+            NrUorgLocalAp,
+            DenoSetorLocalAp
+        FROM aux_local_aposentadoria
+        """,
+        engine
+    )
+
+    mapa_local_ap = (
+        df_local_ap
+        .drop_duplicates(subset=["MATRIC"], keep="first")
+        .set_index("MATRIC")
+        [["NrUorgLocalAp", "DenoSetorLocalAp"]]
+        .to_dict("index")
+    )
+
+    df_funcional["NrUorgLocalAp"] = df_funcional.apply(
+        lambda linha: (
+            ""
+            if str(linha.get("CodSituacao", "")).strip() == "01"
+            else mapa_local_ap
+                .get(str(linha["SIAPE"]).zfill(7), {})
+                .get("NrUorgLocalAp", "")
+        ),
+        axis=1
+    )
+
+    df_funcional["DenoSetorLocalAp"] = df_funcional.apply(
+        lambda linha: (
+            ""
+            if str(linha.get("CodSituacao", "")).strip() == "01"
+            else mapa_local_ap
+                .get(str(linha["SIAPE"]).zfill(7), {})
+                .get("DenoSetorLocalAp", "")
+        ),
+        axis=1
+    )
+
+    return df_funcional
+
+
+
+
 def salvar_dataframe(df,nome_csv,nome_tabela,engine,MesFita):
     """
         salva o dataframe em csv e envia para o banco de dados

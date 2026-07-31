@@ -29,6 +29,8 @@ from funcoes import (
     localizar_arquivo_fita, #localiza o arquivo a ser processado
     arquivar_fita_processada, #move a fita processada para pasta
     validar_codigos_mapa, # validação dos campos quanto a tradução
+    atualizar_local_aposentadoria,
+    preencher_local_aposentadoria,
 )
 
 from mapeamentos import (
@@ -1185,6 +1187,25 @@ def main():
         aviso("ATUALIZANDO BANCO DE DADOS")
         print()
 
+        # salvar_dataframe(
+        #     df_funcional,
+        #     'funcional.csv',
+        #     'tbl_funcional',
+        #     engine,
+        #     MesFita
+        # )
+        atualizar_local_aposentadoria(
+            df_funcional,
+            engine,
+            MesFita
+        )
+
+        df_funcional = preencher_local_aposentadoria(
+            df_funcional,
+            engine
+        )
+
+
         salvar_dataframe(
             df_funcional,
             'funcional.csv',
@@ -1192,6 +1213,7 @@ def main():
             engine,
             MesFita
         )
+
     # ====================================================================
         salvar_dataframe(
             df_pagamento,

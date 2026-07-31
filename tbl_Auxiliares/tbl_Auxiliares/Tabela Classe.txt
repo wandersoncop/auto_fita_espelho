@@ -1,0 +1,27 @@
+"ChaveClasse";"Categ";"CodClasse";"DenoClasse";"ObsClasse"
+"M70545";"M";"4";"PROF ASSISTENTE-A";"Campo chaveClasse composta por CAT + GrupoCargo + Classe + 1º Número campo REF"
+"M70546";"M";"4";"PROF ADJUNTO-A";"Campo chaveClasse composta por CAT + GrupoCargo + Classe + 1º Número campo REF"
+"MU";"M";"U";"ÚNICO";
+"TM";"T";"M";"M";
+"TP";"T";"P";"P";
+"M4";"M";"4";"PROF AUXILIAR";
+"M5";"M";"5";"PROF ASSISTENTE";
+"M6";"M";"6";"PROF ADJUNTO";
+"M8";"M";"8";"PROF TITULAR";
+"MA";"M";"A";"A";
+"MB";"M";"B";"B";
+"MC";"M";"C";"C";
+"MD";"M";"D";"D";
+"ME";"M";"E";"E";
+"TS";"T";"S";"ESPECIAL";
+"T";"T";;"SEM CLASSE";
+"T1";"T";"1";"PRIMEIRA";
+"T2";"T";"2";"SEGUNDA";
+"TA";"T";"A";"NIVEL APOIO";
+"TB";"T";"B";"NIVEL APOIO";
+"TC";"T";"C";"NIVEL INTERMEDIARIO";
+"TD";"T";"D";"NIVEL INTERMEDIARIO";
+"TE";"T";"E";"NIVEL SUPERIOR";
+"MS";"M";"S";"ESPECIAL";
+"M7";"M";"7";"PROF ASSOCIADO";
+"MV";"M";"V";"PROF ASSOCIADO";

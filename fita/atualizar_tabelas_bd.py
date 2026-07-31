@@ -15,8 +15,8 @@ def main():
         Todas as tabelas devem estar:
         em .txt
         com a primeira linha de cabeçalho
-        padrão Unicode(UTF-8)  
-        separados por ';' 
+        padrão Unicode(UTF-8)
+        separados por ';'
         e entre ""
         o sitema enviará tudo como texto para o bd
     """
@@ -78,18 +78,33 @@ def main():
     tbl_titulacao = os.path.join(diretorio,'Tabela Titulacao.txt')
     df_titulacao = pd.read_csv(tbl_titulacao,sep=';',encoding='utf-8-sig',dtype=str)
 
-   
+
 
     df_titulacao.to_sql('aux_titulacao',engine,if_exists='replace',index=False)
     # print('Tabela Titulacao enviada')
-    
+
 
 
     # #-----------------------LOCAL APOSENTADORIA
 
-    tbl_local_aposentadoria = os.path.join(diretorio,'Tabela Local Aposentadoria.txt')
-    df_local_aposentadoria = pd.read_csv(tbl_local_aposentadoria,sep=';',encoding='utf-8-sig',dtype=str)
-    df_local_aposentadoria.to_sql('aux_local_aposentadoria',engine,if_exists='replace',index=False)
+    inspetor = inspect(engine)
+    if not inspetor.has_table('aux_local_aposentadoria'):
+        print('Primeira carga da aux_local_aposentadoria...')
+
+        tbl_local_aposentadoria = os.path.join(
+            diretorio,
+            'Tabela Local Aposentadoria.txt'
+        )
+        df_local_aposentadoria = pd.read_csv(
+            tbl_local_aposentadoria,
+            sep=';',
+            encoding='utf-8-sig',
+            dtype=str)
+        df_local_aposentadoria.to_sql(
+            'aux_local_aposentadoria',
+            engine,
+            if_exists='replace',
+            index=False)
     # print('Tabela Local Aposentadoria enviada')
 
 
@@ -169,7 +184,7 @@ def main():
         df_unidade_atual = pd.read_csv(tbl_unidade_atual,sep=';',encoding='utf-8-sig',dtype=str)
 
         df_unidade_atual.to_sql('aux_unidade_atual',engine,if_exists='replace',index=False)
-       
+
 
     #-----------------------CRIA UNIDADE ATUAL
 
@@ -260,7 +275,7 @@ def main():
     df_novos = df_uorgs[
         ~df_uorgs['CodUnid'].astype(str).isin(cod_existentes)
     ]
-    
+
 
     if len(df_novos) > 0:
         df_novos.to_sql(
@@ -269,7 +284,7 @@ def main():
             if_exists='append',
             index=False
         )
-        print(f"✔ Unidade Atual: {len(df_novos)} novo(s) registro(s) adicionados.")  
+        print(f"✔ Unidade Atual: {len(df_novos)} novo(s) registro(s) adicionados.")
 
 
     df_final = pd.read_sql(
@@ -288,7 +303,7 @@ def main():
         index=False,
         encoding='utf-8-sig'
     )
-   
+
 
 if __name__ == "__main__":
     main()
