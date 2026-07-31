@@ -15,14 +15,12 @@ Além disso:
 
 import time
 from datetime import datetime
-from funcoes import (   
-    localizar_arquivo_fita)
+from funcoes import (localizar_arquivo_fita)
 
 
 from terminal import (
     ok, aviso, erro, linha, separador, LARGURA, tempo_operacao
 )
-
 
 # ==========================================================
 # INÍCIO DA CONTAGEM DO TEMPO
@@ -111,7 +109,7 @@ linha()
 if sucesso:
     print("PROCESSO FINALIZADO COM SUCESSO")
 else:
-    erro('PROCESSO FINALIZADO COM ERRO')
+    erro('Processo interrompido. Faça os devidos ajustes antes de processar novamente.')
 linha()
 
 print()

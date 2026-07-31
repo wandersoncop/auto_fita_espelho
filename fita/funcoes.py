@@ -332,8 +332,13 @@ def validar_codigos_mapa(df, coluna, mapa, descricao_tabela, codigos_ignorados=N
         )
         print()
 
-        for codigo in codigos_invalidos:
-            print(f"   {codigo}")
+        for _, linha in df[
+            codigos_coluna.isin(codigos_invalidos)
+        ][['SIAPE', coluna]].drop_duplicates(subset=[coluna]).iterrows():
+
+            print(f"   SIAPE: {linha['SIAPE']} | {coluna}: {linha[coluna]}")
+
+
 
         print()
         aviso(
@@ -434,7 +439,6 @@ def localizar_arquivo_fita():
         ):
             arquivo_encontrado = arquivo
             break
-
     if arquivo_encontrado:
         caminho_arquivo = os.path.join(
             diretorio,

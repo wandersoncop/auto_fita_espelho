@@ -51,27 +51,19 @@ from mapeamentos import (
 from conexao import engine
 # Importa o objeto de conexão (engine) utilizado para acessar o banco de dados MySQL.
 
-
-
 def imprimir_registro(descricao,quantidade):
     """    vai imprimir a descriação e a quantidade de registros
-    encontrados, craia  no print  a visualização:  '.<35' significa alinhar a esq usando
+    encontrados, cria  no print  a visualização:  '.<35' significa alinhar a esq usando
     35 caracteres e preencher com '.'  '> 8' alinhar a dir
     """
-
     print(f'{descricao:.<35}{quantidade:>8,}'.replace(",","."))
-
-
-
-
-
 
 def main():
     """parte principal da automação
     """
-   # ==========================================================
-# VERIFICA SE EXISTE O ARQUIVO DA FITA
-# ==========================================================
+    # ==========================================================
+    # VERIFICA SE EXISTE O ARQUIVO DA FITA
+    # ==========================================================
 
     caminho_arquivo, arquivo_encontrado, diretorio = localizar_arquivo_fita()
 
@@ -110,7 +102,7 @@ def main():
     #para ver o que retorna
     # print(mapa_estado_civil)
 
-    # PAIS-------------------------------------------------------------------------------------------
+    # PAIS-----------------------------------------------------------------------
     df_pais = pd.read_sql(
         """
             SELECT
@@ -129,7 +121,7 @@ def main():
         )
     )
     # print(mapa_pais)
-    # DENO_ESCOLARIDADE-----------------------------------------------------------------------------
+    # DENO_ESCOLARIDADE-------------------------------------------------------------
     df_escolaridade = pd.read_sql(
         """
             SELECT
@@ -145,7 +137,7 @@ def main():
             df_escolaridade['DenoEscol']
         )
     )
-    # DENO_TITULACAO----------------------------------------------------------------------------------
+    # DENO_TITULACAO-------------------------------------------------------------------
     df_titulacao = pd.read_sql(
         """SELECT
             CodTit,
@@ -159,7 +151,7 @@ def main():
             df_titulacao['DenoTit']
         )
     )
-    # TITULACAO CORRECAO---------------------------------------------------------------------------
+    # TITULACAO CORRECAO--------------------------------------------------------------------
     df_titulacao_correcao = pd.read_sql(
         """
             SELECT
@@ -171,7 +163,7 @@ def main():
         """,
         engine
     )
-    # PESCAD MATRICULA UFMG------------------------------------------------------------------------
+    # PESCAD MATRICULA UFMG--------------------------------------------------------------------
     df_pescad_matricula_ufmg = pd.read_sql(
         """
             SELECT
@@ -187,7 +179,7 @@ def main():
             df_pescad_matricula_ufmg['InscUFMG']
         )
     )
-    # SITUACAO------------------------------------------------------------------------
+    # SITUACAO-----------------------------------------------------------------------------------
     df_situacao = pd.read_sql(
         """
             SELECT
@@ -203,7 +195,7 @@ def main():
             df_situacao['DenoSit']
         )
     )
-    # DENO CARGO------------------------------------------------------------------------
+    # DENO CARGO-----------------------------------------------------------------------------------
     df_deno_cargo = pd.read_sql(
         """
             SELECT
@@ -233,7 +225,7 @@ def main():
         )
     )
     # print(mapa_deno_cargo)
-    #CLASSE-------------------------------------------------
+    #CLASSE------------------------------------------------------------------------------------
     df_classe = pd.read_sql(
         """
             SELECT
@@ -249,7 +241,7 @@ def main():
             df_classe['DenoClasse'],
         )
     )
-    # UNID LOTACAO------------------------------------------------------------------------
+    # UNID LOTACAO--------------------------------------------------------------------------------
     df_unidade = pd.read_sql(
         """
             SELECT
@@ -265,9 +257,9 @@ def main():
 
     df_unidade['CodUnid'] = (
         df_unidade['CodUnid']
-        .fillna('')
-        .astype(str)
-        .str.strip()
+        .fillna('') # fica vazio ao invez de NaN
+        .astype(str) # transforma em string
+        .str.strip() # retira os espaços antes e depois da string
     )
     # caso o CodUnid esteja duplicado traz somente a 1 registro
     df_unidade = df_unidade.drop_duplicates(
@@ -280,7 +272,7 @@ def main():
         .to_dict('index')
     )
     # print(mapa_unidade)
-    # EMAIL------------------------------------------------------------------------
+    # EMAIL-----------------------------------------------------------------------------------
     df_email_uorg = pd.read_sql(
         """
             SELECT
@@ -299,7 +291,7 @@ def main():
         [['ED-EMAIL-UORG', 'ED-MUNICIPIO-ENDERECO-UORG', 'SG-UF-END-UORG']]
         .to_dict('index')
     )
-    # MUNICIPIO------------------------------------------------------------------------
+    # MUNICIPIO-------------------------------------------------------------------------------
     df_municipio = pd.read_sql(
         """
             SELECT
@@ -316,7 +308,7 @@ def main():
         )
     )
 
-    # ATIVIDADE---------------------------------------------------------------------------------
+    # ATIVIDADE-----------------------------------------------------------------------------------
     df_atividade = pd.read_sql(
         """
             SELECT
@@ -397,7 +389,7 @@ def main():
             df_cad_apf['f0300_ctfsgr'].astype(str).str.replace('.0', '', regex=False)
         )
     )
-    # RUBRICA-----------------------------------------------------------------------
+    # RUBRICA---------------------------------------------------------------------------------
     df_rubrica = pd.read_sql(#faz o select na tabela aux
         """
             SELECT
@@ -466,10 +458,9 @@ def main():
         info(f' Mês da fita: {MesFita}')
         print()
 
-
         # ====================================================================
         # TIPO 9 - PARA VALIDAÇÃO DA QUANTIDADE DE REGISTROS DO MesFita
-        #vai chamar a função que esta no arquivo de funções
+        # vai chamar a função que esta no arquivo de funções
         # ====================================================================
         total_controle_fita = extrair_tipo_9(caminho_arquivo)
         info(f'Total de Registros : {total_controle_fita}')
@@ -549,7 +540,7 @@ def main():
         df_funcional = pd.DataFrame(registros_tipo_2)
         # cria um data frame, como se fosse uma tabela do excel na memoria da maquina
 
-        # ====================================================================
+        # =====================================================================
             # EXEMPLO DE COMO CRIAR UM CAMPO!
 
             # Criar a coluna 'UnidLotacao' no DataFrame df_funcional.
@@ -559,7 +550,7 @@ def main():
             # e retornando do campo do 'Unid' a unidade correspondente
             # o campo deve esta listado no HEADER correspondente no arquivo mapeamentos.py
 
-        # ====================================================================
+        # ======================================================================
 
         # VALIDAÇÃO DA TABELA AUX_SITUACAO
         # df_funcional.loc[df_funcional.index[0], 'CodSituacao'] = '999999'
@@ -570,7 +561,6 @@ def main():
             'aux_situacao'
         ):
             return False
-
 
         # VALIDAÇÃO DE UORGS
         # df_funcional.loc[df_funcional.index[0], 'NrUorgLotacao'] = '999999'
@@ -583,7 +573,6 @@ def main():
             codigos_ignorados=['000000000']
         ):
             return False
-
 
         df_funcional['UnidLotacao'] = df_funcional['NrUorgLotacao'].apply(
             lambda codigo: mapa_unidade.get(codigo, {}).get('Unid', '') or ''
@@ -697,10 +686,8 @@ def main():
         df_funcional['CodMunicipioUORGExercicio'] = df_funcional['NrUorgExercicio'].apply(
             lambda codigo: mapa_email_uorg.get(codigo, {}).get('ED-MUNICIPIO-ENDERECO-UORG', '')
         )
-
         # VALIDAÇÃO DE MUNICIPIO
         # df_funcional.loc[df_funcional.index[0], 'CodMunicipioUORGExercicio'] = '999999'
-
         if not validar_codigos_mapa(
             df_funcional,
             'CodMunicipioUORGExercicio',
@@ -751,7 +738,6 @@ def main():
         )
         # VALIDAÇÃO DE FuncSetor
         # df_funcional.loc[df_funcional.index[0], 'FuncSetor'] = '999999'
-
         if not validar_codigos_mapa(
             df_funcional,
             'FuncSetor',
@@ -769,7 +755,6 @@ def main():
         )
         # VALIDAÇÃO DE COD FUNÇÃO IGNORANDO SE FOR 0000
         # df_funcional.loc[df_funcional.index[0], 'CodFuncao'] = '999999'
-
         if not validar_codigos_mapa(
             df_funcional,
             'CodFuncao',
@@ -819,7 +804,6 @@ def main():
 
         # VALIDAÇÃO DE OrgAnt IGNORANDO SE FOR 000000
         # df_funcional.loc[df_funcional.index[0], 'OrgAnt'] = '999999'
-
         if not validar_codigos_mapa(
             df_funcional,
             'OrgAnt',
@@ -828,7 +812,6 @@ def main():
             codigos_ignorados=['', '00000']
         ):
             return False
-
 
         # VALIDAÇÃO DE orgaos IGNORANDO SE FOR 000000
         # df_funcional.loc[df_funcional.index[0], 'OrgReq'] = '999999'
@@ -841,8 +824,6 @@ def main():
         ):
             return False
 
-
-
         df_funcional['DenoOrigem'] = df_funcional['OrgOrigem'].apply(
             lambda codigo:mapa_orgaos.get(codigo,'')
         )
@@ -854,7 +835,7 @@ def main():
         )
         #modificado para atentdr caso seja 00000 para vir vazio
 
-    #CRIA AS REGRAS DE NEGOCIO DO CARGO QUE INFLUENCIA NA CATEGORIA MAGISTERIO
+        #CRIA AS REGRAS DE NEGOCIO DO CARGO QUE INFLUENCIA NA CATEGORIA MAGISTERIO
 
         df_funcional['GrCargo'] = df_funcional.apply(
         lambda linha:
@@ -874,10 +855,8 @@ def main():
         )
         df_funcional['CodCargo'] = df_funcional['GrCargo'] + df_funcional['Cargo']
 
-        # APENAS PARA TESTE DE VALIDAÇÃO
-        # df_funcional.loc[df_funcional.index[0], 'CodCargo'] = '999999'
-
         # VALLIDAÇÃO DE CARGO
+        # df_funcional.loc[df_funcional.index[0], 'CodCargo'] = '999999'
         if not validar_codigos_mapa(
             df_funcional,
             'CodCargo',
@@ -889,7 +868,7 @@ def main():
         df_funcional['DenoCargo'] = df_funcional['CodCargo'].apply(
             lambda codigo: mapa_deno_cargo.get(codigo, '')
         )
-    #-----------------------CRIA A REGRA DE NEGOCIO DA CLASSE CONFORME ACCESS
+        #-----------------------CRIA A REGRA DE NEGOCIO DA CLASSE
         df_funcional['Classe'] = df_funcional.apply(
             lambda linha:
                 mapa_cad_apf_clas.get(str(linha['SIAPE']).zfill(7))
@@ -898,7 +877,7 @@ def main():
                 else str(linha['Classe']).replace('.0', '').strip(),
             axis=1
         )
-    #-----------------------CRIA A COLUNA E ESTABELECE REGRAS DE NEGOCIO DE CATEGORIA
+        #-----------------------CRIA A COLUNA E ESTABELECE REGRAS DE NEGOCIO DE CATEGORIA
         df_funcional['Categoria'] = df_funcional.apply(
         lambda linha:
             'ESTAGIARIO'
@@ -977,8 +956,8 @@ def main():
                 ),
             axis=1
         )
-        # VALLIDACAO DA CHAVE CLASS
-        # df_funcional.loc[df_funcional.index[0], 'ChaveClass'] = '999999'
+    # VALLIDACAO DA CHAVE CLASS
+    # df_funcional.loc[df_funcional.index[0], 'ChaveClass'] = '999999'
         if not validar_codigos_mapa(
             df_funcional,
             'ChaveClass',
@@ -990,10 +969,6 @@ def main():
         df_funcional['DenoClasse'] = df_funcional['ChaveClass'].apply(
             lambda codigo: mapa_classe.get(codigo, '')
         )
-
-
-
-
 
     #-----------------------CRIA A COLUNA E ESTABELECE REGRAS DE NEGOCIO DO TEM FUNCAO
         df_funcional = df_funcional.merge( # e como o join em sql entre a funciona e pessoal
@@ -1034,10 +1009,8 @@ def main():
 
         df_pagamento = pd.DataFrame(registros_tipo_3)
 
-         # VALLIDACAO DA RUBRICA
+        # VALLIDACAO DA RUBRICA
         # df_funcional.loc[df_funcional.index[0], 'CodRub'] = '999999'
-
-        # VALIDAÇÃO DA TABELA AUX_RUBRICA
         if not validar_codigos_mapa(
             df_pagamento,
             'CodRub',
@@ -1051,7 +1024,7 @@ def main():
             'MesFita',  # nome da coluna
             MesFita  # valor
         )
-    #TRATA O CAMPO VALOR RETIRANDO OS ZEROS A ESQUERDA E DEIXANDO CO 2 CASAS DECIMAIS
+        #TRATA O CAMPO VALOR RETIRANDO OS ZEROS A ESQUERDA E DEIXANDO COM 2 CASAS DECIMAIS
         df_pagamento['Valor'] = df_pagamento['Valor'].apply(formatar_valores)
 
     # =================================================================
@@ -1167,7 +1140,7 @@ def main():
         aviso('VALIDAÇÃO DO QUANTITATIVO DA FITA')
 
         print()
-
+        # total controle guarda o tipo 9 que contem a quntidade de registros
         if total_controle_fita == len(registros_tipo_1):
             ok("QUANTIDADE CONFERIDA COM SUCESSO.")
         else:
@@ -1179,7 +1152,6 @@ def main():
             Nenhum dado foi gravado no banco de dados.
             Corrija a fita e execute o processamento novamente.
             """.replace(",", "."))
-
 
             print()
             return False
@@ -1295,7 +1267,6 @@ def main():
                 df_perqualif['PERQUALIF']
             )
         )
-
         # ====================================================================
         # ESCOLARIDADE FINAL
         # ====================================================================
