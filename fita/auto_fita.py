@@ -11,16 +11,11 @@ Além disso:
 - Informa se o processo foi concluído com sucesso ou erro.
 """
 
-
-
 import time
 from datetime import datetime
 from funcoes import (localizar_arquivo_fita)
 
-
-from terminal import (
-    ok, aviso, erro, linha, separador, LARGURA, tempo_operacao
-)
+from terminal import (ok, aviso, erro, linha, separador, LARGURA, tempo_operacao)
 
 
 # ==========================================================
