@@ -4,13 +4,6 @@ from conexao import engine
 from funcoes import obter_pasta_base
 from sqlalchemy import inspect
 def main():
-
-    #---------------------------CAMINHO PARA A PASTA DE TABELAS AUXILIARES
-    diretorio = os.path.join(
-        obter_pasta_base(),
-        'tbl_Auxiliares'
-    )
-    #---------------------------TABELAS AUXILIARES
     """
         Todas as tabelas devem estar:
         em .txt
@@ -20,16 +13,18 @@ def main():
         e entre ""
         o sitema enviará tudo como texto para o bd
     """
-
+    #---------------------------CAMINHO PARA A PASTA DE TABELAS AUXILIARES
+    diretorio = os.path.join(
+        obter_pasta_base(),
+        'tbl_Auxiliares'
+    )
+    #---------------------------TABELAS AUXILIARES
 
     # -----------------------ESTADO CIVIL
 
     tbl_estado_civil = os.path.join(diretorio, 'Tabela Estado Civil.txt')
     df_estado_civil= pd.read_csv(tbl_estado_civil, sep=';',encoding='latin-1',dtype=str)
     df_estado_civil.to_sql( 'aux_estado_civil',engine,if_exists='replace',index=False)
-    # a proxima linha envia o df para o access
-    # enviar_dataframe_para_access(df_estado_civil,'aux_estado_civil')
-    # print ('Tabela estado civil enviada')
 
     # -----------------------PAIS
 
@@ -45,7 +40,7 @@ def main():
     df_cargo.to_sql( 'aux_cargo',engine,if_exists='replace',index=False)
     # print ('Tabela Cargo enviada')
 
-    # #-----------------------SITUAÇÃO
+    #-----------------------SITUAÇÃO
 
     tbl_situacao = os.path.join(diretorio, 'Tabela Situacao.txt')
     df_situacao= pd.read_csv(tbl_situacao, sep=';',encoding='latin-1',dtype=str)
@@ -77,15 +72,10 @@ def main():
 
     tbl_titulacao = os.path.join(diretorio,'Tabela Titulacao.txt')
     df_titulacao = pd.read_csv(tbl_titulacao,sep=';',encoding='utf-8-sig',dtype=str)
-
-
-
     df_titulacao.to_sql('aux_titulacao',engine,if_exists='replace',index=False)
     # print('Tabela Titulacao enviada')
 
-
-
-    # #-----------------------LOCAL APOSENTADORIA
+    #-----------------------LOCAL APOSENTADORIA
 
     inspetor = inspect(engine)
     if not inspetor.has_table('aux_local_aposentadoria'):
@@ -107,9 +97,7 @@ def main():
             index=False)
     # print('Tabela Local Aposentadoria enviada')
 
-
-
-    # #-----------------------MUNICIPIO
+    #-----------------------MUNICIPIO
 
     tbl_municipio = os.path.join(diretorio,'Tabela Municipio.txt')
     df_municipio = pd.read_csv(tbl_municipio,sep=';',encoding='latin-1',dtype=str)
@@ -117,56 +105,56 @@ def main():
     # print('Tabela Municipio enviada')
 
 
-    # #-----------------------UORG ENDEREÇO
+    #-----------------------UORG ENDEREÇO
 
     tbl_uorg_endereco = os.path.join(diretorio,'Tabela UORG Endereco.txt')
     df_uorg_endereco = pd.read_csv(tbl_uorg_endereco,sep=';',encoding='latin-1',dtype=str)
     df_uorg_endereco.to_sql('aux_uorg_endereco',engine,if_exists='replace',index=False)
     # print('Tabela UORG Endereco enviada')
 
-    # #-----------------------TITULAÇÃO CORREÇÃO
+    #-----------------------TITULAÇÃO CORREÇÃO
 
     tbl_titulacao_correcao = os.path.join(diretorio,'Tabela Titulacao Correção.txt')
     df_titulacao_correcao = pd.read_csv(tbl_titulacao_correcao,sep=';',encoding='latin-1',dtype=str)
     df_titulacao_correcao.to_sql('aux_titulacao_correcao',engine,if_exists='replace',index=False)
     # print('Tabela Titulação Correção enviada')
 
-    # #-----------------------RUBRICA ICQ
+    #-----------------------RUBRICA ICQ
 
     tbl_rubrica_incentivo_qualificacao = os.path.join(diretorio,'Tabela Rubrica Incentivo Qualificacao.txt')
     df_rubrica_incentivo_qualificacao = pd.read_csv(tbl_rubrica_incentivo_qualificacao,sep=';',encoding='latin-1',dtype=str)
     df_rubrica_incentivo_qualificacao.to_sql('aux_rubrica_incentivo_qualificacao',engine,if_exists='replace',index=False)
     # print('Tabela Rubrica Incentivo Qualificacao enviada')
 
-    # #-----------------------RUBRICA
+    #-----------------------RUBRICA
 
     tbl_rubrica = os.path.join(diretorio,'Tabela Rubrica.txt')
     df_rubrica = pd.read_csv(tbl_rubrica,sep=';',encoding='latin-1',dtype=str)
     df_rubrica.to_sql('aux_rubrica',engine,if_exists='replace',index=False)
     # print('Tabela Rubrica enviada')
 
-    # #-----------------------OCORRENCIA
+    #-----------------------OCORRENCIA
 
     tbl_ocorrencia = os.path.join(diretorio,'Tabela Ocorrencia.txt')
     df_ocorrencia = pd.read_csv(tbl_ocorrencia,sep=';',encoding='latin-1',dtype=str)
     df_ocorrencia.to_sql('aux_ocorrencia',engine,if_exists='replace',index=False)
     # print('Tabela Ocorrencia enviada')
 
-    # #-----------------------ORGÃOS
+    #-----------------------ORGÃOS
 
     tbl_orgaos = os.path.join(diretorio,'Tabela Orgaos.txt')
     df_orgaos = pd.read_csv(tbl_orgaos,sep=';',encoding='latin-1',dtype=str)
     df_orgaos.to_sql('aux_orgaos',engine,if_exists='replace',index=False)
     # print('Tabela Orgaos enviada')
 
-    # #-----------------------PESCAD
+    #-----------------------PESCAD
 
     tbl_pescad = os.path.join(diretorio,'Pescad_InscUFMG.txt')
     df_pescad = pd.read_csv(tbl_pescad,sep=';',encoding='latin-1',dtype=str)
     df_pescad.to_sql('aux_pescad_insc_ufmg',engine,if_exists='replace',index=False)
     # print('Tabela Pescad enviada')
 
-    # #-----------------------cad_apf resolve situação da categoria MAGISTERIO X TEC-ADMINISTRATIVO
+    #-----------------------cad_apf resolve situação da categoria MAGISTERIO X TEC-ADMINISTRATIVO
 
     tbl_cad_apf = os.path.join(diretorio,'CadAPF.txt')
     tbl_cad_apf = pd.read_csv(tbl_cad_apf,sep=';',encoding='utf-8-sig',dtype=str)
@@ -174,7 +162,7 @@ def main():
     # print('Tabela CadAPF enviada')
 
     #-----------------------CRIA UNIDADE ATUAL SERÁ ENVIADA UMA UNICA VEZ (BASE INCREMENTAL)
-    #usando o inspct
+
     inspetor = inspect(engine)
 
     if not inspetor.has_table('aux_unidade_atual'):
@@ -189,8 +177,6 @@ def main():
     #-----------------------CRIA UNIDADE ATUAL
 
     tbl_uorgs = os.path.join(diretorio, 'Extr_UORGs.txt')
-
-
     df_uorgs = pd.read_csv(tbl_uorgs, sep=';', encoding='latin1', dtype=str)
 
     tbl_uorgs = os.path.join(diretorio, 'Extr_UORGs.txt')
@@ -200,9 +186,7 @@ def main():
         encoding='latin1',
         dtype=str
     )
-
-
-
+    
     #  aqui sera criada a tabela unidade atual, que não pode ser apagada a primeira inserção tem que ser a que esta na fita!!!!!
     # para poder trazer as inserçoes antigas pois a tabela é incremental
     # CodUnid: "000" & Direita([NrUorg];6)
