@@ -1,0 +1,8 @@
+# Ignorar arquivos do Word
+*.docx
+
+# Ignorar pasta dist
+fita/dist/
+
+#ignorar pasta Entrada
+Entrada/
