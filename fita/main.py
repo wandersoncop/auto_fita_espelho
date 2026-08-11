@@ -71,10 +71,9 @@ def main():
 
 
 
-
-    # ==============================================
+    # =========================================================
     #  CRIAÇÃO DOS CAMPOS COM BASE NAS TABELAS AUXILIARES
-    # ==============================================
+    # =========================================================
 
     # ESTADO CIVIL------------------------------------------------------------------------------------
     df_estado_civil = pd.read_sql(
@@ -256,7 +255,6 @@ def main():
         """,
         engine
     )
-
     df_unidade['CodUnid'] = (
         df_unidade['CodUnid']
         .fillna('') # fica vazio ao invez de NaN
@@ -468,17 +466,16 @@ def main():
         info(f'Total de Registros : {total_controle_fita}')
         print()
 
-
         # ====================================================================
         # TIPO 1 - PESSOAL
         # ====================================================================
         #extração e estruturação dos dados
         registros_tipo_1 = ler_fita_por_tipo(
             caminho_arquivo,# onde esta o arquivo
-            LAYOUT_TIPO_1,# mapeamento
-            '1',#tipo do arquivo ex:tipo_1,tipo_2,tipo_3....
-            CAMPOS_DATA,#lista de campos que são data
-            mapas_auxiliares, # e o dicionario para configuracao dos novos campos
+            LAYOUT_TIPO_1,      # mapeamento
+            '1',                # tipo do arquivo ex:tipo_1,tipo_2,tipo_3....
+            CAMPOS_DATA,        # lista de campos que são data
+            mapas_auxiliares,   # e o dicionario para configuracao dos novos campos
         )
         df_pessoal = pd.DataFrame(registros_tipo_1)
 
@@ -494,7 +491,6 @@ def main():
 
         # VALIDAÇÃO DE ESTADO CIVIL
         #df_pessoal.loc[df_pessoal.index[0], 'CodEstadoCiv'] = '999999'
-
         if not validar_codigos_mapa(
             df_pessoal,
             'CodEstadoCiv',
@@ -566,7 +562,6 @@ def main():
 
         # VALIDAÇÃO DE UORGS
         # df_funcional.loc[df_funcional.index[0], 'NrUorgLotacao'] = '999999'
-
         if not validar_codigos_mapa(
             df_funcional,
             'NrUorgLotacao',
