@@ -186,7 +186,7 @@ def main():
         encoding='latin1',
         dtype=str
     )
-    
+
     #  aqui sera criada a tabela unidade atual, que não pode ser apagada a primeira inserção tem que ser a que esta na fita!!!!!
     # para poder trazer as inserçoes antigas pois a tabela é incremental
     # CodUnid: "000" & Direita([NrUorg];6)
@@ -253,11 +253,12 @@ def main():
         "SELECT CodUnid FROM aux_unidade_atual",
         engine
     )
-    cod_existentes = set(
-        df_existente['CodUnid'].astype(str)
+
+    cod_existentes = set(# set ira trazer somente o que não for repetido
+        df_existente['CodUnid'].astype(str) # vai tranformar o CodUnid em texto
     )
     df_novos = df_uorgs[
-        ~df_uorgs['CodUnid'].astype(str).isin(cod_existentes)
+        ~df_uorgs['CodUnid'].astype(str).isin(cod_existentes) # vai trazer o CodUnid que não estiver em cod_existente
     ]
 
 

@@ -31,6 +31,7 @@ from funcoes import (
     validar_codigos_mapa, # validação dos campos quanto a tradução
     atualizar_local_aposentadoria,
     preencher_local_aposentadoria,
+    imprimir_registro,
 )
 
 from mapeamentos import (
@@ -53,12 +54,7 @@ from mapeamentos import (
 from conexao import engine
 # Importa o objeto de conexão (engine) utilizado para acessar o banco de dados MySQL.
 
-def imprimir_registro(descricao,quantidade):
-    """    vai imprimir a descriação e a quantidade de registros
-    encontrados, cria  no print  a visualização:  '.<35' significa alinhar a esq usando
-    35 caracteres e preencher com '.'  '> 8' alinhar a dir
-    """
-    print(f'{descricao:.<35}{quantidade:>8,}'.replace(",","."))
+
 
 def main():
     """parte principal da automação
@@ -709,8 +705,9 @@ def main():
         mapa_local_ap = (
             df_local_ap
             .drop_duplicates(subset=['MATRIC'], keep='first')
-            .set_index('MATRIC')
-            [['NrUorgLocalAp', 'DenoSetorLocalAp']]
+            # se tiver mais de uma linha com a mesma matricula traz somente a primeira
+            .set_index('MATRIC') # MATRIC passa a ser o index 'chave' do df
+            [['NrUorgLocalAp', 'DenoSetorLocalAp']] # seleciona as duas colunas
             .to_dict('index')
         )
         df_funcional['NrUorgLocalAp'] = df_funcional.apply(
@@ -968,10 +965,10 @@ def main():
         )
 
     #-----------------------CRIA A COLUNA E ESTABELECE REGRAS DE NEGOCIO DO TEM FUNCAO
-        df_funcional = df_funcional.merge( # e como o join em sql entre a funciona e pessoal
-            df_pessoal[['SIAPE','Nome']], #join entre SIAPE e Nome
-            on= 'SIAPE', # achave é o SIAPE
-            how='left' # e o join e´um left-join
+        df_funcional = df_funcional.merge(  # e como o join em sql entre a funciona e pessoal
+            df_pessoal[['SIAPE','Nome']],   # join entre SIAPE e Nome
+            on= 'SIAPE',                    # a chave é o SIAPE
+            how='left'                      # e o join é um left-join
         )
         nome_coluna = df_funcional.pop('Nome')
         # remove a coluna da ultima posicao para reinserir na posição indicada
@@ -985,9 +982,9 @@ def main():
             nome_coluna
         )
         df_funcional.insert(# faz a inserção do campo MesFita na tbl funcional
-            0,#posição 1 coluna
-            'MesFita', #nome da coluna
-            MesFita #valor da coluna
+            0,          # posição 1 coluna
+            'MesFita',  # nome da coluna
+            MesFita     # valor da coluna
         )
         df_funcional = df_funcional[HEADER_TIPO_2]
 

@@ -288,12 +288,14 @@ def validar_codigos_mapa(df, coluna, mapa, descricao_tabela, codigos_ignorados=N
         for codigo in mapa.keys()
     }
     # Localiza códigos preenchidos que não existem no mapa
+    # coloca em ordem
+    # ignora os repetidos
     codigos_invalidos = sorted(
         set(
             codigos_coluna[
-                (codigos_coluna != '')
-                & (~codigos_coluna.isin(codigos_ignorados))
-                & (~codigos_coluna.isin(codigos_validos))
+                (codigos_coluna != '')                      # pega somente os que não estão vazios
+                & (~codigos_coluna.isin(codigos_ignorados)) # isin verifica se o cod esta dentro da lista de ignorados
+                & (~codigos_coluna.isin(codigos_validos))   # o ~ significa não ele inverte o resultado
             ]
         )
     )
@@ -306,13 +308,11 @@ def validar_codigos_mapa(df, coluna, mapa, descricao_tabela, codigos_ignorados=N
         )
         print()
 
-        for _, linha in df[
+        for _, linha in df[ # o _ é para não trazer o indice da linha
             codigos_coluna.isin(codigos_invalidos)
         ][['SIAPE', coluna]].drop_duplicates(subset=[coluna]).iterrows():
-
+        # para cada codigo encontrado,  moostra o SIAPE e o codigo
             print(f"   SIAPE: {linha['SIAPE']} | {coluna}: {linha[coluna]}")
-
-
 
         print()
         aviso(
@@ -388,6 +388,7 @@ def atualizar_local_aposentadoria(df_funcional,engine,MesFita):
 
 
     existentes = set(df_existentes["MATRIC"].astype(str))
+
 
     df = df[
         ~df["SIAPE"].astype(str).isin(existentes)
@@ -472,10 +473,11 @@ def salvar_dataframe(df,nome_csv,nome_tabela,engine,MesFita):
         cria a tabela caso não exista.
         se existir remove os registros para inserir os da nova fita
     """
-
+    ano = MesFita[:4]
     pasta_saida = os.path.join(
        obter_pasta_base(),
         'Saida',
+        ano,
         MesFita
     )
     os.makedirs(pasta_saida,exist_ok=True)
@@ -592,6 +594,13 @@ def arquivar_fita_processada(caminho_arquivo, MesFita):
     shutil.move(caminho_arquivo,destino)
 
     ok(f"{nome_arquivo} arquivada.")
+
+def imprimir_registro(descricao,quantidade):
+    """    vai imprimir a descriação e a quantidade de registros
+    encontrados, cria  no print  a visualização:  '.<35' significa alinhar a esq usando
+    35 caracteres e preencher com '.'  '> 8' alinhar a dir
+    """
+    print(f'{descricao:.<35}{quantidade:>8,}'.replace(",","."))
 
 # from sqlalchemy import text
 # import pandas as pd
