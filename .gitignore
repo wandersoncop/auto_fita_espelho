@@ -9,3 +9,8 @@ Entrada/
 
 #ignorar pasta Entrada
 Saida/
+
+dist/
+build/
+*.exe
+*.pkg
