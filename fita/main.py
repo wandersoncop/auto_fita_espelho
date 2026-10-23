@@ -148,6 +148,7 @@ def main():
             df_titulacao['DenoTit']
         )
     )
+    
     # TITULACAO CORRECAO--------------------------------------------------------------------
     df_titulacao_correcao = pd.read_sql(
         """
@@ -1255,7 +1256,8 @@ def main():
                 riq.PERQUALIF
             FROM tbl_registro_pagamento rp
         INNER JOIN aux_rubrica_incentivo_qualificacao riq
-            ON rp.CodRub = riq.CODQUALIF;
+            ON rp.CodRub COLLATE utf8mb4_unicode_ci =
+            riq.CODQUALIF COLLATE utf8mb4_unicode_ci;
         """
 
         with engine.begin() as conexao:
