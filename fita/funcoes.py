@@ -522,6 +522,9 @@ def salvar_dataframe(df,nome_csv,nome_tabela,engine,MesFita):
     ok(f"{nome_csv:<32} -> {nome_tabela}")
     # print(f"✅ {nome_tabela} salvo no banco!")
 
+
+    
+
 def obter_pasta_base():
     """
     Retorna a pasta base do sistema.

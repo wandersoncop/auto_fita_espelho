@@ -18,6 +18,16 @@ def main():
         obter_pasta_base(),
         'tbl_Auxiliares'
     )
+
+
+
+
+
+
+
+
+
+    
     #---------------------------TABELAS AUXILIARES
 
     # -----------------------ESTADO CIVIL
