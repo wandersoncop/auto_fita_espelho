@@ -161,6 +161,7 @@ def main():
         """,
         engine
     )
+    
     # PESCAD MATRICULA UFMG--------------------------------------------------------------------
     df_pescad_matricula_ufmg = pd.read_sql(
         """
@@ -177,6 +178,13 @@ def main():
             df_pescad_matricula_ufmg['InscUFMG']
         )
     )
+
+
+
+
+
+
+
     # SITUACAO-----------------------------------------------------------------------------------
     df_situacao = pd.read_sql(
         """
