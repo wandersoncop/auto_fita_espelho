@@ -163,15 +163,36 @@ def main():
     )
     
     # PESCAD MATRICULA UFMG--------------------------------------------------------------------
+    # df_pescad_matricula_ufmg = pd.read_sql(
+    #     """
+    #         SELECT
+    #         InscUFMG,
+    #         MATRIC
+    #         FROM aux_pescad_insc_ufmg
+    #     """,
+    #     engine
+    # )
+    # mapa_insc_ufmg = dict(
+    #     zip(
+    #         df_pescad_matricula_ufmg['MATRIC'],
+    #         df_pescad_matricula_ufmg['InscUFMG']
+    #     )
+    # )
+
     df_pescad_matricula_ufmg = pd.read_sql(
-        """
-            SELECT
-            InscUFMG,
-            MATRIC
-            FROM aux_pescad_insc_ufmg
-        """,
-        engine
+    """
+    SELECT DISTINCT
+        Inscr AS InscUFMG,
+        SIAPE AS MATRIC
+    FROM `pescad cadastro`
+    WHERE
+        SIAPE <> '0000000'
+        AND ORG_CODIGO <> 'PEN'
+    """,
+    engine
     )
+    # print(df_pescad_matricula_ufmg.head())
+
     mapa_insc_ufmg = dict(
         zip(
             df_pescad_matricula_ufmg['MATRIC'],

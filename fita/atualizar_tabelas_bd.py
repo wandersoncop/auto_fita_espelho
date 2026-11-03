@@ -159,10 +159,20 @@ def main():
 
     #-----------------------PESCAD
 
-    tbl_pescad = os.path.join(diretorio,'Pescad_InscUFMG.txt')
-    df_pescad = pd.read_csv(tbl_pescad,sep=';',encoding='latin-1',dtype=str)
-    df_pescad.to_sql('aux_pescad_insc_ufmg',engine,if_exists='replace',index=False)
-    # print('Tabela Pescad enviada')
+    # tbl_pescad = os.path.join(diretorio,'Pescad_InscUFMG.txt')
+    # df_pescad = pd.read_csv(tbl_pescad,sep=';',encoding='latin-1',dtype=str)
+    # df_pescad.to_sql('aux_pescad_insc_ufmg',engine,if_exists='replace',index=False)
+    # # print('Tabela Pescad enviada')
+
+    
+    df_pescad = pd.read_csv(os.path.join(diretorio, 'PESCAD Cadastro.csv'),     
+        sep=';',
+        encoding='latin-1',
+        dtype=str
+    )
+    df_pescad.to_sql('pescad cadastro',engine,if_exists='replace',
+        index=False
+    )
 
     #-----------------------cad_apf resolve situação da categoria MAGISTERIO X TEC-ADMINISTRATIVO
 
